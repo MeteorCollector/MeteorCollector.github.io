@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 欢迎来到下载站！
+title: download
 permalink: /download/
 ---
 
