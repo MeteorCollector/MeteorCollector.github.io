@@ -1,6 +1,6 @@
 ---
 layout: default
-title: MeteorCollector 的单人果壳
+title: 
 permalink: /download/individual/
 ---
 
