@@ -13,20 +13,19 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-# title: MeteorCollector's Electric Wasteland
+title: 流星收集者的电子荒原
 # email: data deleted
-# description: >- # this means to ignore newlines until "baseurl:"
-# MeteorCollector 的电子荒原，仅此而已
+description: >- # this means to ignore newlines until "baseurl:"
+ 关于MeteorCollecor，以及可以访问到的他与互联网相关的一切（大概）
 # baseurl: "" # the subpath of your site, e.g. /blog
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
-# twitter_username: bilibili @过路的末某人
-# github_username:  MeteorCollector
+github_username:  MeteorCollector
 
 # Build settings
-# markdown: kramdown
+markdown: kramdown
 theme: jekyll-theme-hacker
-#plugins:
-#  - jekyll-feed
+plugins:
+  - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
