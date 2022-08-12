@@ -4,7 +4,8 @@ title: About
 permalink: /about/
 ---
 
-## About Page
+
+
 ### MeteorCollector 是谁？
 MeteorCollector 是一位来自华北平原的天文与造梦爱好者，目前在长江流域某计算机专业就读。因为计算机科学所做的事情是在电子海洋里重新创世，所以ta很感兴趣！然而由于天资不够，MeteorCollector 总是需要付出很多很多倍的努力才能达到和身边人差不多的水平，非常痛苦，非常不甘心。
 

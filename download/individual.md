@@ -1,0 +1,7 @@
+---
+layout: page
+title: MeteorCollector 的单人果壳
+permalink: /download/individual/
+---
+
+唉呦！看起来他在这里什么也没放。也许还是去`github`或者`bilibili`看看？
