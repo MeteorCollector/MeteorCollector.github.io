@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: 你可以回到过去，但是那里已经没有人了
 permalink: /download/studio/
 ---
