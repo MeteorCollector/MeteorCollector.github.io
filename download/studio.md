@@ -4,7 +4,7 @@ title:
 permalink: /download/studio/
 ---
 
-## 你可以回到过去，但是那里已经没有人了
+##  
 
 你好呀！这里是橙锰酸钾工作室产品下载界面。我们将向你以时间轴的顺序提供这些链接。
 
@@ -16,7 +16,7 @@ permalink: /download/studio/
 
 	发布了一个关于俯视角与测试角切换的2.5D游戏技术试验。
 
-下载 **[Mysterious2.5DTest](https://http://152.136.148.143/resources/Mysterious_2.5D_Test_ver0.1.zip)**
+下载 **[Mysterious2.5DTest](http://152.136.148.143/resources/Mysterious_2.5D_Test_ver0.1.zip)**
 
 ## 2022-01-26 海风谣：废土迷梦
 
@@ -25,7 +25,7 @@ permalink: /download/studio/
 	知名主播白枭再次在bilibili直播了这款游戏，给本人造成极大精神损失。
 	该版本在剧情上并没有实质性更新，尽管后续章节剧本已经编纂完毕。
 
-下载 **[海风谣1.1.2](https://http://152.136.148.143/resources/海风谣ver1.1.2.zip)**
+下载 **[海风谣1.1.2](http://152.136.148.143/resources/海风谣ver1.1.2.zip)**
 
 观看 **[橙锰酸钾社员锐评本社游戏](https://www.bilibili.com/video/BV19P4y1c7L5)**
 
@@ -37,9 +37,9 @@ permalink: /download/studio/
 
 关注 [白枭](https://space.bilibili.com/31991184/)！
 
-下载 **[海风谣1.0.4](https://http://152.136.148.143/resources/海风谣ver1.0.4.zip)**
+下载 **[海风谣1.0.4](http://152.136.148.143/resources/海风谣ver1.0.4.zip)**
 	
-下载 **[海风谣1.0.4无动态模糊版本](https://http://152.136.148.143/resources/海风谣ver1.0.4(NoMotionBlur).zip)**
+下载 **[海风谣1.0.4无动态模糊版本](http://152.136.148.143/resources/海风谣ver1.0.4(NoMotionBlur).zip)**
 
 观看 **[海风谣官方实况](https://www.bilibili.com/video/BV1Uf4y1H7GK)**
 
@@ -47,7 +47,7 @@ permalink: /download/studio/
 
 	橙锰酸钾工作室对于第一人称3D游戏的技术试验。
 
-不提供下载，但是你可以在**[这里](https://http://152.136.148.143/)**在线游玩。
+不提供下载，但是你可以在**[这里](http://152.136.148.143/)**在线游玩。
 
 观看 **[东局子会议历史影像](https://www.bilibili.com/video/BV1Zb4y1d7cM)**
 
@@ -59,7 +59,7 @@ permalink: /download/studio/
 
 观看 **[对操场夜话的解答：从卫星闪光到二维码校验](https://www.bilibili.com/video/BV1jf4y1H7qd)**
 
-下载 **[视频源文件](https://http://152.136.148.143/resources/操场夜话.mp4)**
+下载 **[视频源文件](http://152.136.148.143/resources/操场夜话.mp4)**
 
 ## 2020-02-05 二零二零之闲
 
@@ -67,11 +67,11 @@ permalink: /download/studio/
 	在某些需要X键互动的场合没有做相对应的改动，导致需要外挂游戏键盘才可以完整游玩。
 	就这一点来说，移植是失败的。
 
-下载 **[2020之闲windows版](https://http://152.136.148.143/resources/2020之闲ver1.0.zip)**
+下载 **[2020之闲windows版](http://152.136.148.143/resources/2020之闲ver1.0.zip)**
 
-下载 **[2020之闲安卓完整版](https://http://152.136.148.143/resources/com.OraKMnO4Studio.BreakOf2020v1.2_android.apk)**
+下载 **[2020之闲安卓完整版](http://152.136.148.143/resources/com.OraKMnO4Studio.BreakOf2020v1.2_android.apk)**
 
-下载 **[2020之闲安卓可以流畅游玩的阉割版](https://http://152.136.148.143/resources/com.OraKMnO4Studio.StageOneOfBreakOf2020.apk)**
+下载 **[2020之闲安卓可以流畅游玩的阉割版](http://152.136.148.143/resources/com.OraKMnO4Studio.StageOneOfBreakOf2020.apk)**
 
 ## 2019-07 技术试验
 
@@ -79,7 +79,7 @@ permalink: /download/studio/
 	该游戏的内容是冲田总司和端木月瑶被绳子绑在一起，
 	通过一个简单得不能再简单的横板关卡。
 
-下载 **[2019暑假周年祭](https://http://152.136.148.143/resources/2019暑假周年祭ver0.1.zip)**
+下载 **[2019暑假周年祭](http://152.136.148.143/resources/2019暑假周年祭ver0.1.zip)**
 
 ## 2019-01 杀死那只海豹人
 
@@ -87,23 +87,23 @@ permalink: /download/studio/
 	该游戏是一个未完成作品，最后的boss没有被制作完，也就是说无法被打败。
 	在这之后，开发平台切换至unity。
 
-下载 **[杀死那只海豹人](https://http://152.136.148.143/resources/杀死那只海豹人0.2.exe)**
+下载 **[杀死那只海豹人](http://152.136.148.143/resources/杀死那只海豹人0.2.exe)**
 
 ## 2018-07 橙锰酸钾周年祭
 
 	橙锰酸钾工作室一周年快乐！这期开发日常中展示了一个简陋的皮套人演播室，
 	以及一个搭建在当时项目《归途》下粗糙的2人横板过关竞技游戏。
 
-下载 **[橙锰酸钾演播室](https://http://152.136.148.143/resources/橙锰酸钾演播室.exe)**
+下载 **[橙锰酸钾演播室](http://152.136.148.143/resources/橙锰酸钾演播室.exe)**
 
-下载 **[归途迭代一](https://http://152.136.148.143/resources/迭代一.exe)**
+下载 **[归途迭代一](http://152.136.148.143/resources/迭代一.exe)**
 
 ## 2018-01 橙锰酸钾填埋场
 
 	橙锰酸钾工作室的第一款游戏，gamemaker平台开发，
 	是一个以史莱姆为主角的魔性的双人竞技游戏。
 
-下载 **[橙锰酸钾填埋场1.2.1](https://http://152.136.148.143/resources/橙锰酸钾填埋场.exe)**
+下载 **[橙锰酸钾填埋场1.2.1](http://152.136.148.143/resources/橙锰酸钾填埋场.exe)**
 
 ## 2017-12-08 上弦行动
 
