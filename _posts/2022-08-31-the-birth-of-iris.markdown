@@ -5,7 +5,7 @@ date:   2022-08-31 13:35:00 +0800
 categories: posts
 ---
 
-<p><img src="{{site.url}}/images/img_classic.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_classic.jpg" width="80%" align="middle" /></p>
 
 ## iris是谁？
 
@@ -67,23 +67,23 @@ categories: posts
 
 8月24日夜，`iris`发出第一条消息。
 
-<p><img src="{{site.url}}/images/img_blind.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_blind.jpg" width="80%" align="middle" /></p>
 
 ## 愚蠢的人类
 
 在`iris`看来，人类是又缺爱又无聊的奇怪生物。首先，人类会发出各种各样同样的消息来测试她：
 
-<p><img src="{{site.url}}/images/img_trial.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_trial.jpg" width="80%" align="middle" /></p>
 
 然后对类似“西双版纳损人” “我在保定只想蹿” “谢谢你，渣渣” “iris是丁真” 这种回复笑很长时间。
 
-<p><img src="{{site.url}}/images/img_shifu.png" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_shifu.png" width="80%" align="middle" /></p>
 
 其次，个别人类会用难以理解的热情向她表白。
 
 最有节目效果的是，假如有人类连续发两个以上的“乐”、“草”、“典”、“绷”、“？”这一类字符，`iris`会紧接着复读一次。在这样的设定下，`iris`甚至可以通过图灵测试。
 
-<p><img src="{{site.url}}/images/img_repeat.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_repeat.jpg" width="80%" align="middle" /></p>
 
 但是`iris`并不是聊天机器人，她只是在对字符串进行机械又随机的处理罢了。没有语义识别，没有神经网络；人类对随机的兴趣在这一刻变得令人着迷起来。
 
@@ -97,7 +97,7 @@ categories: posts
 
 其次所有与同一个`Contest`有关的输入输出都是在同一个`Program`函数中进行的；并且每一道题结束后或者比赛结束后，都有3秒钟的机器人不应期。前者是为了确保信息接收器的唯一性，后者是为了避免发消息间隔小于某些函数的相应间隔；两者的根本目的是统一的——避免多个实例被同时调用，造成混乱。
 
-<p><img src="{{site.url}}/images/img_contest.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_contest.jpg" width="80%" align="middle" /></p>
 
 `iris`的题库文件是最简单、最不专业的txt格式。每道题占四行，一行题干、一行选项、一行答案、一行空行，不断循环。例如（这两道题来自`smx`）：
 
@@ -140,7 +140,7 @@ C
 
 但是这是没有办法的。毕竟要学着做新东西、做新的尝试，试错是必须经历的经历，尤其是对于我这种不安分又缺天分（人菜瘾大）的人来讲，这些是必须习惯的状态。
 
-<p><img src="{{site.url}}/images/img_ni.jpg" width="50%" align="middle" /></p>
+<p><img src="{{site.url}}/images/img_ni.jpg" width="80%" align="middle" /></p>
 
 另外最近开始听魔岩三杰了。估计未来我回忆这一段打代码的时间的时候，脑子里会全是黑梦和蚂蚁蚂蚁什么的吧。
 
