@@ -20,10 +20,10 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 ## iris 发
 
-#### iris 发 土豆
+#### **iris 发 土豆**
 发送土豆（猫）；
 
-#### iris 发 柴郡猫
+#### **iris 发 柴郡猫**
 发送柴郡猫；
 
 #### iris 发 [catalogue] [args]
