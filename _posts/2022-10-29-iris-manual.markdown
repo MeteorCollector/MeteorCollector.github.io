@@ -26,7 +26,7 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 #### **iris 发 柴郡猫**
 发送柴郡猫；
 
-#### iris 发 [catalogue] [args]
+#### **iris 发 [catalogue] [args]**
 发送深空天体；支持全部NGC星表、IC星表、梅西耶星表；
 
 示例： `iris 发 NGC7023`    `iris 发 M104`
@@ -35,12 +35,12 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 示例：`iris 发 IC`	
 
-#### iris 发 恒星 [args]
+#### **iris 发 恒星 [args]**
 发送恒星数据（暂不支持实施方位角查询）；支持全部HIP星表、HD星表、Gliese星表、Bayer命名法（暂不支持希腊字母，需要转为英文），并且支持部分中文星名；
 
 示例： `iris 发 恒星 omi Cet`	`iris 发 恒星 17 Tau`    `iris 发 恒星 蒭藁增二`	`iris 发 恒星 HIP10826`	`iris 发 恒星 HD14386`
 
-#### iris 发 APOD [args]
+#### **iris 发 APOD [args]**
 发送nasa每日天文一图；args格式为严格的YYYY-MM-DD，用于确定特定日期；
 
 示例：`iris 发 APOD`	`iris 发 APOD 2022-08-24`
@@ -51,14 +51,14 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 若发送 `iris 发 APOD 随机`，iris随机发送一张APOD并省略介绍；
 
-#### iris 发 地球 [date]
+#### **iris 发 地球 [date]**
 发送EPIC地球卫星图像；args格式为严格的YYYY-MM-DD，用于确定特定日期；
 
 示例：`iris 发 地球`	`iris 发 地球 2020-08-14`
 
 若参数args缺省或不合法，发送最新图片；
 
-#### iris 发 太阳 [args] [args]
+#### **iris 发 太阳 [args] [args]**
 若传入城市名参数，发送太阳运行信息（来自heavens-above）；若参数缺省，默认南京；
 
 示例：`iris 发 太阳 湘潭`	`iris 发 太阳`
@@ -69,22 +69,22 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 传入C2，获得C2相机图像；C3同理；
 
-#### iris 发 月球/月亮 [city]
+#### **iris 发 月球/月亮 [city]**
 若传入城市名参数，发送月球运行信息（来自heavens-above）；若参数缺省，默认南京；
 
 示例：`iris 发 月球 阿勒泰`	`iris 发 月亮`
 
-#### iris 发 星图 [city]
+#### **iris 发 星图 [city]**
 若传入城市名参数，发送该城市实时星图（来自heavens-above）；若参数缺省，默认南京；
 
 示例：`iris 发 星图 秦皇岛`	`iris 发 星图`
 
-#### iris 发 坐标 [city]
+#### **iris 发 坐标 [city]**
 传入城市名参数，发送iris的地名库中该城市经纬度；
 
 示例：`iris 发 坐标 华蓥`
 
-#### iris 发 行星 [args] [city]
+#### **iris 发 行星 [args] [city]**
 若传入行星名与城市名两个参数，发送太阳系内行星（以及冥王星）在当地的运行信息（来自heavens-above）；若参数缺省，默认南京；
 
 示例：`iris 发 行星 水星 安庆`	`iris 发 行星 冥王星 景洪`
@@ -93,7 +93,7 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 示例：`iris 发 火星 青铜峡`	`iris 发 天王星 南京`
 
-#### iris 发 人造卫星/人造天体 [args] [city]
+#### **iris 发 人造卫星/人造天体 [args] [city]**
 若传入人造天体名与城市名两个参数，发送人造天体在当地的过境信息（来自heavens-above）；若参数缺省，默认南京；（注意，该功能目前仅支持国际空间站和中国空间站）
 
 示例：`iris 发 人造卫星 ISS 合肥`	`iris 发 人造天体 中国空间站 太原`
@@ -102,15 +102,15 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 示例：`iris 发 国际空间站 石家庄`	`iris 发 CSS 酒泉`
 
-#### iris 发 雷达 [args]
+#### **iris 发 雷达 [args]**
 发送中央气象台实时雷达图片，目前仅支持部分雷达站；
 
 示例：`iris 发 雷达 全国`	`iris 发 雷达 华东`	`iris 发 雷达 西安`	`iris 发 雷达 巴中`	`iris 发 雷达 黑瞎子岛`
 
-#### iris 发 太阳系
+#### **iris 发 太阳系**
 获得太阳系天体实时位置（来源：heavens-above）；
 
-#### iris 发 iris
+#### **iris 发 iris**
 那你可是真闲。
 
 ## iris 填字
@@ -165,8 +165,8 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 ## iris 天竞
 
-### 赛制介绍
-#### 旧赛制
+### **赛制介绍**
+#### **旧赛制**
 >每一场竞赛最多容纳5位选手，共5题；
 >
 >输入 'iris 天竞' 开始一场新的知识竞赛；
@@ -174,7 +174,7 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 >
 >每一道题，每位选手有且仅有一次回答机会，首名答对出现或者全部参赛选手答完后或者60s内无人答对则进行下一题，共五题，答对加五分，答错倒扣五分；
 
-#### 新赛制
+#### **新赛制**
 >每一场竞赛最多容纳选手数量不设上限，共5题；
 >
 >输入 'iris 天竞' 开始一场新的知识竞赛；
@@ -182,51 +182,51 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 >
 >每一道题，每位选手有且仅有一次回答机会，首名答对出现或者30s内无人答对则进行下一题，共五题，答对加五分，答错倒扣五分；
 
-### 指令列表
-#### iris 天竞
+### **指令列表**
+#### **iris 天竞**
 开始一场新的天文知识竞赛。如果该群已经有竞赛进行中，则无法开始新竞赛；默认采用新赛制；
 
 使用“iris 天竞 旧”开始旧赛制比赛；
 
-#### iris 天竞 报名
+#### **iris 天竞 报名**
 报名当前天文知识竞赛（仅旧赛制）；
 
-#### iris 天竞 开始比赛
+#### **iris 天竞 开始比赛**
 使当前比赛报名阶段结束，进入答题阶段。至少需要1名选手开始竞赛；
 
-#### iris 天竞 终止比赛
+#### **iris 天竞 终止比赛**
 强制终止一场进行中的知识竞赛；
 
-#### iris 天竞 -h (iris 天竞 --help)
+#### **iris 天竞 -h (iris 天竞 --help)**
 输出关于天文竞赛方面的帮助信息，包括赛制和指令等；
 
 ## 运行维护
 
-#### iris 开机
+#### **iris 开机**
 在某群聊打开iris；（需要管理员权限）
 
-#### iris 关机
+#### **iris 关机**
 在某群聊使iris休眠；（需要管理员权限）
 
-#### iris 开 [args]
+#### **iris 开 [args]**
 在某群聊开启iris的某一大类功能（发，填字，应答）；（需要管理员权限）
 
-#### iris 关 [args]
+#### **iris 关 [args]**
 在某群聊关闭iris的某一大类功能（发，填字，应答）；（需要管理员权限）
 
-#### iris -ls (iris --list)
+#### **iris -ls (iris --list)**
 查询iris在该群聊的指令开关状态；
 
-#### iris -h (iris --help)
+#### **iris -h (iris --help)**
 输出帮助信息；
 
-#### iris -v (iris --version)
+#### **iris -v (iris --version)**
 输出版本信息；
 
-#### iris -i (iris --info)
+#### **iris -i (iris --info)**
 输出没什么用的信息；
 
-#### iris 小纸条 [msg]
+#### **iris 小纸条 [msg]**
 向iris的监护人打小报告，可以反馈一些bug
 
 示例：
@@ -241,10 +241,10 @@ iris的监护人会收到该消息：
 
 ## Q&A
 
-#### 为什么我私聊iris她却不理我？
+#### **为什么我私聊iris她却不理我？**
 iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊只支持一般疑问句随机回答、填字，以及`iris 唱歌`;
 
-#### iris的形象是谁设计的？
+#### **iris的形象是谁设计的？**
 主要是iris自己。我和群友们通过提问让iris自己选择了这个形象。在设定稿绘制过程中，群友们的集体创作占主导，非常感谢大家。此后我们用novelai生成了很多iris的图片，你现在看到的iris人像基本是ai画出来的；
 
 ...持续更新中...
