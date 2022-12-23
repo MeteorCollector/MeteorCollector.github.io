@@ -296,4 +296,14 @@ iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊�
 
 最近更新：2022/12/23
 
-<p><img src="{{site.url}}/images/iris_field.png" width="80%" align="middle" /></p>
+<p><img src="{{site.url}}/images/iris_100.png" width="80%" align="middle" /></p>
+
+iris 运行100天贺图，过路的末某人绘
+
+<p><img src="{{site.url}}/images/iris_field.jpg" width="80%" align="middle" /></p>
+
+iris 在天文观测后的野地中，过路的末某人绘
+
+<p><img src="{{site.url}}/images/iris_dune.jpg" width="80%" align="middle" /></p>
+
+iris 在沙丘上挥舞红旗，过路的末某人绘
