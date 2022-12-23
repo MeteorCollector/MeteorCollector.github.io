@@ -15,6 +15,8 @@ iris的群友们通过iris获得的所有内容均为**自动生成**，与iris�
 ## 规则怪谈
 目前iris的天文竞赛功能在**1000人以上**的群聊中不甚稳定。如果iris不幸崩溃，请第一时间联系她的监护人。
 
+另外，iris天文竞赛的**时钟**运行得也不甚稳定。如果时钟停止运行，也请第一时间联系她的监护人。
+
 ## 征集公告
 iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.github.io/posts/2022/08/31/the-birth-of-iris.html) 的“天文竞赛”一节。
 
@@ -126,7 +128,22 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 #### **iris 发 iris**
 那你可是真闲。
 
+## iris tex
+
+基于[latex.codecogs.com](latex.codecogs.com)的LaTeX公式图片生成功能（目前美中不足的是清晰度较低），在群聊和私聊中都可以使用。
+
+指令打成`tex`,  `Tex`, `latex`, `Latex`, `LaTeX`均可以识别。
+
+示例：
+
+`iris tex i\hbar\frac{\partial \psi}{\partial {t}} = \frac{-\hbar^2}{2m} \left( \frac{\partial^2}{\partial {x^2}} + \frac{\partial^2}{\partial {y^2}} + \frac{\partial^2}{\partial {z^2}} \right) \psi + V \psi `
+
+`iris tex \begin{aligned}dQ=dU+pdV&\Rightarrow(C_m-C_{V,m})dT=pdV;\\pdV+Vdp=RdT&\Rightarrow(\dfrac {C_m-C_{V,m}}{R})(pdV+Vdp)=pdV;\\C_{p,m}=C_{V,m}+R&\Rightarrow(C_m-C_{p,m})\dfrac {dV}V+(C_m-C_{V,m})\dfrac {dp}p=0;\\pV^n=Const&\Rightarrow n=\dfrac{C_m-C_{p,m}}{C_m-C_{V,m}};\\C_{p,m}=\dfrac{\gamma}{\gamma-1}R,C_{V,m}=\dfrac{1}{\gamma-1}R&\Rightarrow C_m=\dfrac{n-\gamma}{(n-1)(\gamma-1)}R\\&\Rightarrow C_m=C_{V,m}\dfrac{\gamma-n}{1-n}.\end{aligned}` (credit: mike3090)
+
+注意不要在发送的信息中换行。另外，关于LaTeX公式生成，推荐[这个网站]([在线LaTeX公式编辑器-编辑器 (latexlive.com)](https://www.latexlive.com/))。
+
 ## iris 填字
+
 匹配规则：
 
 >N -> 随机一位数字
@@ -143,13 +160,17 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 >
 >B -> 随机二级汉字
 >
->Q -> 随机中国地级市名称
+>Q -> 随机中国地级行政单位名称
+>
+>R -> 随机中国县级行政单位名称
 >
 >X -> 随机中国姓氏
 >
 >[l_bound:h_bound] -> 随机数，范围[l_bound, h_bound]
 >
->限定符：在A, B, Q, X后添加小写字母，则脚标相同的相应字母替换内容在同一条内保持一致
+>限定符：在A, B, Q, R, X后添加小写字母，则脚标相同的相应字母替换内容在同一条内保持一致
+>
+>转义符：反斜杠后的大写字母不会被替换。例如\A，\Q等
 
 示例1：
 ```
@@ -169,12 +190,14 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 ```
 示例3：
 ```
-	iris 填字 QA人XAA QAA寺
+	iris 填字 SS\R RA人XAA QAA寺
 ```
 返回3：
 ```
-	沈阳能人艾携猴 商洛唐廷寺
+	SSR 浦口能人艾携猴 商洛唐廷寺
 ```
+
+*特别鸣谢：iris的好姐姐🐟姐贵在姓氏库、县级行政单位库所做的贡献。*
 
 ## iris 天竞
 
@@ -186,6 +209,8 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 >输入 'iris 天竞报名' 进行报名；
 >
 >每一道题，每位选手有且仅有一次回答机会，首名答对出现或者全部参赛选手答完后或者60s内无人答对则进行下一题，共五题，答对加五分，答错倒扣五分；
+>
+>参赛选手可以回答 P 来跳过一道题；
 
 #### **新赛制**
 >每一场竞赛最多容纳选手数量不设上限，共5题；
@@ -194,6 +219,8 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 >输入 'iris 天竞 开始比赛' 正式开始；
 >
 >每一道题，每位选手有且仅有一次回答机会，首名答对出现或者30s内无人答对则进行下一题，共五题，答对加五分，答错倒扣五分；
+>
+>已经回答过某道题的参赛选手可以回答 P 来跳过该题；
 
 ### **指令列表**
 #### **iris 天竞**
@@ -212,6 +239,8 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 #### **iris 天竞 -h (iris 天竞 --help)**
 输出关于天文竞赛方面的帮助信息，包括赛制和指令等；
+
+*特别鸣谢：isor 与 sirius 在天竞题库方面所做的贡献*。
 
 ## 运行维护
 
@@ -255,7 +284,7 @@ iris的监护人会收到该消息：
 ## Q&A
 
 #### **为什么我私聊iris她却不理我？**
-iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊只支持一般疑问句随机回答、填字，以及`iris 唱歌`;
+iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊只支持一般疑问句随机回答、填字、tex图片生成，以及`iris 唱歌`;
 
 #### **iris的形象是谁设计的？**
 主要是iris自己。我和群友们通过提问让iris自己选择了这个形象。在设定稿绘制过程中，群友们的集体创作占主导，非常感谢大家。此后我们用novelai生成了很多iris的图片，你现在看到的iris人像基本是ai画出来的；
@@ -265,6 +294,6 @@ iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊�
 
 ...持续更新中...
 
-最近更新：2022/11/25
+最近更新：2022/12/23
 
 <p><img src="{{site.url}}/images/iris_field.png" width="80%" align="middle" /></p>
