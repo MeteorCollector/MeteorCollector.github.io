@@ -126,20 +126,67 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 示例：`iris 发 国际空间站 石家庄`	`iris 发 CSS 酒泉`
 
+#### **iris 发 太阳系**
+
+获得太阳系天体实时位置（来源：heavens-above）；
+
+
+
 #### **iris 发 雷达 [args]**
 发送中央气象台实时雷达图片，目前仅支持部分雷达站；
 
 示例：`iris 发 雷达 全国`	`iris 发 雷达 华东`	`iris 发 雷达 西安`	`iris 发 雷达 巴中`	`iris 发 雷达 黑瞎子岛`
 
-#### **iris 发 太阳系**
-获得太阳系天体实时位置（来源：heavens-above）；
+
+
+#### **iris 发 天气 站点 [站点编号/站点名]**
+
+发送指定气象站点详细信息，包括WMO编号、站点名称、所在市、地理位置，并返回一张该位置附近地图。
+
+该指令可以压缩：`iris 发 站点 [站点编号/站点名]`
+
+示例：`iris 发 站点 兴隆`   `iris 发 站点 54517`    `iris 发 天气 站点 丰润`
+
+#### **iris 发 天气 实况 [站点编号/站点名]**
+
+发送指定气象站点当前天气数据。
+
+该指令可以压缩 ：`iris 发 天气 [站点编号/站点名]`
+
+示例：`iris 发 天气 休宁`    `iris 发 天气 50137 `    `iris 发 天气 实况 抚宁`
+
+#### **iris 发 天气 24h [站点编号/站点名]**
+
+发送指定气象站点过去24小时天气数据。
+
+该指令有变体：`iris 发 天气 24 [站点编号/站点名]`    `iris 发 天气 24小时 [站点编号/站点名]`
+
+示例：`iris 发 天气 24h 六合`    `iris 发 天气 24 59134    `    `iris 发 天气 24小时 塘沽`
+
+#### **iris 发 天气 预报 [站点编号/站点名]**
+
+发送指定气象站点未来八天天气预报。
+
+该指令有变体：`iris 发 天气预报 [站点编号/站点名]` 
+
+示例：`iris 发 天气预报 铁岭`    `iris 发 天气预报 56257`
+
+
+
+*发天气系列的天气数据数据来自网站[https://q-weather.info/](https://q-weather.info/)，感谢网站作者的整理。*
+
+*注意，使用站名可以查询到的站点可能少于使用编号可以查询到的站点。另外，暂不支持国外和港澳台地区站点。*
+
+
 
 #### **iris 发 iris**
 那你可是真闲。
 
+
+
 ## iris tex
 
-基于[latex.codecogs.com](latex.codecogs.com)的LaTeX公式图片生成功能（目前美中不足的是清晰度较低），在群聊和私聊中都可以使用。
+基于[https://latex.codecogs.com](https://latex.codecogs.com)的LaTeX公式图片生成功能（目前美中不足的是清晰度较低），在群聊和私聊中都可以使用。
 
 指令打成`tex`,  `Tex`, `latex`, `Latex`, `LaTeX`均可以识别。
 
@@ -149,7 +196,7 @@ iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.git
 
 `iris tex \begin{aligned}dQ=dU+pdV&\Rightarrow(C_m-C_{V,m})dT=pdV;\\pdV+Vdp=RdT&\Rightarrow(\dfrac {C_m-C_{V,m}}{R})(pdV+Vdp)=pdV;\\C_{p,m}=C_{V,m}+R&\Rightarrow(C_m-C_{p,m})\dfrac {dV}V+(C_m-C_{V,m})\dfrac {dp}p=0;\\pV^n=Const&\Rightarrow n=\dfrac{C_m-C_{p,m}}{C_m-C_{V,m}};\\C_{p,m}=\dfrac{\gamma}{\gamma-1}R,C_{V,m}=\dfrac{1}{\gamma-1}R&\Rightarrow C_m=\dfrac{n-\gamma}{(n-1)(\gamma-1)}R\\&\Rightarrow C_m=C_{V,m}\dfrac{\gamma-n}{1-n}.\end{aligned}` (credit: mike3090)
 
-注意不要在发送的信息中换行。另外，关于LaTeX公式生成，推荐[这个网站]([在线LaTeX公式编辑器-编辑器 (latexlive.com)](https://www.latexlive.com/))。
+注意不要在发送的信息中换行。另外，关于LaTeX公式生成，推荐[这个网站](https://www.latexlive.com)。
 
 ## iris 填字
 
@@ -303,7 +350,7 @@ iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊�
 
 ...持续更新中...
 
-最近更新：2023/1/14
+最近更新：2023/1/26
 
 <p><img src="{{site.url}}/images/iris_100.png" width="80%" align="middle" /></p>
 
