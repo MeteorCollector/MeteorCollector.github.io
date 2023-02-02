@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: 个人作品下载
 ---
 

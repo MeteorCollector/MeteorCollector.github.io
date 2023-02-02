@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: 橙锰酸钾工作室产品下载
 ---
 

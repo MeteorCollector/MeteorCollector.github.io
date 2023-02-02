@@ -1394,7 +1394,8 @@ nav a {
   padding: 0px;
   color: #999;
   font-weight: 700;
-  font-size: .8em;
+  font-size: 10px;
+  /* font-size: .8em;  */
   text-shadow: none;
   -webkit-transition: color 0.3s;
   -moz-transition: color 0.3s;
