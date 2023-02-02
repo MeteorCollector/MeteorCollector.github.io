@@ -1,7 +1,6 @@
 ---
 layout: default
-title: 
-permalink: /download/studio/
+title: 橙锰酸钾工作室产品下载
 ---
 
 # ( •̀ ω •́ )

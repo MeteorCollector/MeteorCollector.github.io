@@ -8,9 +8,9 @@ permalink: /download/
 
 ### “芝麻开门！”
 
-这里是 **[橙锰酸钾工作室时光机](https://meteorcollector.github.io/download/studio/)**；
+这里是 **[橙锰酸钾工作室时光机](https://meteorcollector.github.io/studio/)**；
 
-这里是 **[个人作品下载处](https://meteorcollector.github.io/download/individual/)**；
+这里是 **[个人作品下载处](https://meteorcollector.github.io/individual/)**；
 
 ### “听南风吹来——”
 
