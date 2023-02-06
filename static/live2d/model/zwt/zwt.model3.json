@@ -1,0 +1,10 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "zwt.moc3",
+		"Textures": [
+			"zwt.1024/texture_00.png"
+		],
+		"DisplayInfo": "zwt.cdi3.json"
+	}
+}

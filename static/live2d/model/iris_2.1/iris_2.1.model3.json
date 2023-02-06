@@ -1,0 +1,18 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "iris_2.1.moc3",
+		"Textures": [
+			"iris_2.1.1024/texture_00.png"
+		],
+		"Physics": "iris_2.1.physics3.json",
+		"DisplayInfo": "iris_2.1.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		}
+	]
+}

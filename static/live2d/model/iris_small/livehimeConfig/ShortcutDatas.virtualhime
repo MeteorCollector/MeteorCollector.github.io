@@ -1,0 +1,49 @@
+{
+  "SwitchMode": 0,
+  "RemoveAllExpKeys": [
+    0,
+    0,
+    0
+  ],
+  "MotionShortcutKeyDatas": {
+    "wave_hand.motion3.json": {
+      "MotionName": "wave_hand.motion3.json",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "PlayMaxTime": 0.0,
+      "Mode": 0,
+      "Keys": [
+        119,
+        0,
+        0
+      ],
+      "FadeDuration": 0.0
+    }
+  },
+  "ExpShortcutKeyDatas": {
+    "cc_iris_small.cfg_Param": {
+      "ExpName": "cc_iris_small.cfg_Param",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        49,
+        0,
+        0
+      ],
+      "Mode": 0,
+      "FadeDuration": 0.5
+    },
+    "cc_iris_small.cfg_Param2": {
+      "ExpName": "cc_iris_small.cfg_Param2",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        50,
+        0,
+        0
+      ],
+      "Mode": 1,
+      "FadeDuration": 0.5
+    }
+  }
+}

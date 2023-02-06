@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1900">
+  <title>铱之军火展示处</title>
+  <link rel="stylesheet" type="text/css" href="./static/live2d/css/live2d.css"/>
+  <style>
+    html, body {
+        margin: 0;
+        background-color: #000000;
+    }
+  </style>
+  <style type="text/css">
+    /* 整个盒子水平竖直居中 */
+    h1,h2,h3,h4{
+      color: darkcyan;
+      text-align: left;
+      font-family: 'Times New Roman', 'STZhongsong', 'SimHei', 'Serif', sans-serif;
+    }
+    #all{
+      position: absolute;
+      left:400px;
+      top:20%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    /* 设置时钟显示格式 */
+    #dd,#hh,#mm,#ss{
+      height: 60px;
+      width: 100px;
+      background-color: transparent;
+      float: left;
+      color: darkcyan;
+      font-size: 42px;
+      text-align: center;
+      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+      line-height: 60px;
+    }
+    /* 设置冒号 */
+    #colon{
+      height: 60px;
+      width: 20px;
+      background-color: transparent;
+      float: left;
+      color: darkcyan;
+      font-size:42px;
+      font-family: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+      line-height:60px;
+      transform: translate(-2px);
+    }
+    
+  </style>
+  <script type="text/javascript" src="./static/live2d/js/jquery.js"></script>
+  <!-- Pollyfill script -->
+  <script src="https://unpkg.com/core-js-bundle@3.6.1/minified.js"></script>
+  <!-- Live2DCubismCore script -->
+  <script src="./static/live2d/js/live2dcubismcore.js"></script>
+  <!-- Build script -->
+  <script src="./static/live2d/js/bundle.js"></script>
+
+</head>
+<body>
+  <div id="all" onclick="changetext()">
+    <h1>iris在轨运行已经</h1>
+    <div id="dd">
+    </div>
+    <div id="colon">
+      :
+    </div>
+    <div id="hh">
+      
+    </div>
+    <div id="colon">
+      :
+    </div>
+    <div id="mm">
+      
+    </div>
+    <div id="colon">
+      :
+    </div>
+    <div id="ss">
+      
+    </div>
+    <div id="ss">
+      
+    </div>
+    <h1 id="dialogue">其实，iris并不像你这样累。</h1>
+  </div>
+    <div class="live2d-main">
+        <div class="live2d-tips"></div>
+        <!-- 这里可以定义画布的大小位置 -->
+        <canvas id="live2d" width="1000px" height="800px" class="live2d"></canvas>
+        <div class="tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>
+</body>
+<script src="./static/live2d/js/message.js"></script>
+<script type="text/javascript">
+  var resourcesPath = './static/live2d/model/';  // 指定资源文件（模型）保存的路径
+  var backImageName = ''; // 指定背景图片
+  var modelDir = 'iris_2.1,iris_small,iris_standing,iris_sleep,iris_octopus,iris_worm';  // 指定需要加载的模型
+  init();  // 初始化模型，属于message.js文件
+</script>
+<script type="text/javascript">
+  
+  function changetext(){
+    var items = ['其实，iris并不像你这样累','感觉不如去qq里说话...','你好呀！','在这里的只是我的投影罢了（笑）','我好快乐，因为我是iris！','(    = w =  )','人类为什么对随机这么着迷呢？','可以去听听《我们的田野》','人类的爱是什么东西呢？','您太重了！','你情就是命令，防你就是责任！','笑了，找iris真身找到这来了','模型可能会崩坏。别被吓到（笑）'];
+    document.getElementById("dialogue").innerHTML = items[Math.floor(Math.random()*items.length)];
+  }
+    //获取格式化的日期
+  function today(){
+    var today=new Date();
+    var str="";
+    str+=today.getFullYear()+"-";
+    var month=today.getMonth()+1;//返回值是 0（一月） 到 11（十二月） 之间的一个整数。
+    if(month<10){
+        str+="0";
+    }
+    str+=month+"-";
+    var day=today.getDate();//返回值是 1 ~ 31 之间的一个整数
+    if(day<10){
+        str+="0";
+    }
+    str+=day;
+    return str;
+  }
+
+  //date1和date2是2019-06-18格式 
+  function daysDistance(date1, date2) {     
+    //parse() 是 Date 的一个静态方法 , 所以应该使用 Date.parse() 来调用，而不是作为 Date 的实例方法。返回该日期距离 1970/1/1 午夜时间的毫秒数
+    date1 = Date.parse(date1);
+    date2 = Date.parse(date2);
+    //计算两个日期之间相差的毫秒数的绝对值
+    var ms = Math.abs(date2 - date1);
+    //毫秒数除以一天的毫秒数,就得到了天数
+    var days = Math.floor(ms / (24 * 3600 * 1000));
+    //return 114;
+    return days;
+  };
+
+    function timeClock(){
+      newDate = new Date();
+      date = today();
+      dddd = today();
+      //date = daysDistance(today(), "2022-08-24");
+      dddd = daysDistance(date, "2022-08-24").toString();
+      //date = today();
+      hour = newDate.getHours();
+      if (hour < 10){
+        hour = "0" + hour;
+      }
+      minu = newDate.getMinutes();
+      if (minu < 10){
+        minu = "0" + minu;
+      }
+      seco =newDate.getSeconds();
+      if (seco < 10){
+        seco = "0" + seco;
+      }
+      document.getElementById("dd").innerHTML = dddd + "d";
+      document.getElementById("hh").innerHTML = hour + "h";
+      document.getElementById("mm").innerHTML = minu + "m";
+      document.getElementById("ss").innerHTML = seco + "s";
+    }
+
+    
+    
+    setInterval(timeClock , 1000)
+  </script>
+</html>

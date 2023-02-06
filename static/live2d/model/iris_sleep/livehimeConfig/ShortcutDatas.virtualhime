@@ -1,0 +1,47 @@
+{
+  "SwitchMode": 0,
+  "RemoveAllExpKeys": [
+    0,
+    0,
+    0
+  ],
+  "MotionShortcutKeyDatas": {},
+  "ExpShortcutKeyDatas": {
+    "cc_iris_sleep.cfg_ParamSleep": {
+      "ExpName": "cc_iris_sleep.cfg_ParamSleep",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        115,
+        0,
+        0
+      ],
+      "Mode": 0,
+      "FadeDuration": 0.5
+    },
+    "cc_iris_sleep.cfg_ParamEyeLOpen": {
+      "ExpName": "cc_iris_sleep.cfg_ParamEyeLOpen",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        115,
+        0,
+        0
+      ],
+      "Mode": 0,
+      "FadeDuration": 0.5
+    },
+    "cc_iris_sleep.cfg_ParamEyeROpen": {
+      "ExpName": "cc_iris_sleep.cfg_ParamEyeROpen",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        115,
+        0,
+        0
+      ],
+      "Mode": 0,
+      "FadeDuration": 0.5
+    }
+  }
+}

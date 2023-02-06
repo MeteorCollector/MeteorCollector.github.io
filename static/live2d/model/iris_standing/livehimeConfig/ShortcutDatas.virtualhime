@@ -1,0 +1,23 @@
+{
+  "SwitchMode": 0,
+  "RemoveAllExpKeys": [
+    0,
+    0,
+    0
+  ],
+  "MotionShortcutKeyDatas": {},
+  "ExpShortcutKeyDatas": {
+    "cc_iris_standing.cfg_ParamWalk": {
+      "ExpName": "cc_iris_standing.cfg_ParamWalk",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "Keys": [
+        101,
+        0,
+        0
+      ],
+      "Mode": 0,
+      "FadeDuration": 0.5
+    }
+  }
+}

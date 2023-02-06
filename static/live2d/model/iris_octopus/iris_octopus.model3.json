@@ -1,0 +1,23 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "iris_octopus.moc3",
+		"Textures": [
+			"iris_octopus.1024/texture_00.png"
+		],
+		"Physics": "iris_octopus.physics3.json",
+		"DisplayInfo": "iris_octopus.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": []
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}

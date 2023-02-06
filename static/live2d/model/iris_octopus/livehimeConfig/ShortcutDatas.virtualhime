@@ -1,0 +1,24 @@
+{
+  "SwitchMode": 0,
+  "RemoveAllExpKeys": [
+    0,
+    0,
+    0
+  ],
+  "MotionShortcutKeyDatas": {
+    "knife_shooting.motion3.json": {
+      "MotionName": "knife_shooting.motion3.json",
+      "IsEnable": true,
+      "IsGlobal": true,
+      "PlayMaxTime": 0.0,
+      "Mode": 0,
+      "Keys": [
+        113,
+        0,
+        0
+      ],
+      "FadeDuration": 0.0
+    }
+  },
+  "ExpShortcutKeyDatas": {}
+}
