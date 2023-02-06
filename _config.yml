@@ -30,7 +30,7 @@ social:
 
 # 百度统计 
 # 使用博客模板请去掉或者更换 id 
- baidu:
+baidu:
     id: 10294136f424c7c9e549f53673fe6d60  
 
 # Google Analytics
@@ -75,5 +75,3 @@ nav:
 gems: [jekyll-paginate,jekyll-sitemap]
 paginate: 20
 paginate_path: "page/:num/"
-
-
