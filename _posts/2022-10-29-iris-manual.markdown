@@ -9,6 +9,9 @@ categories: posts
 
 # iris指令集
 
+## 铱之皮套
+或许你可以到[这里]({{site.url}}}/iris_model.html)看看铱之皮套。
+
 ## 免责声明
 iris的群友们通过iris获得的所有内容均为**自动生成**，与iris的观点**完全无关**。请在知晓这一点的前提下与iris进行互动。
 
@@ -18,7 +21,7 @@ iris的群友们通过iris获得的所有内容均为**自动生成**，与iris�
 另外，iris天文竞赛的**时钟**运行得也不甚稳定。如果时钟停止运行，也请第一时间联系她的监护人。
 
 ## 征集公告
-iris长期征集天文题库。详见 [这篇文章](https://meteorcollector.github.io/posts/2022/08/31/the-birth-of-iris.html) 的“天文竞赛”一节。
+iris长期征集天文题库。详见 [这篇文章]({{site.url}}}/2022/08/the-birth-of-iris/) 的“天文竞赛”一节。
 
 ## 重要提醒
 
