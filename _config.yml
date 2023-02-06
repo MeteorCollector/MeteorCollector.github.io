@@ -69,7 +69,7 @@ nav:
     - {title: 标签, description: tags, url: '/tags'}      
     - {title: 下载, description: download, url: '/download'}      
     - {title: 关于, description: about, url: '/about'}   
-    - {title: live2d, description: iris_model, url: '/iris_model'}
+    - {title: live2d, description: iris_model, url: '/iris_model.html'}
 
 # Pagination
 gems: [jekyll-paginate,jekyll-sitemap]
