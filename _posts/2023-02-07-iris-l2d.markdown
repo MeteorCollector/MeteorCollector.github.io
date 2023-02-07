@@ -28,7 +28,7 @@ categories: posts
 
 做完了大模型之后，我开始做iris的小模型。其实做像奎恩小狗一样的小模型才是我的初衷。陆陆续续做了iris的坐姿、站姿、走姿、吉他演奏姿势，还有铱虫和铱大章鱼形态，并研制了相对应的按键动画。正好那段时间在回顾outer wilds的实况，于是做了这个视频：[天文机器人iris陪你烤棉花糖_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1V24y167sv/)
 
-<iframe src="//player.bilibili.com/player.html?aid=693589877&bvid=BV1V24y167sv&cid=986008981&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<iframe width=100% height=480px src="//player.bilibili.com/player.html?aid=693589877&bvid=BV1V24y167sv&cid=986008981&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
 还可以在这里获取所有模型的gb：[各种形态的天文机器人iris.gb_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1hs4y1s7CK/)
 
