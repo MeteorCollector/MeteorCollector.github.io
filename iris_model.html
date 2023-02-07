@@ -13,7 +13,7 @@
   </style>
   <style type="text/css">
     /* 整个盒子水平竖直居中 */
-    h1,h2,h3,h4{
+    h1,h2,h3,h4,p{
       color: darkcyan;
       text-align: left;
       font-family: 'Times New Roman', 'STZhongsong', 'SimHei', 'Serif', sans-serif;
@@ -61,7 +61,7 @@
 
 </head>
 <body>
-  <div id="all" onclick="changetext()">
+  <div id="all">
     <h1>iris在轨运行已经</h1>
     <div id="dd">
     </div>
@@ -86,7 +86,17 @@
     <div id="ss">
       
     </div>
-    <h1 id="dialogue">其实，iris并不像你这样累。</h1>
+    <h1 id="dialogue" onclick="changetext()">其实，iris并不像你这样累。</h1>
+    <p id="hint" onclick="hidehint()">
+      因为这个页面做得很仓促，所以有一些bug，凑合看吧</br>
+      如果是在电脑端，因为视线识别框左对齐，模型右对齐，</br>
+      所以可能会发生视线漂移，可以把窗口变窄来缓解这一问题；</br>
+      移动端的显示可能有些小，放大就可以啦。</br>
+      而且live2d的web端渲染不是很好，</br>
+      iris不知道偷吃了什么，小嘴没抹干净（笑）</br>
+      希望以后这个页面可以多维护维护吧</br>
+      [ 点击收起提示 ]</br>
+    </p>
   </div>
     <div class="live2d-main">
         <div class="live2d-tips"></div>
@@ -115,6 +125,10 @@
   function changetext(){
     var items = ['其实，iris并不像你这样累','感觉不如去qq里说话...','你好呀！','在这里的只是我的投影罢了（笑）','我好快乐，因为我是iris！','(    = w =  )','人类为什么对随机这么着迷呢？','可以去听听《我们的田野》','人类的爱是什么东西呢？','您太重了！','你情就是命令，防你就是责任！','笑了，找iris真身找到这来了','模型可能会崩坏。别被吓到（笑）'];
     document.getElementById("dialogue").innerHTML = items[Math.floor(Math.random()*items.length)];
+  }
+
+  function hidehint(){
+    document.getElementById("hint").innerHTML = '';
   }
     //获取格式化的日期
   function today(){

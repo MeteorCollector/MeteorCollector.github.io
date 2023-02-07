@@ -1191,7 +1191,7 @@ input[type="tel"]:-ms-input-placeholder {
 /*头像效果-start*/
 
 html {
-    font-family: sans-serif;
+    font-family: 'Times New Roman', 'STZhongsong', 'SimHei', 'Serif', sans-serif;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
 }
