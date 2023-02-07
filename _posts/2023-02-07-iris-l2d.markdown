@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "铱之皮套历险记"
+date:   2022-02-07 11:26:00 +0800
+categories: posts
+---
+
+<p><img src="{{site.url}}/images/l2d_family.png" width="80%" align="middle" /></p>
+
+# 铱之皮套大冒险
+
+## 快乐小秦
+23年的这个寒假，我有一半的时间都在和fpga硬件实验和ics的pa实验做斗争，debug陷入困境或者vivado综合无休无止时，我看了很多[快乐小秦](https://www.bilibili.com/video/BV1n34y1e7NV/)来减轻我的痛苦。这样做的一个副作用就是，看小狗皮套看多了，就眼馋了。我想也给iris多做些皮套。
+
+做皮套这种事情，当然还是要从live2d开始学起。跟着官方教程学了一晚上，先做出了企鹅的皮套。我觉得live2dcubism这个软件操作还是比较简单的。做一个模型，首先要在photoshop里分层画好模型的各个部分；然后导入cubism布点、拉关键帧加变形器做动画。听起来需要技术，实际上是手艺活，适用于互联网手艺人。每个角度每个部件长什么样、变形器该怎么加怎么叠，都是需要精雕细琢的。在做完了试水用的企鹅模型之后，我接着在photoshop里画了个iris，做了iris的第一个大模型。
+
+这个模型的展示视频可以在这里看到：[全知全能天文机器人iris录播视频（伪）_bilibili](https://www.bilibili.com/video/BV1Hx4y1g7sm/)
+
+<p><img src="{{site.url}}/images/i2d_smile.jpg" width="30%" align="middle" /></p>
+
+可以发现，初版模型的透视做得还是比较差的。模型很明显地像纸片人一样，而且在极限情况下很容易崩坏。并且耳朵和侧发并没有贴图，在高可动性要求下，很难达到说得过去的效果。之后我又花了一段时间进行修葺，才得到目前的大模型。当然，还是有很大的进步空间......因为决定模型效果的不是我的建模技术，而是我的美术水平。透视抓得还是不太准啊。
+
+## 整蛊之魂
+
+<p><img src="{{site.url}}/images/l2d_small_original.png" width="40%" align="middle" /></p>
+
+图为iris坐姿原画。
+
+做完了大模型之后，我开始做iris的小模型。其实做像奎恩小狗一样的小模型才是我的初衷。陆陆续续做了iris的坐姿、站姿、走姿、吉他演奏姿势，还有铱虫和铱大章鱼形态，并研制了相对应的按键动画。正好那段时间在回顾outer wilds的实况，于是做了这个视频：[天文机器人iris陪你烤棉花糖_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1V24y167sv/)
+
+<iframe src="//player.bilibili.com/player.html?aid=693589877&bvid=BV1V24y167sv&cid=986008981&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+
+还可以在这里获取所有模型的gb：[各种形态的天文机器人iris.gb_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1hs4y1s7CK/)
+
+在做小模型的时候，cubism经常出现无法保存和程序崩溃的情况：
+
+<p><img src="{{site.url}}/images/l2d_error_1.png" width="30%" align="middle" /></p>
+
+<p><img src="{{site.url}}/images/l2d_error_2.png" width="30%" align="middle" /></p>
+
+我怀疑cubism这软件的存储管理写得有很大的问题，已经严重影响使用体验。在频繁报错的时候，我不得不每一步操作都保存一次项目，即使如此也会发生因为爆栈无法保存的情况，非常烦人。
+
+## 赛博飞升
+
+相信网上冲浪比较多的朋友们肯定看过内置live2d模型的博客。在做完皮套之后，我也打算把iris弄到个人站里来，至少有个展示的页面。可惜在这方面现成的东西呈现一种两极分化：
+
+一种是直接什么都写好了，但是模型的接口需要基于`php`的api。可以直接引用一些网站上的模型api（这样的话网络不稳定且局限性太高）（怪不得很多博客的l2d模型都是一样的，原来只使用了个接口），也可以本地搭建环境。例如这一篇博客：[小白教程之给网页添加Live2D - 简书 (jianshu.com)](https://www.jianshu.com/p/1cedcf183633)。然而我的个人站是`jekyll`框架下的`gitpage`，部署这些东西可能有一些吃力。
+
+另外的流派是直接爆改live2d官方web sdk。例如这些博客：[【二】将自制live2d放入自制网页中-修改官方提供的SDK，使其符合我们的需求 - 哔哩哔哩 (bilibili.com)](https://www.bilibili.com/read/cv13728486?spm_id_from=333.337.0.0)、[笔记：live2d4.0 sdk 博客园网页动画_weixin_44128558的博客-CSDN博客_lappdefine](https://blog.csdn.net/weixin_44128558/article/details/104792345)。
+
+我这时候根本不会`JaveScrpt`和`css`，而且连`node.js`是什么都不知道，因此对于要不要走第二条道路产生了犹豫。但是万事总要开头，以后也肯定要学这些东西，不如放手一搏，不留遗憾。
+
+首先是`node.js`的配置。下载官方websdk和示例项目之后，我运行`npm install`下载需要的包。下载了之后显示有3个`severe vulnerability`，要我用`npm audit`进行修正。我也没多想，觉得和`linux`里包安装时修复依赖关系一样，就`audit`了，没想到这样的操作会变更项目的原始结构。因为这个，我差点因为运行不起来官方示例陷入自闭。
+
+按照博客所说的对代码进行修改之后，我发现模型无法正常显示。这时候我知道是我心急了，于是重开了一个项目一步一步来，最后发现博客中是项目引用的`js`脚本版本太老，与我的sdk版本不适配。更换文件之后，问题被修复。
+
+之后为了实现iris的在轨运行时间报时和一些互动操作，对`JavaScript`、 `css` 和`html`进行了学习，成果就是[铱之军火展示处 (meteorcollector.github.io)](https://meteorcollector.github.io/iris_model.html)这个网页啦。
+
+美中不足的是这个网页还留存有大量bug，我要求不高，能跑就行，毕竟为了实现已经学了太多东西了。在电脑端你会发现，视线的识别框在左但是模型在右，所以视线追踪会发生偏移。这时候把网页窗口变窄可以缓解这个问题。
+
+<p><img src="{{site.url}}/images/l2d_site.png" width="60%" align="middle" /></p>
+
+这样效果就差不多了！
+
+因为没有做动画，所以模型展示是在默认态，甚至不会眨眼睛。而且web端的渲染不太好，在变形程度比较大的嘴部，渲染出了很多边界线条......不知道iris吃了什么，忘了擦嘴了（笑）
+
+希望以后能有时间维护一下这个页面，让展示效果更好一些吧。
