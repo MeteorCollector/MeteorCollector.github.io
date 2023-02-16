@@ -11,12 +11,12 @@ MeteorCollector 的人生目标是尽量活得清楚一些，所以ta的眼睛�
 ### 橙锰酸钾工作室是什么？
 橙锰酸钾工作室 (OrzKMnO4 Studio) 是 MeteorCollector 在初中时期成立的某个工作室，曾经致力于~~造梦~~制作游戏，目前已经没有太多更新了。毕竟在`内容至上`的大背景下，产出优质产品并不是一件容易的事情。快振作起来啊！另外，提到橙锰酸钾工作室，MeteorCollector 更常用的名字是 `过路的末某人`。
 
-### 我的朋友们
+### 前有friends
 
-爱人草原：[LianPaoGrassland (lpgrassland.github.io)](https://lpgrassland.github.io/)
+橙锰酸钾工作室公号：[橙锰酸钾工作室的个人空间_哔哩哔哩_bilibili](https://space.bilibili.com/2146486290/)
 
-杨瑛：
+冷屁股草原：[LianPaoGrassland (lpgrassland.github.io)](https://lpgrassland.github.io/)
 
-下载链接实验：[CLRS](https://meteorcollector.github.io/download/(TC)CLRS_Introduction_to_Algorithms_(3rd_Edition,_2009).pdf)
+杨瑛：[https://eileenyung0424.github.io](https://eileenyung0424.github.io/)
 
 本个人站基于<a target="_blank" href='https://github.com/leopardpan/leopardpan.github.io/'>此处</a>的框架代码搭建。感谢原作者！
