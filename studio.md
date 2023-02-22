@@ -9,6 +9,12 @@ title: 橙锰酸钾工作室产品下载
 
 在 `bilibili` 上 **[关注我们](https://space.bilibili.com/2146486290)**！
 
+## 注意
+
+由于服务器配置和租用等问题，目前这里的下载链接暂时失效。我会在之后将资源文件移动到更方便、稳定的域名~
+
+如果有需要，可以联系我获得资源。
+
 ## 现在
 
 ## 2022-07-20 2.5D技术试验
@@ -20,7 +26,7 @@ title: 橙锰酸钾工作室产品下载
 	[鼠标左键]开火；
 	[空格]和[鼠标左键]是互动键。
 
-下载 **[Mysterious2.5DTest](http://152.136.148.143/resources/Mysterious_2.5D_Test_ver0.1.zip)**
+下载 **[Mysterious2.5DTest](https://meteorcollector.github.io/studio/)**
 
 ## 2022-01-26 海风谣：废土迷梦
 
@@ -33,7 +39,7 @@ title: 橙锰酸钾工作室产品下载
 	[空格]控制跳跃和二段跳；
 	[X]是互动键。
 
-下载 **[海风谣1.1.2](http://152.136.148.143/resources/海风谣ver1.1.2.zip)**
+下载 **[海风谣1.1.2](https://meteorcollector.github.io/studio/)**
 
 观看 **[橙锰酸钾社员锐评本社游戏](https://www.bilibili.com/video/BV19P4y1c7L5)**
 
@@ -54,9 +60,9 @@ title: 橙锰酸钾工作室产品下载
 
 关注 [白枭](https://space.bilibili.com/31991184/)！
 
-下载 **[海风谣1.0.4](http://152.136.148.143/resources/海风谣ver1.0.4.zip)**
+下载 **[海风谣1.0.4](https://meteorcollector.github.io/studio/)**
 	
-下载 **[海风谣1.0.4无动态模糊版本](http://152.136.148.143/resources/海风谣ver1.0.4(NoMotionBlur).zip)**
+下载 **[海风谣1.0.4无动态模糊版本](https://meteorcollector.github.io/studio/)**
 
 观看 **[海风谣官方实况](https://www.bilibili.com/video/BV1Uf4y1H7GK)**
 
@@ -68,7 +74,7 @@ title: 橙锰酸钾工作室产品下载
 	[空格]控制跳跃和二段跳；
 	[X]是互动键。
 
-不提供下载，但是你可以在**[这里](http://152.136.148.143/)**在线游玩。
+不提供下载，但是你可以在**[这里](https://meteorcollector.github.io/studio/)**在线游玩。
 
 观看 **[东局子会议历史影像](https://www.bilibili.com/video/BV1Zb4y1d7cM)**
 
@@ -80,7 +86,7 @@ title: 橙锰酸钾工作室产品下载
 
 观看 **[对操场夜话的解答：从卫星闪光到二维码校验](https://www.bilibili.com/video/BV1jf4y1H7qd)**
 
-下载 **[视频源文件](http://152.136.148.143/resources/操场夜话.mp4)**
+下载 **[视频源文件](https://meteorcollector.github.io/studio/)**
 
 ## 2020-02-05 二零二零之闲
 
@@ -92,11 +98,11 @@ title: 橙锰酸钾工作室产品下载
 	在横板地图下，如果没有摇杆，W键跳跃，AD键左右移动，S键攻击。
 	在横板地图下，如果有摇杆，是用摇杆控制移动和攻击。
 
-下载 **[2020之闲windows版](http://152.136.148.143/resources/2020之闲ver1.0.zip)**
+下载 **[2020之闲windows版](https://meteorcollector.github.io/studio/)**
 
-下载 **[2020之闲安卓完整版](http://152.136.148.143/resources/com.OraKMnO4Studio.BreakOf2020v1.2_android.apk)**
+下载 **[2020之闲安卓完整版](https://meteorcollector.github.io/studio/)**
 
-下载 **[2020之闲安卓可以流畅游玩的阉割版](http://152.136.148.143/resources/com.OraKMnO4Studio.StageOneOfBreakOf2020.apk)**
+下载 **[2020之闲安卓可以流畅游玩的阉割版](https://meteorcollector.github.io/studio/)**
 
 ## 2019-07 技术试验
 
@@ -107,7 +113,7 @@ title: 橙锰酸钾工作室产品下载
 	玩家一：W键跳跃，AD键左右移动，S键攻击。
 	玩家二：I键跳跃，JL键左右移动，K键攻击。
 
-下载 **[2019暑假周年祭](http://152.136.148.143/resources/2019暑假周年祭ver0.1.zip)**
+下载 **[2019暑假周年祭](https://meteorcollector.github.io/studio/)**
 
 ## 2019-01 杀死那只海豹人
 
@@ -117,7 +123,7 @@ title: 橙锰酸钾工作室产品下载
 	
 	W键跳跃，AD键左右移动，S键攻击。
 
-下载 **[杀死那只海豹人](http://152.136.148.143/resources/杀死那只海豹人0.2.exe)**
+下载 **[杀死那只海豹人](https://meteorcollector.github.io/studio/)**
 
 ## 2018-07 橙锰酸钾周年祭
 
@@ -133,9 +139,9 @@ title: 橙锰酸钾工作室产品下载
 	玩家一：W键跳跃，AD键左右移动，S键攻击。
 	玩家二：I键跳跃，JL键左右移动，K键攻击。
 
-下载 **[橙锰酸钾演播室](http://152.136.148.143/resources/橙锰酸钾演播室.exe)**
+下载 **[橙锰酸钾演播室](https://meteorcollector.github.io/studio/)**
 
-下载 **[归途迭代一](http://152.136.148.143/resources/迭代一.exe)**
+下载 **[归途迭代一](https://meteorcollector.github.io/studio/)**
 
 ## 2018-01 橙锰酸钾填埋场
 
@@ -145,7 +151,7 @@ title: 橙锰酸钾工作室产品下载
 	玩家一：W键跳跃，AD键左右移动，S键攻击。
 	玩家二：I键跳跃，JL键左右移动，K键攻击。
 
-下载 **[橙锰酸钾填埋场1.2.1](http://152.136.148.143/resources/橙锰酸钾填埋场1.2.1.exe)**
+下载 **[橙锰酸钾填埋场1.2.1](https://meteorcollector.github.io/studio/)**
 
 ## 2017-12-08 上弦行动
 
