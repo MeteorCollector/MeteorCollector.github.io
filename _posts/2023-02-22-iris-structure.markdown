@@ -27,7 +27,7 @@ iris的源代码结构如下：
 
 ```
 Iris-bot-early-ver
-├─ ApiParse.cs              // 与成熟api接口的互动（例如nasa提供的apod接）
+├─ ApiParse.cs              // 与成熟api接口的互动（例如nasa提供的apod接口）
 ├─ FriendMsgManager.cs      // 私聊功能
 ├─ HAParse.cs               // 各种网页爬虫
 ├─ IrisAstroCont.cs         // 天文竞赛功能
@@ -81,8 +81,8 @@ iris_build
 │    ├─ iris的各种图片
 │    └─ Description.txt           // iris对每张图片的描述
 ├─ Radar
-│    ├─ RadarDir.csv              // 方便中央气象台王雷达图爬虫工作的某些匹配信息
-│    └─ RadarTrans.csv            // 方便中央气象台王雷达图爬虫工作的某些匹配信息
+│    ├─ RadarDir.csv              // 方便中央气象台网雷达图爬虫工作的某些匹配信息
+│    └─ RadarTrans.csv            // 方便中央气象台网雷达图爬虫工作的某些匹配信息
 ├─ StarTrans.csv                  // 恒星中文名转支持查询的其他格式（比如星表号码）
 ├─ System.Reactive.dll
 ├─ System.Reactive.xml
