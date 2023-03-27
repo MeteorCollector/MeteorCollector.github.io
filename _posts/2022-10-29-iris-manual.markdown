@@ -10,7 +10,7 @@ categories: posts
 # iris指令集
 
 ## 铱之皮套
-或许你可以到[这里]({{site.url}}}/iris_model.html)看看铱之皮套。
+或许你可以到[这里](https://meteorcollector.github.io/2023/02/iris-l2d/)看看铱之皮套。
 
 ## 免责声明
 iris的群友们通过iris获得的所有内容均为**自动生成**，与iris的观点**完全无关**。请在知晓这一点的前提下与iris进行互动。
