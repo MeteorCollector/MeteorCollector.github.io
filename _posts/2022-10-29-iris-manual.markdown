@@ -201,6 +201,8 @@ iris长期征集天文题库。详见 [这篇文章]({{site.url}}}/2022/08/the-b
 
 `iris tex \begin{aligned}dQ=dU+pdV&\Rightarrow(C_m-C_{V,m})dT=pdV;\\pdV+Vdp=RdT&\Rightarrow(\dfrac {C_m-C_{V,m}}{R})(pdV+Vdp)=pdV;\\C_{p,m}=C_{V,m}+R&\Rightarrow(C_m-C_{p,m})\dfrac {dV}V+(C_m-C_{V,m})\dfrac {dp}p=0;\\pV^n=Const&\Rightarrow n=\dfrac{C_m-C_{p,m}}{C_m-C_{V,m}};\\C_{p,m}=\dfrac{\gamma}{\gamma-1}R,C_{V,m}=\dfrac{1}{\gamma-1}R&\Rightarrow C_m=\dfrac{n-\gamma}{(n-1)(\gamma-1)}R\\&\Rightarrow C_m=C_{V,m}\dfrac{\gamma-n}{1-n}.\end{aligned}` (credit: mike3090)
 
+` \color{red}\left.\begin{matrix} \wedge\;\underline{\;\;\;}\;\wedge\;\; \\ \begin{pmatrix}\sigma\;\omega\;\sigma\\\\\;\;\;\;\;\;\;\;\;\;\;\;\;\\ \cup \;\;\;\;\cup  \\ \end{pmatrix}\end{matrix}\right.\left.\left.\begin{matrix} \ddagger  \\\Psi \\\Upsilon \\\mathbb{I}\\\mathbb{I}\\\mathbb{I}\\\mathbb{I} \end{matrix}\right. \;\;\begin{matrix} \textbf{Please\;give\;me\;money}\\ \end{matrix}\right.` (神秘字符画)
+
 注意不要在发送的信息中换行。另外，关于LaTeX公式生成，推荐[这个网站](https://www.latexlive.com)。
 
 ## iris 填字
