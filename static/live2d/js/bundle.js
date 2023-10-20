@@ -9429,7 +9429,7 @@ exports.BackImageName = '';
 exports.GearImageName = 'icon_gear.png';
 exports.PowerImageName = 'CloseNormal.png';
 exports.ModelDir = [
-    'iris_2.1',
+    'iris_new',
     'iris_small',
     'iris_standing',
     'iris_sleep',
