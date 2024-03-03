@@ -37,13 +37,13 @@ Usage:
       
     {% endif %}
   
-    <li>
+    <!-- <li>
       <span>
         {{ post.date | date: "%Y-%m-%e" }}
       </span>
        &raquo; 
       <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
-    </li>
+    </li> -->
     <li>
       <h2 class="post-list__post-title post-title"><a href="{{ BASE_PATH }}{{ post.url }}" title="Read Article: {{ post.title }}">{{ post.title }}</a></h2>
       <p class="excerpt">{{ post.content | strip_html | strip_newlines | truncate: 250 }}&hellip;</p>
