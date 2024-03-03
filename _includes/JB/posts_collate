@@ -33,7 +33,7 @@ Usage:
         <h3>{{this_year}}</h3>
       </div>
       <div class="post_list">
-      <ul>
+      <ol>
       
     {% endif %}
   
@@ -66,18 +66,18 @@ Usage:
     </li>
  
     {% if forloop.last %}
-      </ul>
+      </ol>
       
     {% else %}
       {% if this_year != next_year %}
-        </ul>
+        </ol>
          </div>         
          
         <div class="hat_title">
          <h3> {{next_year}}</h3>
         </div>
         <div class="post_list">
-        <ul>
+        <ol>
       {% else %}    
       {% endif %}
     {% endif %}
