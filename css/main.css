@@ -823,9 +823,19 @@ img::-moz-selection {
     text-align: left; 
     display: inline-block;
   }
+
+  .post-list ul {
+    list-style-position: outside;
+  }
+
+  .post-list ol {
+    list-style-position: outside;
+  }
+
   .post-list li {
     margin: 0 0 2.2em 0;
     float: left;
+    padding: 5px;
     width: 100%;
     border-radius: 8px;
 
