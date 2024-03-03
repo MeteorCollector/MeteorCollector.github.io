@@ -62,8 +62,7 @@ Usage:
           <a class="btn-border-small" href={{ post.url }}>Full Text >> </a>
           </div>
       </div>
-      <div></div>
-      <!--<hr class="post-list__divider" />-->
+      <hr class="post-list__divider" />
     </li>
  
     {% if forloop.last %}
