@@ -16,7 +16,7 @@ group: navigation
 <div class="main-post-list hidden">
 
   <ol class="post-list">
-    {% for post in paginator.posts %}
+    {% for post in site.posts %}
     <li>
       <h2 class="post-list__post-title post-title"><a href="{{ post.url }}" title="Read Article: {{ post.title }}">{{ post.title }}</a></h2>
       <p class="excerpt">{{ post.content | strip_html | strip_newlines | truncate: 250 }}&hellip;</p>
