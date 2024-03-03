@@ -6,6 +6,8 @@ header {
     background-color: black;
     height: 64px;
     width: 100%;
+    position: fixed;
+    z-index: 1;
 }
 header ul {
     position: absolute;
@@ -28,7 +30,7 @@ header li {
 .front {
     background-color: black;
     color: white;
-    height: 95vh;
+    height: 100vh;
     background-image: url("images/background-cover.jpg");
     background-size: cover;
     background-position: center;
@@ -38,6 +40,7 @@ header li {
     justify-content: center;
 }
 .front h1 {
+    margin-top: 60px;
     font-size: 64px;
     font-family: "Lucida Console", "Consolas";
     text-align: center;
@@ -49,6 +52,7 @@ header li {
     color: white;
     margin: 16px;
     font-size: 18px;
+    line-height: 36px;
     font-family: "Lucida Console", "Consolas";
     text-align: center;
     opacity: 75%;
@@ -81,6 +85,7 @@ header li {
     text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
 }
 .list p {
+    margin-top: 12px;
     margin-left: 10vw;
     margin-right: 28vw;
     font-size: 18px;
@@ -121,6 +126,7 @@ header li {
     align-items: top;
     transition: all 0.5s;
     animation: fadeIn 1.5s;
+    background-color:rgba(255, 255, 255, 0.75)
 }
 .gallery .card:hover {
     transform: translate(0, -10px);
@@ -187,6 +193,29 @@ footer p {
     pointer-events: none;
     z-index: -1;
 }
+@keyframes circleAnimation {
+    0% {
+      transform: translateY(6000px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(-100%);
+      opacity: 0.75;
+    }
+}
+  
+.circle {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+    border-radius: 50%;
+    animation: circleAnimation 10s forwards;
+    pointer-events: none;
+}
+  
+.animate {
+    animation-play-state: running;
+}
+  
 
 
 @keyframes fadeIn {
