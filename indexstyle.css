@@ -1,0 +1,201 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+header {
+    background-color: black;
+    height: 64px;
+    width: 100%;
+}
+header ul {
+    position: absolute;
+    left: 5vw;
+    top: 0;
+    line-height: 64px;
+}
+header a {
+    color: white;
+    font-family: "Lucida Console", "Consolas";
+    text-decoration: none;
+}
+header a:hover {
+    text-decoration: underline;
+}
+header li {
+    display: inline;
+    margin-right: 4vw; 
+}
+.front {
+    background-color: black;
+    color: white;
+    height: 95vh;
+    background-image: url("images/background-cover.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.front h1 {
+    font-size: 64px;
+    font-family: "Lucida Console", "Consolas";
+    text-align: center;
+    color: white;
+    transition: all 0.5s;
+    animation: fadeIn 1.5s;
+}
+.front blockquote {
+    color: white;
+    margin: 16px;
+    font-size: 18px;
+    font-family: "Lucida Console", "Consolas";
+    text-align: center;
+    opacity: 75%;
+    transition: all 0.5s;
+    animation: fadeIn 1.5s;
+}
+.front h1:hover {
+    transform: translate(0, -10px);
+    text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
+}
+.front blockquote:hover {
+    transform: translate(0, -10px);
+    text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
+}
+.list {
+    margin: 100px, 100px;
+}
+.list h2 {
+    margin-top: 100px;
+    margin-left: 10vw;
+    color: black;
+    font-size: 36px;
+    font-family: "Lucida Console", "Consolas";
+    line-height: 64px;
+    transition: all 0.5s;
+    animation: fadeIn 1.5s;
+}
+.list h2:hover {
+    transform: translate(0, -10px);
+    text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
+}
+.list p {
+    margin-left: 10vw;
+    margin-right: 28vw;
+    font-size: 18px;
+    font-family: "Lucida Console", "Consolas";
+    line-height: 36px;
+    transition: all 0.5s;
+    animation: fadeIn 1.5s;
+}
+.list .txt {
+    color: black;
+    opacity: 60%;
+}
+.list .txt:hover {
+    transform: translate(0, -10px);
+    text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
+}
+.list .ref {
+    color: black;
+    opacity: 100%;
+}
+.list a {
+    color: black;
+    text-decoration: none;
+}
+.list a:hover {
+    text-decoration: underline;
+}
+/* .gallery {
+    padding: 100px 10vw 80px;
+} */
+.gallery .card {
+    margin-top: 5vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    border-radius: 10px;;
+    display: flex;
+    justify-content: left;
+    align-items: top;
+    transition: all 0.5s;
+    animation: fadeIn 1.5s;
+}
+.gallery .card:hover {
+    transform: translate(0, -10px);
+    /* background-color: cyan; */
+    box-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
+}
+.gallery h3 {
+    color: black;
+    font-size: 24px;
+    font-family: "Lucida Console", "Consolas";
+    line-height: 48px;
+}
+.gallery p {
+    color: black;
+    font-size: 16px;
+    font-family: "Lucida Console", "Consolas";
+    line-height: 28px;
+    opacity: 60%
+}
+.gallery a {
+    color: black;
+    text-decoration: none;
+}
+.gallery a:hover {
+    text-decoration: underline;
+    opacity: 100%;
+}
+.gallery .square-image {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 10px;;
+}
+.gallery .square-image img {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+}
+.gallery .info {
+    margin-left: 5vw;
+}
+footer {
+    margin-top: 120px;
+    background-color: black;
+    color: white;
+    height: 120px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    font-size: 16px;
+    line-height: 1.8em;
+}
+footer p {
+    margin-left: 10vw;
+    font-family: "Lucida Console", "Consolas";
+    text-decoration: none;
+}
+.circles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity:0%;
+        transform: translateY(32px);
+    }
+    100% {
+        opacity:100%;
+        transform: translateY(0%);
+    }
+}
