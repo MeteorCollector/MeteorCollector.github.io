@@ -52,9 +52,9 @@ Usage:
           <img src="/images/calendar.png" width="20px" /> 
           {{ post.date | date: "%F"}}</time> 
         <div class = "tag-img-icon">
-          <img src="/images/tag-icon.svg" width="20px" /> 
+          <a href="/tags">
+          <img src="/images/tag-icon.svg" width="20px" /></a>
         </div>
-        <a href="/tags">
           <div class = "post-list-icon-mate">
             <span class="post-list__meta--tags-right">{{ post.tags }}</span>
           </div>
@@ -62,6 +62,7 @@ Usage:
           <a class="btn-border-small" href={{ post.url }}>Full Text >> </a>
           </div>
       </div>
+      <div></div>
       <!--<hr class="post-list__divider" />-->
     </li>
  
