@@ -152,11 +152,11 @@ fib n 返回斐波那契数列第n项；如果后续加入参数all，将打印�
 
 播放锁屏动画。
 
-<p><img src="{{site.url}}/images/logo_white.jpg" width="60%" align="middle" /></p>
+<p><img src="{{site.url}}/images/logo_white.JPG" width="60%" align="middle" /></p>
 
 字符画组成的logo将在屏幕上斜向移动，遇边缘反弹。按下任意键结束动画，返回终端。如果打开rgb模式，效果如下：
 
-<p><img src="{{site.url}}/images/logo_rgb.jpg" width="60%" align="middle" /></p>
+<p><img src="{{site.url}}/images/logo_rgb.JPG" width="60%" align="middle" /></p>
 
 ### snake
 
@@ -166,10 +166,10 @@ fib n 返回斐波那契数列第n项；如果后续加入参数all，将打印�
 
 游戏开始前的选择提醒与退出后的信息。
 
-<p><img src="{{site.url}}/images/snake_white.jpg" width="60%" align="middle" /></p>
+<p><img src="{{site.url}}/images/snake_white.JPG" width="60%" align="middle" /></p>
 
 贪吃蛇游戏画面。
 
-<p><img src="{{site.url}}/images/snake_rgb.jpg" width="60%" align="middle" /></p>
+<p><img src="{{site.url}}/images/snake_rgb.JPG" width="60%" align="middle" /></p>
 
 贪吃蛇，但是rgb。
