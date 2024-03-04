@@ -57,3 +57,20 @@ R-CNN这个领域目前研究非常活跃，先后出现了R-CNN、SPP-net、Fas
 
 **R-CNN：**针对区域提取做CNN的object detction。
 
+<p><img src="{{site.url}}/images/R-CNN1.webp" width="75%" align="middle" /></p>
+
+**R-CNN基本步骤:**
+
+1. 输入测试图像；
+2. 利用selective search 算法在图像中从上到下提取2000个左右的Region Proposal；
+3. 将每个Region Proposal缩放(warp)成227*227的大小并输入到CNN，将CNN的fc7层的输出作为特征；
+4. 将每个Region Proposal提取的CNN特征输入到SVM进行分类；
+5. 对于SVM分好类的Region Proposal做边框回归，用Bounding box回归值校正原来的建议窗口，生成预测窗口坐标。
+
+**缺陷:**
+
+1. 训练分为多个阶段，步骤繁琐：微调网络+训练SVM+训练边框回归器；
+2. 训练耗时，占用磁盘空间大；5000张图像产生几百G的特征文件；
+3. 速度慢：使用GPU，VGG16模型处理一张图像需要47s；
+4. 测试速度慢：每个候选区域需要运行整个前向CNN计算；
+5. SVM和回归是事后操作，在SVM和回归过程中CNN特征没有被学习更新。
