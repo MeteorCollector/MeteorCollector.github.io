@@ -7,6 +7,8 @@ categories: posts
 
 # 传送门：iris的相关动画
 
+朋友鼓励我多写写关于iris的东西，完善世界观、故事和人物之类，给iris增添一些文学性。
+
 - [2024/02/01] 3D/故事线：[落日天涯](https://www.bilibili.com/video/BV1c6421V7av/)
 - [2023/08/30] 3D/铱岛游戏实况：[铱岛上线十天，随便逛逛](https://www.bilibili.com/video/BV1Bu4y1C7Lq/)
 - [2023/08/11] 3D/MMD/iris跳幻想嘉年华开场曲：[天文机器人iris跳月球名舞](https://www.bilibili.com/video/BV1Ru4y1X765/)
