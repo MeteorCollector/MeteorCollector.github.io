@@ -8,6 +8,8 @@ avatarTitle: 过路的末某人
 avatarDesc: Computer Science / 天文 / 游戏制作
 url: "https://meteorcollector.github.io/"
 
+markdown: kramdown
+
 # 博客是否自动生成目录，false为不生成
 enableToc: true
 
