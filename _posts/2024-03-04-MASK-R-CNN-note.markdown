@@ -14,6 +14,8 @@ tag: cv
 
 另外引一个我觉得不错的笔记：[人工智能基础](https://note.tonycrane.cc/cs/ai/basic/)
 
+很好的CV概括：[计算机视觉四大基本任务（分类、定位、检测、分割）](https://zhuanlan.zhihu.com/p/31727402)
+
 嗯，感觉还是要回复一些总结整理的习惯。
 
 从下面开始就是CV论文阅读笔记了。本文为第一篇。
@@ -170,14 +172,14 @@ Faster-RCNN创造性地采用卷积网络自行产生建议框，并且和目标
 
 <p><img src="{{site.url}}/images/R-CNN5.png" width="75%" align="middle" /></p>
 
-Mask RCNN分成三个部分，第一个是主干网络用来进行特征提取，第二个是头结构用来做边界框识别（分类和回归），第三个就是mask预测用来对每一个ROI进行区分。主干网络使用的是50层的深度残差网络ResNet50和Feature Pyramid Network(FPN) 。Mask-RCNN 大体框架还是Faster-RCNN的框架，可以说在基础特征网络之后又加入了全连接的分割子网，由原来的两个任务（分类+回归）变为了三个任务（分类+回归+分割）。Mask R-CNN是Faster
+Mask RCNN分成三个部分，第一个是**主干网络用来进行特征提取**，第二个是**头结构用来做边界框识别**（分类和回归），第三个就是**mask预测**用来对每一个ROI进行区分。主干网络使用的是50层的深度残差网络ResNet50和Feature Pyramid Network(FPN) 。Mask-RCNN 大体框架还是Faster-RCNN的框架，可以说在基础特征网络之后又加入了全连接的分割子网，由原来的两个任务（分类+回归）变为了三个任务（分类+回归+分割）。Mask R-CNN是Faster
 R-CNN 上的扩展——在其已有的用于边界框识别分支上添加了一个并行的用于预测目标掩码的分支。Mask R-CNN的训练很简单，只是在R-CNN的基础增加了少量的计算量，大约为5fps
 
 其中黑色部分为原来的 Faster-RCNN，红色部分为在 Faster网络上的修改：
 
 <p><img src="{{site.url}}/images/R-CNN6.png" width="75%" align="middle" /></p>
 
-1. 将Roi Pooling 层替换成了 RoiAlign；
+1. 将Roi Pooling 层替换成了 Roi Align；
 2. 添加并列的 FCN层（mask 层）；
 
 先来概述一下Mask-RCNN 的几个特点（来自于 Paper 的 Abstract）：
