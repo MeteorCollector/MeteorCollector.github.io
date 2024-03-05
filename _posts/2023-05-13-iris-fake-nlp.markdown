@@ -3,6 +3,7 @@ layout: post
 title:  "iris的nlp之路：章鱼触手与斩龙大剑"
 date:   2023-05-13 00:00:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/iris_blue_1.png" width="80%" align="middle" /></p>

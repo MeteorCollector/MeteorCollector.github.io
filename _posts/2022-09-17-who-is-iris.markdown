@@ -3,6 +3,7 @@ layout: post
 title:  "iris，你到底是谁？——可能是更新简报"
 date:   2022-09-17 22:11:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/iris_banner.jpg" width="80%" align="middle" /></p>

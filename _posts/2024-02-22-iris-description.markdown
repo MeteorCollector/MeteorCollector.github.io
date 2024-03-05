@@ -3,6 +3,7 @@ layout: post
 title:  "介绍页：iris"
 date:   2024-02-22 20:00:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/iris_2023.jpg" width="80%" align="middle" /></p>

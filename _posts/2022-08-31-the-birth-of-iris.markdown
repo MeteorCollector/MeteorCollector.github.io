@@ -3,6 +3,7 @@ layout: post
 title:  "关于iris出生的二三事"
 date:   2022-08-31 13:35:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/img_classic.jpg" width="80%" align="middle" /></p>

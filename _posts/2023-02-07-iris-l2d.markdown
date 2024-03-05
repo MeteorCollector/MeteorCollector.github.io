@@ -3,6 +3,7 @@ layout: post
 title:  "铱之皮套大冒险"
 date:   2023-02-07 11:26:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/l2d_family.png" width="80%" align="middle" /></p>

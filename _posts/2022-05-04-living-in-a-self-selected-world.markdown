@@ -3,6 +3,7 @@ layout: post
 title:  "活在自我选择的世界里"
 date:   2022-05-04 10:00:00 +0800
 categories: posts
+tag: talk
 ---
 
 ### 活在自我选择的世界里

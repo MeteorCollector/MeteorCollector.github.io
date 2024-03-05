@@ -3,6 +3,7 @@ layout: post
 title:  "一个reader-friendly的iris手册"
 date:   2022-10-29 00:12:00 +0800
 categories: posts
+tag: iris
 ---
 
 <p><img src="{{site.url}}/images/iris_star.jpg" width="80%" align="middle" /></p>
