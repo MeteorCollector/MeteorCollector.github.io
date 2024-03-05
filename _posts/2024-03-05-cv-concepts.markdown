@@ -65,46 +65,49 @@ $$=\frac{\partial E}{\partial x_L}\left(1+\sum^{L-1}_{i=l}\frac{\partial}{\parti
 
 需要注意，上述两个假设是必不可少的，否则如上关系不再成立。论文中提到，经实践证明，令 $w_s = I$ 是最优的选择。
 
-#### 实现摘录
+## Covolutional Neural Network (CNN)
 
-```python
-import torch.nn as nn
-import torch
-from torch.nn.init import kaiming_normal, constant
+[reference1](https://zhuanlan.zhihu.com/p/156926543)
 
-class BasicConvResBlock(nn.Module):
+[reference2](https://zhuanlan.zhihu.com/p/259751387)
 
-    def __init__(self, input_dim=128, n_filters=256, kernel_size=3, padding=1, stride=1, shortcut=False, downsample=None):
-        super(BasicConvResBlock, self).__init__()
+万物起源。
 
-        self.downsample = downsample
-        self.shortcut = shortcut
+引用一个比较直观的视频：
 
-        self.conv1 = nn.Conv1d(input_dim, n_filters, kernel_size=kernel_size, padding=padding, stride=stride)
-        self.bn1 = nn.BatchNorm1d(n_filters)
-        self.relu = nn.ReLU()
-        self.conv2 = nn.Conv1d(n_filters, n_filters, kernel_size=kernel_size, padding=padding, stride=stride)
-        self.bn2 = nn.BatchNorm1d(n_filters)
+<iframe src="//player.bilibili.com/player.html?aid=980345114&bvid=BV1x44y1P7s2&cid=565260239&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
 
-    def forward(self, x):
-        residual = x
+一个卷积神经网络主要由以下5层组成：
 
-        out = self.conv1(x)
-        out = self.bn1(out)
-        out = self.relu(out)
+- 数据输入层/ Input layer
+- 卷积计算层/ CONV layer
+- ReLU激励层 / ReLU layer
+- 池化层 / Pooling layer
+- 全连接层 / FC layer
 
-        out = self.conv2(out)
-        out = self.bn2(out)
+#### 数据输入层
 
-        if self.shortcut:
-            out += residual
+该层要做的处理主要是对原始图像数据进行预处理，其中包括：
 
-        out = self.relu(out)
+- **去均值**：把输入数据各个维度都中心化为0；
+- **归一化**：幅度归一化到同样的范围；
+- **PCA/白化**：用PCA降维；白化是对数据各个特征轴上的幅度归一化
 
-        return out
-```
+#### 卷积计算层
 
+**描述卷积的四个量** 一个卷积层的配置由如下四个量确定**。**
 
+1. **滤波器个数**。使用一个滤波器对输入进行卷积会得到一个二维的特征图(feature map)。我们可以用时使用多个滤波器对输入进行卷积，以得到多个特征图。
+2. **感受野(receptive field)** *F*，即滤波器空间局部连接大小（卷积核尺寸）。
+3. **零填补(zero-padding)** *P***。**随着卷积的进行，图像大小将缩小，图像边缘的信息将逐渐丢失。因此，在卷积前，我们在图像上下左右填补一些0，使得我们可以控制输出特征图的大小。
+4. **步长(stride)** *S***。**滤波器在输入每移动*S*个位置计算一个输出神经元。
+
+**应该使用多大的滤波器** 尽量使用小的滤波器，如3×3卷积。通过堆叠多层3×3卷积，可以取得与大滤波器相同的感受野，例如三层3×3卷积等效于一层7×7卷积的感受野。但使用小滤波器有以下两点好处。
+
+1. **更少的参数量**。假设通道数为*D*，三层3×3卷积的参数量为3×(*D*×*D*×3×3)=27*D*^2, 而一层7×7卷积的参数量为*D*×*D*×7×7=49*D*^2。
+2. **更多非线性。**由于每层卷积层后都有非线性激活函数，三层3×3卷积一共经过三次非线性激活函数，而一层7×7卷积只经过一次。
+
+**1**×**1卷积** 旨在对每个空间位置的*D*维向量做一个相同的线性变换。通常用于增加非线性，或降维，这相当于在通道数方向上进行了压缩。1×1卷积是减少网络计算量和参数的重要方式。
 
 ## ROI: ROI pooling, ROI align, ROI wrap
 

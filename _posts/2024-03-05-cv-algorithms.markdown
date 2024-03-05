@@ -77,7 +77,7 @@ $$s(r_i,r_j)=\alpha_1 s_{colour}(r_i,r_j) + \alpha_2 s_{texture}(r_i,r_j) + \alp
 
 **颜色相似度**
 
-将区域的颜色空间转换为直方图，三个颜色通道的bins取25。于是我们可以得到某个区域 $r_i$ 的颜色直方图向量：$C_i=\{c^1_i,...,c^n_i\}$，其中 $n=75$（计算方式：$bins\times n\_channels=25\times3bins×n_channels=25×3$），并且$C_i$是用区域的 $L_1$ 范数归一化后的向量。关于 $r_t = r_i \cup r_j$ 的 $C_t$，计算方式是这样的：
+将区域的颜色空间转换为直方图，三个颜色通道的bins取25。于是我们可以得到某个区域 $r_i$ 的颜色直方图向量：$C_i=\{c^1_i,...,c^n_i\}$，其中 $n=75$（计算方式：$bins\times n_{channels}=25\times3$），并且$C_i$是用区域的 $L_1$ 范数归一化后的向量。关于 $r_t = r_i \cup r_j$ 的 $C_t$，计算方式是这样的：
 
 $$C_t=\frac{size(r_i)\times C_i + size(r_j)\times C_j}{size(r_i)+size(r_j)}$$
 
@@ -89,7 +89,7 @@ $$s_{colour}(r_i,r_j)=\sum^{n}_{k=1}\textbf{min}(c^k_i,c^k_j)$$
 
 **纹理相似度**
 
-对每一个颜色通道，在8个方向上提取高斯导数 $\sigma=1$。在每个颜色通道的每个方向上，提取一个bins为10的直方图，从而得到每个区域 $r_i$ 的纹理直方图向量 $T_i=\{t^1_i,...,t^n_i\}$，其中 $n=240$（计算方式：$n\_orientations\times bins\times n\_channels=8\times10\times3$），$T_i$ 也是用区域的 $L_1$ 范数归一化后的向量。
+对每一个颜色通道，在8个方向上提取高斯导数 $\sigma=1$。在每个颜色通道的每个方向上，提取一个bins为10的直方图，从而得到每个区域 $r_i$ 的纹理直方图向量 $T_i=\{t^1_i,...,t^n_i\}$，其中 $n=240$（计算方式：$n_{orientations}\times bins\times n_{channels}=8\times10\times3$），$T_i$ 也是用区域的 $L_1$ 范数归一化后的向量。
 纹理相似度的计算公式：
 
 $$s_{texture}(r_i,r_j)=\sum^{n}_{k=1}\mathbf{min}(t^k_i,t^k_j)$$
