@@ -28,6 +28,8 @@ Kaiming He, Georgia Gkioxari, Piotr Doll ́ar, Ross Girshick, Facebook AI Resear
 
 [ReadPaper链接](https://readpaper.com/pdf-annotate/note?pdfId=4557556612374470657)
 
+[论文本身链接](https://export.arxiv.org/pdf/1703.06870.pdf)
+
 R-CNN已经是成熟的技术了，这方面还是有比较好的笔记，我暂不动笔
 
 [知乎：深度学习之目标检测的前世今生](https://zhuanlan.zhihu.com/p/32830206)
