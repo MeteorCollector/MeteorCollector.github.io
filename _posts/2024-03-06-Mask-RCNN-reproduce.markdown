@@ -47,6 +47,8 @@ IPython[all]
 
 [pytorch 官方教程](https://pytorch.org/tutorials/intermediate/torchvision_tutorial.html)给了一个使用Faster/Mask R-CNN实现行人检测的例子。
 
+另有 [torchvision.models](https://pytorch.org/vision/0.11/models.html)
+
 由于原教程已经十分详尽，我在这里仅进行转载和注解。
 
 ### Defining the Dataset
@@ -394,3 +396,210 @@ def get_transform(train):
     transforms.append(T.ToPureTensor())
     return T.Compose(transforms)
 ```
+
+### Evaluate Default Model (Test forward())
+
+这里主要是用输出验证一下默认网络是怎么训练和推理的。这里的网络是已经预训练完成的了。在此之前先转载一下Dataloader的完整写法和参数：
+
+示例：
+```python
+data.DataLoader(
+dataset,
+batch_size=1,
+shuffle=False,
+sample=None,
+batch_sample=None,
+num_workers=0,
+collate_fn=<function default_collate at 0x7f108ee01620>,
+pin_memory=False,
+drop_last=False,
+timeout=0,
+worker_init_fn=None
+)
+```
+
+参数介绍：
+```text
+dataset：加载的数据集
+batch_size：批大小
+shuffle：是否将数据打乱
+sample：样本抽样
+batch_sample：
+num_workers：使用多进程加载的进程数，0代表不使用多进程
+collate_fn：如何将多个样本数据拼接成一个batch，一般使用默认的拼接方法即可
+pin_memory：是否将数据保存在pin memory区，pin memory中的数据转到GPU会快一些
+drop_last：dataset中的数据个数可能不是batch_size的整数倍，drop_last为True会将多出来不足一个的batch的数据丢弃
+timeout：
+worker_init_fn：
+```
+
+回到pytorch教程这边来。
+
+Before iterating over the dataset, it’s good to see what the model expects during training and inference time on sample data.
+
+其实这段代码只是让你看看输出长什么样，实际上去看模型本身的文档也可以，不过这样更直观、信息更详细。
+
+```python
+import torch
+import torchvision
+from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
+import utils
+import mydataset
+from mydataset import PennFudanDataset, get_transform
+
+model = torchvision.models.detection.fasterrcnn_resnet50_fpn(weights="DEFAULT")
+dataset = PennFudanDataset('data/PennFudanPed', get_transform(train=True))
+data_loader = torch.utils.data.DataLoader(
+    dataset,
+    batch_size=2,
+    shuffle=True,
+    num_workers=4,
+    collate_fn=utils.collate_fn
+)
+
+# For Training
+# Dataloader返回的是我们定义dataset时定义的__get_item__函数返回类型的列表
+images, targets = next(iter(data_loader))
+images = list(image for image in images)
+targets = [{k: v for k, v in t.items()} for t in targets]
+output = model(images, targets)  # Returns losses and detections
+print(output)
+
+# For inference
+model.eval()
+# 生成随机图片，两张，用来推理
+x = [torch.rand(3, 300, 400), torch.rand(3, 500, 400)]
+predictions = model(x)  # Returns predictions
+print(predictions[0])
+print(predictions[1])
+```
+
+### 训练代码
+
+这里是核心的训练部分。
+
+```python
+from engine import train_one_epoch, evaluate
+
+# train on the GPU or on the CPU, if a GPU is not available
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+
+# our dataset has two classes only - background and person
+num_classes = 2
+# use our dataset and defined transformations
+dataset = PennFudanDataset('data/PennFudanPed', get_transform(train=True))
+dataset_test = PennFudanDataset('data/PennFudanPed', get_transform(train=False))
+
+# split the dataset in train and test set
+# 用randperm打乱编号，划分训练集和测试集
+indices = torch.randperm(len(dataset)).tolist()
+dataset = torch.utils.data.Subset(dataset, indices[:-50])
+dataset_test = torch.utils.data.Subset(dataset_test, indices[-50:])
+
+# define training and validation data loaders
+data_loader = torch.utils.data.DataLoader(
+    dataset,
+    batch_size=2,
+    shuffle=True,
+    num_workers=4,
+    collate_fn=utils.collate_fn
+)
+
+data_loader_test = torch.utils.data.DataLoader(
+    dataset_test,
+    batch_size=1,
+    shuffle=False,
+    num_workers=4,
+    collate_fn=utils.collate_fn
+)
+
+# get the model using our helper function
+model = finetune.get_model_instance_segmentation(num_classes)
+
+# move model to the right device
+model.to(device)
+
+# construct an optimizer
+# stochastic gradient descent
+params = [p for p in model.parameters() if p.requires_grad]
+optimizer = torch.optim.SGD(
+    params,
+    lr=0.005,
+    momentum=0.9,
+    weight_decay=0.0005
+)
+
+# and a learning rate scheduler
+# 这里定义的是学习率的更新，可以看这里https://zhuanlan.zhihu.com/p/344294796
+# StepLR是等比数列式的更新方式。同样还有线性的LambdaLR等等...
+lr_scheduler = torch.optim.lr_scheduler.StepLR(
+    optimizer,
+    step_size=3, # 3个epoch更新一次
+    gamma=0.1
+)
+
+# let's train it just for 2 epochs
+num_epochs = 2
+
+for epoch in range(num_epochs):
+    # train for one epoch, printing every 10 iterations
+    train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=10)
+    # update the learning rate
+    lr_scheduler.step()
+    # evaluate on the test dataset
+    evaluate(model, data_loader_test, device=device)
+
+# 这里保存模型参数
+torch.save(model.state_dict(), 'mymask.pth')
+print("That's it!")
+```
+
+### 推理代码
+
+这里的代码将存储的模型参数代入模型推理并进行可视化。
+
+```python
+import matplotlib.pyplot as plt
+from torchvision.utils import draw_bounding_boxes, draw_segmentation_masks
+
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+num_classes = 2
+# get the model using our helper function
+model = finetune.get_model_instance_segmentation(num_classes)
+model.load_state_dict(torch.load('mymask.pth'))
+# 如果出现RuntimeError: input type (torch.cuda.FloatTensor) and weight type (torch.FloatTensor) should be the same
+# 则注释掉下一行。
+model.cuda()
+
+# image = read_image("data/PennFudanPed/PNGImages/FudanPed00016.png")
+image = read_image("data/MyPic/1.jpg")
+eval_transform = get_transform(train=False)
+
+model.eval()
+with torch.no_grad():
+    x = eval_transform(image)
+    # convert RGBA -> RGB and move to device
+    x = x[:3, ...].to(device)
+    predictions = model([x, ])
+    pred = predictions[0]
+
+
+image = (255.0 * (image - image.min()) / (image.max() - image.min())).to(torch.uint8)
+image = image[:3, ...]
+pred_labels = [f"pedestrian: {score:.3f}" for label, score in zip(pred["labels"], pred["scores"])]
+pred_boxes = pred["boxes"].long()
+output_image = draw_bounding_boxes(image, pred_boxes, pred_labels, colors="red")
+
+masks = (pred["masks"] > 0.7).squeeze(1)
+output_image = draw_segmentation_masks(output_image, masks, alpha=0.5, colors="blue")
+
+
+plt.figure(figsize=(12, 12))
+plt.imshow(output_image.permute(1, 2, 0))
+plt.show()
+```
+
+<p><img src="{{site.url}}/images/maskres.png" width="60%" align="middle" /></p>
+
+这样就大功告成了。代码仓库在[这里](https://github.com/MeteorCollector/My-Mask-R-CNN)。
