@@ -22,27 +22,128 @@
     z-index: -1;
     background: black;
 }
+.radio {
+    /* height: 20px; */
+    border-radius: 10px;
+    border: solid;
+    border-color: white;
+    border-width: 4px;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-bottom: 1.6em;
+}
 .radiocard {
     margin-top: 5vw;
     margin-left: 10vw;
     margin-right: 10vw;
     border-radius: 10px;;
+    
     display: flex;
-    justify-content: left;
+    justify-content: center;
     align-items: top;
     transition: all 0.5s;
-    animation: fadeIn 1.5s;
+    /* animation: fadeIn 1.5s; */
+    z-index: 2;
 }
 .title h1 {
     margin-top: 60px;
-    font-size: 64px;
+    font-size: 36px;
+    line-height: 72px;
     font-family: "Lucida Console", "Consolas";
     text-align: center;
     color: white;
     transition: all 0.5s;
-    animation: fadeIn 1.5s;
+    /* animation: fadeIn 1.5s; */
 }
+h2 {
+    margin-top: 4px;
+    font-size: 20px;
+    line-height: 36px;
+    color: white;
+    font-family: "Lucida Console", "Consolas";
+    transition: all 0.5s;
+}
+.cardtitle
+{
+    background-color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-items: center;
+}
+.cardtitle h2 {
+    margin-left: 1.6em;
+    text-align: left;
+}
+.chat-container {
+    
+    margin-left: 10vw;
+    margin-right: 10vw;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: top;
+}
+.left-column {
+    margin-right: 0.8em;
+    flex: 1 1 150px;
+    height: 75vh;
+    /* background-color: blue; */
+    display: flex;
+    flex-flow: column;
+}
+.right-column {
+    margin-left: 0.8em;
+    flex: 1 1 150px;
+    height: 75vh;
+    /* background-color: blue; */
+    display: flex;
+    flex-flow: column;
+    /* padding: 1.6em 0; */
+}
+.card {
+    border-radius: 10px;
+    border: solid;
+    border-color: white;
+    border-width: 4px;
+    flex: 1;
+    margin-bottom: 1.6em;
+}
+.input-left {
+    margin-right: 1.6em;
+    flex: 1 1 150px;
+    height: 20vh;
+    /* background-color: blue; */
 
+    border-radius: 10px;
+    border: solid;
+    border-color: white;
+    border-width: 4px;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 1.6em
+}
+input {
+    font-size: 18px;
+    font-family: "Lucida Console", "Consolas";
+    margin-bottom: 0.8em;
+}
+.nametag {
+    height: 36px;
+}
+.mgsbox {
+    height: 36px;
+}
+button {
+    font-size: 18px;
+    font-family: "Lucida Console", "Consolas";
+    width: 96px;
+    height: 36px;
+}
 .front {
     background-color: black;
     color: white;
