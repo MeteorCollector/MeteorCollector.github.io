@@ -1,6 +1,7 @@
 * {
     padding: 0;
     margin: 0;
+    font-family: Lucida Console, Consolas, Menlo, Monaco, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
 }
 *:hover {
     color: lime;
@@ -15,6 +16,30 @@
     z-index: -2;
     background: black;
 }
+
+.head-notice {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    padding: 10px;
+    z-index: 9999;
+    overflow: hidden; /* 隐藏溢出 */
+    white-space: nowrap; /* 确保文本不换行 */
+}
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+.notice-text {
+    animation: marquee 20s linear infinite; /* 设置动画 */
+}
+
 .container {
     position: fixed;
     top: 0;
@@ -61,7 +86,7 @@
     margin-top: 60px;
     font-size: 36px;
     line-height: 72px;
-    font-family: "Lucida Console", "Consolas";
+    
     text-align: center;
     color: white;
     transition: all 0.5s;
@@ -75,7 +100,7 @@ h2 {
     font-size: 20px;
     line-height: 36px;
     color: white;
-    font-family: "Lucida Console", "Consolas";
+    
     transition: all 0.5s;
 }
 h2:hover {
@@ -208,6 +233,9 @@ input {
     border-radius: 10px;
     padding: 1.6em;
     background-color: black;
+}
+.bottom-chat-container:hover {
+    border-color: lime;
 }
 .msgbox {
     width: 36vw;

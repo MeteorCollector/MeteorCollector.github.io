@@ -16,6 +16,26 @@
         <h1>iris terminal</h1>
     </section>
 
+    <div class="head-notice">
+        <div class="notice-text">
+            <h2>Now Broadcasting: <span id="albumname"></span></h2>
+            <script>
+                setInterval(updateAlbumName, 1000);
+
+                function updateAlbumName() {
+                    fetch('http://120.46.209.170/album_name')
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('albumname').textContent = data;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+            </script>
+        </div>
+    </div>
+
     <section class="radio">
     <div class="cardtitle">
         <h2>Radio</h2>
