@@ -106,6 +106,15 @@ h2 {
 h2:hover {
     color: lime;
 }
+p {
+    color: white;
+    font-size: 18px;
+    
+}
+p:hover {
+    color: lime;
+}
+
 .cardtitle
 {
     background-color: rgba(255, 255, 255, 0.3);
@@ -120,12 +129,39 @@ h2:hover {
 .chat-container {
     margin-left: 10vw;
     margin-right: 10vw;
+    
     display: flex;
     flex-flow: row;
     flex-wrap: wrap;
     justify-content: center;
     align-items: top;
+    
 }
+.chat-container pre {
+    width: 30vw;
+}
+.chat-content {
+    overflow-y: scroll;
+    scrollbar-color: white transparent;
+    /* scrollbar-width: thin; */
+    margin: 1.6em;
+    height: 60vh;
+    position: relative;
+}
+.chat-content:hover {
+    scrollbar-color: lime transparent;
+}
+.chat-container .chat-text {
+    /* background-color: blue; */
+    color: white;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    
+    line-height: 24px;
+    
+}
+
 .left-column {
     margin-right: 0.8em;
     flex: 1 1 150px;
@@ -143,6 +179,7 @@ h2:hover {
     flex-flow: column;
     /* padding: 1.6em 0; */
 }
+
 .card {
     border-radius: 10px;
     border: solid;
@@ -160,11 +197,25 @@ h2:hover {
 .card:hover .cardtitle {
     background-color: rgba(0, 255, 0, 0.2);
 }
-
+.cardimg {
+    position: relative;
+    overflow: hidden;
+    width: 30vw;
+    height: 25vh;
+    display: flex;
+    transform: translateX(-50%);
+    left: 50%
+}
+.cardimg image {
+    position: relative;
+    object-fit: contain;
+    transform: translateX(-50%);
+    left: 50%
+}
 .left-column-2 {
     margin-right: 0.8em;
     flex: 1 1 150px;
-    height: 30vh;
+    height: 35vh;
     /* background-color: blue; */
     display: flex;
     flex-flow: column;
@@ -172,7 +223,7 @@ h2:hover {
 .right-column-2 {
     margin-left: 0.8em;
     flex: 1 1 150px;
-    height: 30vh;
+    height: 35vh;
     /* background-color: blue; */
     display: flex;
     flex-flow: column;

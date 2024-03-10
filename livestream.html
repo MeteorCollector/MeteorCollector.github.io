@@ -67,7 +67,39 @@
                     <div class="cardtitle">
                         <h2>Public Channel 0</h2>
                     </div>
-                    <div class="chat-content"></div>
+                    <div class="chat-content">
+                        <p><pre><div class="chat-text" id="chatchat"></div></pre></p>
+                        <script>
+                            let lastModifiedTime = 0;
+                            setInterval(checkForUpdate, 100);
+
+                            function checkForUpdate() {
+                                fetch('./experimental/chatlog', { method: 'HEAD' })
+                                    .then(response => {
+                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
+
+                                        if (currentModifiedTime !== lastModifiedTime) {
+                                            lastModifiedTime = currentModifiedTime;
+                                            updateAlbumName();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            function updateAlbumName() {
+                                fetch('./experimental/chatlog', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        document.getElementById('chatchat').textContent = data;
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+                        </script>
+                    </div>
                 </div>
             </div>
             
@@ -76,14 +108,78 @@
                     <div class="cardtitle">
                         <h2>Image: Last Sent</h2>
                     </div>
-                    <img src="" id="img1">
+                    <div class="cardimg">
+                        <img id="Image1" src="" alt="Image">
+
+                        <script>
+                            function checkForUpdate() {
+                                fetch('./experimental/img1', { method: 'HEAD' })
+                                    .then(response => {
+                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
+
+                                        if (currentModifiedTime !== lastModifiedTime) {
+                                            lastModifiedTime = currentModifiedTime;
+                                            updateImageURL();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            function updateImageURL() {
+                                fetch('./experimental/img1')
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        document.getElementById('Image1').src = data;
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            setInterval(updateImageURL, 100);
+                        </script>
+                    </div>
                 </div>
 
                 <div class="card right">
                     <div class="cardtitle">
                         <h2>Image: Second Last</h2>
                     </div>
-                    <img src="" id="img2">
+                    <div class="cardimg">
+                        <img id="Image2" src="" alt="Image">
+
+                        <script>
+                            function checkForUpdate() {
+                                fetch('./experimental/img2', { method: 'HEAD' })
+                                    .then(response => {
+                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
+
+                                        if (currentModifiedTime !== lastModifiedTime) {
+                                            lastModifiedTime = currentModifiedTime;
+                                            updateImageURL();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            function updateImageURL() {
+                                fetch('./experimental/img2')
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        document.getElementById('Image2').src = data;
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            setInterval(updateImageURL, 100);
+                        </script>
+                    </div>
                 </div>
 
                 
@@ -96,7 +192,9 @@
                 <div class="cardtitle">
                     <h2>Camera: Permission Denied</h2>
                 </div>
-                <img src="" id="img1">
+                <div class="cardimg">
+                    <!-- <img id="Image" src="" alt="Image"> -->
+                </div>
             </div>
         </div>
 
@@ -105,7 +203,39 @@
                 <div class="cardtitle">
                     <h2>Image: Third Last</h2>
                 </div>
-                <img src="" id="img1">
+                <div class="cardimg">
+                    <img id="Image3" src="" alt="Image">
+
+                    <script>
+                        function checkForUpdate() {
+                                fetch('./experimental/img3', { method: 'HEAD' })
+                                    .then(response => {
+                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
+
+                                        if (currentModifiedTime !== lastModifiedTime) {
+                                            lastModifiedTime = currentModifiedTime;
+                                            updateImageURL();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            function updateImageURL() {
+                                fetch('./experimental/img3')
+                                    .then(response => response.text())
+                                    .then(data => {
+                                        document.getElementById('Image3').src = data;
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+
+                            setInterval(updateImageURL, 100);
+                    </script>
+                </div>
             </div>
         </div>
     </section>
