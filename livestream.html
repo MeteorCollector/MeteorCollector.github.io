@@ -7,6 +7,7 @@
     <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet">
     <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js" type="text/javascript"></script>
+    
     <link rel="stylesheet" href="livestyle.css">
 </head>
 <body>
@@ -70,22 +71,34 @@
     </section>
     
     <section class="chat-container">
-        <div class="input-left">
-            
-            <input class="msgbox" type="text" id="messageInput" placeholder="Type a message...">
-            
-            <div class="lowbar">
-                
-                <button onclick="sendMessage()">Send</button>
+        <div class="left-column-2">
+            <div class="card">
+                <div class="cardtitle">
+                    <h2>Camera: Permission Denied</h2>
+                </div>
+                <img src="" id="img1">
             </div>
-            
         </div>
-        <div class="card right">
-            <div class="cardtitle">
-                <h2>Image: Third Last</h2>
+
+        <div class="right-column-2">
+            <div class="card">
+                <div class="cardtitle">
+                    <h2>Image: Third Last</h2>
+                </div>
+                <img src="" id="img1">
             </div>
-            <img src="" id="img1">
         </div>
     </section>
+
+    <section class="bottom-chat">
+        <div class="bottom-chat-container">
+            <div class="message-box">
+              <textarea class="msgbox" placeholder="Type your message..."></textarea>
+              <button class="send-button">Send</button>
+            </div>
+        </div>
+        
+    </section>
+    
     
 </body>

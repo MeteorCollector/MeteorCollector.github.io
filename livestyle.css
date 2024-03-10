@@ -93,7 +93,6 @@ h2:hover {
     text-align: left;
 }
 .chat-container {
-    
     margin-left: 10vw;
     margin-right: 10vw;
     display: flex;
@@ -136,6 +135,25 @@ h2:hover {
 .card:hover .cardtitle {
     background-color: rgba(0, 255, 0, 0.2);
 }
+
+.left-column-2 {
+    margin-right: 0.8em;
+    flex: 1 1 150px;
+    height: 30vh;
+    /* background-color: blue; */
+    display: flex;
+    flex-flow: column;
+}
+.right-column-2 {
+    margin-left: 0.8em;
+    flex: 1 1 150px;
+    height: 30vh;
+    /* background-color: blue; */
+    display: flex;
+    flex-flow: column;
+    /* padding: 1.6em 0; */
+}
+
 .input-left {
     margin-right: 1.6em;
     flex: 1 1 150px;
@@ -172,27 +190,59 @@ input {
     border-radius: 10px;
     padding: 10px;
 }
-.msgbox {
-    height: 8vh;
-    width: 40vw;
-    background-color: transparent;
+
+.bottom-chat {
+    position: fixed;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.bottom-chat-container {
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    align-items: bottom;
+    justify-content: space-between;
     color: white;
     border: 2px solid;
     border-radius: 10px;
+    padding: 1.6em;
+    background-color: black;
+}
+.msgbox {
+    width: 36vw;
+    font-size: 18px;
+    font-family: "Lucida Console", "Consolas";
+
+    flex: 1 1 auto;
+    background-color: black;
+    color: white;
+    border: none;
     padding: 10px;
+
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+.msgbox:focus {
+    outline: none;
 }
 button {
     font-size: 18px;
     font-family: "Lucida Console", "Consolas";
     width: 96px;
-    background-color: transparent;
+    background-color: black;
     color: white;
     border: 2px solid;
     border-radius: 10px;
     padding: 10px;
 }
 button:hover {
-    background-color: rgba(0, 255, 0, 0.4);
+    background-color: rgb(0, 77, 0)
+}
+.send-button {
+    position: absolute;
+    bottom: 1.2em;
+    right: 1.6em;
 }
 .front {
     background-color: black;
