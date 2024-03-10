@@ -2,6 +2,9 @@
     padding: 0;
     margin: 0;
 }
+*:hover {
+    color: lime;
+}
 .backimg {
     position: fixed;
     top: 0;
@@ -32,6 +35,15 @@
     margin-right: 10vw;
     margin-bottom: 1.6em;
 }
+.radio:hover {
+    border-color: lime;
+}
+.radio:hover * {
+    color: lime;
+}
+.radio:hover .cardtitle {
+    background-color: rgba(0, 255, 0, 0.2);
+}
 .radiocard {
     margin-top: 5vw;
     margin-left: 10vw;
@@ -55,6 +67,9 @@
     transition: all 0.5s;
     /* animation: fadeIn 1.5s; */
 }
+h1:hover {
+    color: lime;
+}
 h2 {
     margin-top: 4px;
     font-size: 20px;
@@ -62,6 +77,9 @@ h2 {
     color: white;
     font-family: "Lucida Console", "Consolas";
     transition: all 0.5s;
+}
+h2:hover {
+    color: lime;
 }
 .cardtitle
 {
@@ -109,6 +127,15 @@ h2 {
     flex: 1;
     margin-bottom: 1.6em;
 }
+.card:hover {
+    border-color: lime;
+}
+.card:hover * {
+    color: lime;
+}
+.card:hover .cardtitle {
+    background-color: rgba(0, 255, 0, 0.2);
+}
 .input-left {
     margin-right: 1.6em;
     flex: 1 1 150px;
@@ -127,22 +154,45 @@ h2 {
 
     margin-bottom: 1.6em
 }
+.input-left:hover {
+    border-color: lime;
+}
+.input-left:hover * {
+    color:lime;
+}
 input {
     font-size: 18px;
     font-family: "Lucida Console", "Consolas";
     margin-bottom: 0.8em;
 }
 .nametag {
-    height: 36px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 10px;
 }
-.mgsbox {
-    height: 36px;
+.msgbox {
+    height: 8vh;
+    width: 40vw;
+    background-color: transparent;
+    color: white;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 10px;
 }
 button {
     font-size: 18px;
     font-family: "Lucida Console", "Consolas";
     width: 96px;
-    height: 36px;
+    background-color: transparent;
+    color: white;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 10px;
+}
+button:hover {
+    background-color: rgba(0, 255, 0, 0.4);
 }
 .front {
     background-color: black;
