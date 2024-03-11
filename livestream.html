@@ -8,6 +8,7 @@
     <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js" type="text/javascript"></script>
     
+    
     <link rel="stylesheet" href="livestyle.css">
 </head>
 <body>
@@ -67,7 +68,7 @@
                     <div class="cardtitle">
                         <h2>Public Channel 0</h2>
                     </div>
-                    <div class="chat-content">
+                    <div class="chat-content" id="chat-window">
                         <p><pre><div class="chat-text" id="chatchat"></div></pre></p>
                         <script>
                             let lastModifiedTime = 0;
@@ -80,7 +81,7 @@
 
                                         if (currentModifiedTime !== lastModifiedTime) {
                                             lastModifiedTime = currentModifiedTime;
-                                            updateAlbumName();
+                                            updateChatContent();
                                         }
                                     })
                                     .catch(error => {
@@ -88,11 +89,12 @@
                                     });
                             }
 
-                            function updateAlbumName() {
+                            function updateChatContent() {
                                 fetch('./experimental/chatlog', { headers: { 'Content-Type': 'text/plain; charset=utf-8' } })
                                     .then(response => response.text())
                                     .then(data => {
                                         document.getElementById('chatchat').textContent = data;
+                                        document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
                                     })
                                     .catch(error => {
                                         console.error('Error:', error);
@@ -242,12 +244,12 @@
 
     <section class="bottom-chat">
         <div class="bottom-chat-container">
-            <div class="message-box">
-              <textarea class="msgbox" placeholder="Type your message..."></textarea>
-              <button class="send-button">Send</button>
-            </div>
+            <form class="message-box" id="messageForm">
+              <textarea class="msgbox" id="messageInput" placeholder="Type your message..."></textarea>
+              <button type="submit" class="send-button">Send</button>
+            </form>
         </div>
-        
+        <script src="livestream.js" type="text/javascript"></script>
     </section>
     
     
