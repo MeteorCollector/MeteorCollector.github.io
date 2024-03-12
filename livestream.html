@@ -73,6 +73,7 @@
                         <script>
                             let lastModifiedTime = 0;
                             setInterval(checkForUpdate, 100);
+                            setInterval(updateChatContent, 5000);
 
                             function checkForUpdate() {
                                 fetch('./experimental/chatlog', { method: 'HEAD' })
@@ -114,14 +115,17 @@
                         <img id="Image1" src="" alt="Image">
 
                         <script>
-                            function checkForUpdate() {
-                                fetch('./experimental/img1', { method: 'HEAD' })
-                                    .then(response => {
-                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
-
-                                        if (currentModifiedTime !== lastModifiedTime) {
-                                            lastModifiedTime = currentModifiedTime;
-                                            updateImageURL();
+                            setInterval(checkForUpdate1, 100);
+                            // setInterval(updateImageURL1, 1000);
+                            lastContent1 = ""
+                        
+                            function checkForUpdate1() {
+                                fetch('./experimental/img1')
+                                    .then(response => response.text())
+                                    .then(newContent => {
+                                        if (newContent !== lastContent1) {
+                                            lastContent1 = newContent;
+                                            updateImageURL1();
                                         }
                                     })
                                     .catch(error => {
@@ -129,7 +133,7 @@
                                     });
                             }
 
-                            function updateImageURL() {
+                            function updateImageURL1() {
                                 fetch('./experimental/img1')
                                     .then(response => response.text())
                                     .then(data => {
@@ -139,8 +143,6 @@
                                         console.error('Error:', error);
                                     });
                             }
-
-                            setInterval(updateImageURL, 100);
                         </script>
                     </div>
                 </div>
@@ -153,14 +155,17 @@
                         <img id="Image2" src="" alt="Image">
 
                         <script>
-                            function checkForUpdate() {
-                                fetch('./experimental/img2', { method: 'HEAD' })
-                                    .then(response => {
-                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
-
-                                        if (currentModifiedTime !== lastModifiedTime) {
-                                            lastModifiedTime = currentModifiedTime;
-                                            updateImageURL();
+                            setInterval(checkForUpdate2, 100);
+                            // /setInterval(updateImageURL2, 1000);
+                            lastContent2 = ""
+                        
+                            function checkForUpdate2() {
+                                fetch('./experimental/img2')
+                                    .then(response => response.text())
+                                    .then(newContent => {
+                                        if (newContent !== lastContent2) {
+                                            lastContent2 = newContent;
+                                            updateImageURL2();
                                         }
                                     })
                                     .catch(error => {
@@ -168,7 +173,7 @@
                                     });
                             }
 
-                            function updateImageURL() {
+                            function updateImageURL2() {
                                 fetch('./experimental/img2')
                                     .then(response => response.text())
                                     .then(data => {
@@ -178,8 +183,6 @@
                                         console.error('Error:', error);
                                     });
                             }
-
-                            setInterval(updateImageURL, 100);
                         </script>
                     </div>
                 </div>
@@ -209,14 +212,17 @@
                     <img id="Image3" src="" alt="Image">
 
                     <script>
-                        function checkForUpdate() {
-                                fetch('./experimental/img3', { method: 'HEAD' })
-                                    .then(response => {
-                                        let currentModifiedTime = new Date(response.headers.get('last-modified')).getTime();
-
-                                        if (currentModifiedTime !== lastModifiedTime) {
-                                            lastModifiedTime = currentModifiedTime;
-                                            updateImageURL();
+                        setInterval(checkForUpdate3, 100);
+                        // setInterval(updateImageURL3, 1000);
+                        lastContent3 = ""
+                        
+                        function checkForUpdate3() {
+                                fetch('./experimental/img3')
+                                    .then(response => response.text())
+                                    .then(newContent => {
+                                        if (newContent !== lastContent3) {
+                                            lastContent3 = newContent;
+                                            updateImageURL3();
                                         }
                                     })
                                     .catch(error => {
@@ -224,7 +230,7 @@
                                     });
                             }
 
-                            function updateImageURL() {
+                            function updateImageURL3() {
                                 fetch('./experimental/img3')
                                     .then(response => response.text())
                                     .then(data => {
@@ -234,8 +240,6 @@
                                         console.error('Error:', error);
                                     });
                             }
-
-                            setInterval(updateImageURL, 100);
                     </script>
                 </div>
             </div>

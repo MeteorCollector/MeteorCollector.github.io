@@ -3,7 +3,7 @@ var prename = ''
 document.getElementById('messageForm').addEventListener('submit', function(event) {
   event.preventDefault();
   
-  console.log("Sending...")
+  console.log("Reading input...")
   var nameInput = document.getElementById('nameInput').value;
   var messageInput = document.getElementById('messageInput').value.trim();
   
@@ -19,7 +19,7 @@ document.getElementById('messageForm').addEventListener('submit', function(event
 
   prename = nameInput;
   
-  var data = {
+  var json_data = {
       msg: messageInput,
       chid: 0,
       type: 'text',
@@ -28,7 +28,7 @@ document.getElementById('messageForm').addEventListener('submit', function(event
       uid: generateHash(nameInput)
   };
 
-  sendDataToServer(data);
+  sendDataToServer(json_data);
 });
 
 function generateHash(name) {
@@ -41,16 +41,44 @@ function generateHash(name) {
 }
 
 function sendDataToServer(data) {
+  console.log("Connecting to server...")
   var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'http://localhost:5002', true);
+  xhr.open('POST', 'http://120.46.209.170:5002', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify(data));
   
   xhr.onreadystatechange = function() {
+      console.log("Sending...")
       if (xhr.readyState === 4 && xhr.status === 200) {
           console.log('message sent');
       }
   };
-  xhr.send(JSON.stringify(data));
-
+  //xhr.send(JSON.stringify(data));
+  document.getElementById('messageInput').value = '';
   
 }
+
+
+// function sendDataToServer(json_data) {
+//   console.log("Connecting to server...")
+//   fetch('http://120.46.209.170:5002', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(json_data)
+//   })
+//   .then(response => {
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     return response.json();
+//   })
+//   .then(data => {
+//     console.log('Message Sent and Response received:', data);
+//     document.getElementById('messageInput').value = '';
+//   })
+//   .catch(error => {
+//     console.error('There was a problem with your fetch operation when sending message:', error);
+//   });
+// }
