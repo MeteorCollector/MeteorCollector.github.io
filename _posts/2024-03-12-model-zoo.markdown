@@ -179,7 +179,7 @@ size: $3 \times 3$
 
 stride: $2$
 
-output: $2 \timnes 27 \times 27 \times 48$
+output: $2 \times 27 \times 27 \times 48$
 
 #### LRN1
 
