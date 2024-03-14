@@ -12,7 +12,33 @@
     <link rel="stylesheet" href="livestyle.css">
 </head>
 <body>
-    <div class="backimg"></div>
+    <div class="backimg">
+
+        <script>
+            function createRipple() {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple');
+        
+                // 随机生成坐标
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+        
+                // 将涟漪添加到body中
+                document.body.appendChild(ripple);
+        
+                // 3秒后删除涟漪
+                setTimeout(() => {
+                    ripple.remove();
+                }, 7000);
+            }
+        
+            // 每隔3秒创建一个涟漪
+            setInterval(createRipple, 1000);
+        </script>
+    </div>
+
     <section class="title">
         <h1>iris terminal</h1>
     </section>
@@ -195,11 +221,13 @@
         <div class="left-column-2">
             <div class="card">
                 <div class="cardtitle">
-                    <h2>Camera: Permission Denied</h2>
+                    <h2>Camera</h2>
                 </div>
-                <div class="cardimg">
-                    <!-- <img id="Image" src="" alt="Image"> -->
+                <div class="cardtext">
+                    <h2>Access denied.</h2>
+                    <p><br>Please contact administrator for further information.</p>
                 </div>
+                <!-- <img id="Image" src="" alt="Image"> -->
             </div>
         </div>
 
@@ -244,6 +272,67 @@
                 </div>
             </div>
         </div>
+    </section>
+
+    <section class="radio">
+        <div class="cardtitle">
+            <h2>Mission Status</h2>
+        </div>
+        <div class="infotext">
+            <div class="cardtext">
+                <h2>Announcement</h2>
+                <p><br>The technical failure in iris's communication system has been fixed. 
+                    Now all available channels are opened to public.<br><br>
+                    We highly recommend all survivors to contact iris constantly for information update or find other survivors/settlements via iris.<br><br>
+                    For security reasons, we reserve channel 0 as public chatroom where sending sensitive information is prohibited.<br><br>
+                    Wish all of us good luck among swarms of stars...<br><br>
+                    Blessings from iris.<br><br><br>
+                </p>
+                <h2>Special Reminder</h2>
+                <p><br>Some of iris's functions on former Earth are reserved in channel 0.
+                    You can refer to <a href="https://meteorcollector.github.io/2022/10/iris-manual/" target="_blank">iris manual</a> when using them.</p>
+                    <br><br>
+                    <p></p>
+                <h2 id="clock"></h2>
+                <p>
+                    <br>
+                    Stage: 01, orbiting former Earth.<br>
+                    Orbit: Ecc: (no data) Inc: (no data)<br>
+                           Perigee: (no data) Apogee: (no data)<br>
+                    Current Location (Lat, Long, Height):<br>
+                           (no data)<br>
+                    Dest (Universial Coordinate): (no data)<br><br>
+                    Capsule Completeness: 100%<br>
+                    Shell   Completeness: 100%    Functionality: 7%<br>
+                    Ghost   Completeness: 100%    Consciousness: 5%<br><br>
+
+                    You're not authorized to access further information about current mission.
+                    <br><br><br><br>
+                </p>
+
+                <script>
+                function updateClock() {
+                    var now = new Date();
+                    var targetDate = new Date("2022-08-24T00:00:00");
+
+                    var timeDifference = now.getTime() - targetDate.getTime();
+
+                    var hours = Math.floor(timeDifference / (1000 * 60 * 60));
+                    var minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                    document.getElementById("clock").innerText = "Mission Clock: T+" + hours + ":" + minutes + ":" + seconds;
+                }
+
+                setInterval(updateClock, 250);
+                </script>
+            </div>
+        </div>
+            
+    </section>
+
+    <section class="reserved">
+
     </section>
 
     <section class="bottom-chat">

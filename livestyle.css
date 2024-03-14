@@ -6,6 +6,13 @@
 *:hover {
     color: lime;
 }
+a {
+    color: white;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
 .backimg {
     position: fixed;
     top: 0;
@@ -13,7 +20,7 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: -2;
+    z-index: -200;
     background: black;
 }
 
@@ -55,6 +62,7 @@
     border-radius: 10px;
     border: solid;
     border-color: white;
+    background-color: black;
     border-width: 4px;
     margin-left: 10vw;
     margin-right: 10vw;
@@ -74,7 +82,9 @@
     margin-left: 10vw;
     margin-right: 10vw;
     border-radius: 10px;;
+
     
+
     display: flex;
     justify-content: center;
     align-items: top;
@@ -82,6 +92,7 @@
     /* animation: fadeIn 1.5s; */
     z-index: 2;
 }
+
 .title h1 {
     margin-top: 60px;
     font-size: 36px;
@@ -187,6 +198,7 @@ p:hover {
     border-width: 4px;
     flex: 1;
     margin-bottom: 1.6em;
+    background-color: black;
 }
 .card:hover {
     border-color: lime;
@@ -204,7 +216,8 @@ p:hover {
     height: 25vh;
     display: flex;
     transform: translateX(-50%);
-    left: 50%
+    left: 50%;
+    justify-items: center; 
 }
 .cardimg image {
     position: relative;
@@ -212,6 +225,15 @@ p:hover {
     transform: translateX(-50%);
     left: 50%
 }
+.cardtext {
+    margin: 1.6em;
+    vertical-align: center;
+}
+.infotext {
+    margin-left: 5vw;
+    margin-right: 5vw;
+}
+
 .left-column-2 {
     margin-right: 0.8em;
     flex: 1 1 150px;
@@ -486,5 +508,32 @@ footer p {
     100% {
         opacity:100%;
         transform: translateY(0%);
+    }
+}
+
+.reserved {
+    height: 50vh;
+}
+
+.ripple {
+    z-index: -100;
+    position: absolute;
+    border: 10px solid rgba(0, 255, 0, 0.5); /* 绿色边框 */
+    border-radius: 50%; /* 圆形 */
+    animation: ripple 4s linear forwards; /* 动画 */
+}
+
+@keyframes ripple {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        width: 200vw; /* 变大 */
+        height: 200vw; /* 变大 */
+        opacity: 0;
+        transform: translate(-50%, -50%);
     }
 }
