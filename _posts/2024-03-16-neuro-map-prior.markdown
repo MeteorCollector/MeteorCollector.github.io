@@ -187,6 +187,8 @@ Embedded git repository: [mmdetection3d](https://github.com/open-mmlab/mmdetecti
 
 ## tools
 
+如果纯粹地训练/使用该模型，只会直接运行该文件夹下的脚本。这些脚本针对不同模型都是普适的，只需要更改参数就可以运行不同的模型。
+
 ```
 .
 ├── create_data.py
@@ -206,7 +208,24 @@ Embedded git repository: [mmdetection3d](https://github.com/open-mmlab/mmdetecti
 
 ### dist_test.sh
 
-Getting started: evaluation test 第一个需要运行的脚本。
+Getting started: evaluation test 运行的脚本。实际上调用了 `tools/test.py`，完整指令为
+
+```
+./tools/dist_test.sh ./project/configs/bevformer_30m_60m.py ./ckpts/bevformer_epoch_24.pth 8 --eval iou
+```
+
+### test.py
+
+```python
+description='MMDet test (and eval) a model'
+```
+
+和他描述的一样，是一个训练/评估模型的较为普适的脚本，从CONFIG文件读取配置信息。
+
+### train.py
+
+同样地，是一个普适性的模型训练脚本。
+
 
 ## project
 
@@ -318,7 +337,15 @@ Getting started: evaluation test 第一个需要运行的脚本。
 
 ### configs
 
-暂略
+这里存放的都是模型的`config`文件。
+
+#### bevformer_30m_60m.py
+
+`BEVformer map baseline with resnet101 backbone`
+
+Getting started: evaluation test调用的默认模型`config`文件
+
+
 
 ### __init__.py
 
