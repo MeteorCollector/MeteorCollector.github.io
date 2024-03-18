@@ -360,15 +360,37 @@ from .datasets import *
 
 #### ckpts
 
-需要用户自己创建一个 `ckpts` 文件夹，在这里存储训练的 `checkpoint` 文件
+需要用户自己创建一个 `ckpts` 文件夹，在这里存储训练获得的 `checkpoint` 。
 
 #### datasets
 
+- **__init__.py**
+
+  ```python
+  from .pipelines import *
+  from .nuscenes_dataset import *
+  from .base_dataset import *
+  
+  __all__ = ['nuScenesMapDataset', 'BaseMapDataset']
+  ```
+
 - **base_dataset.py**
+
+  This is the base dataset of SUNRGB-D, ScanNet, nuScenes, and KITTI dataset.
+
+  这里定义了为了加载主流地图数据写的dataset的基类 `BaseMapDataset`。重载了 `pytorch` 中 `dataset` 的若干函数并添加了一些自定义函数。
+
+- **nuscenes_dataset.py**
+
+  前半部分主要是 `config` 信息，有 `img_norm_cfg`, `eval_cfg`, `train_pipeline`, `MAPS`
+
+  后半部分以 `BaseMapDataset` 为基类定义了 `nuScenesMapDataset`。
 
 - **evaluation**
 
   - **chamfer_dist.py**
+
+    
 
   - **eval_dataloader.py**
 
@@ -392,8 +414,6 @@ from .datasets import *
 
   - **vectorized_map.py**
 
-- **__init__.py**
-
 - **nuscenes_utils**
 
   - **base_nusc_dataset.py**
@@ -407,8 +427,6 @@ from .datasets import *
   - **nuscene.py**
 
   - **utils.py**
-  
-- **nuscenes_dataset.py**
 
 - **pipelines**
 

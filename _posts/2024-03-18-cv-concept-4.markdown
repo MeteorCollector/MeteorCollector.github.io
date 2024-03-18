@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "CV概念笔记（四）"
+date:   2024-03-18 23:36:00 +0800
+categories: posts
+tag: cv
+---
+
+其实序号是接续CV论文笔记（三）的，虽然说一个是“论文”一个是“笔记”，但是主要内容差不多。
+
+这里主要存放我阅读 `Neuro Map Prior` 和 `BEVformer` 代码时遇到的概念。
+
+## 倒角距离 Chamfer Distance
+
+reference: chatGPT, CVF open access
+
+Chamfer distance (CD) is a standard metric to measure the shape dissimilarity between point clouds in point cloud completion, as well as a loss function for (deep) learning. 
+
+Chamfer距离是衡量两个点云之间相异或距离的一种方式，这些点云是在三维空间中表示的。它通常用于计算机视觉和计算机图形中的形状匹配、对象识别和点云配准等任务。
+
+Chamfer距离的计算方法是找到一个点云中每个点到另一个点云中最近的邻居，然后对应地计算距离，反之亦然，然后将两者的距离之和。在数学上，它可以表示为：
+
+$$D_{Chamfer}(A,B) = \sum_{a \in A}\min_{b\in B} \left\| a - b \right\|^2_2 + \sum_{b \in B}\min_{a\in A} \left\| b - a \right\|^2_2$$
+
+其中：
+
+- $A$ 和 $B$ 是分别表示为点云的两组点。
+  
+- $\left\| \cdot \right\|_2$​ 表示欧氏距离。
+ 
+- $a$ 和 $b$ 分别是来自集合 $A$ 和 $B$ 的点。
+
+Chamfer距离通过将一个点云中每个点与另一个点云中最近邻居的距离的平方相加，并将结果相加，以衡量两个点云的匹配程度。
+
+最小化Chamfer距离可以是各种任务的目标，如三维形状重建、点云配准以及从实际扫描中生成逼真的三维模型。
+
+如果该距离较大，则说明两组点云区别较大；如果距离较小，则说明重建效果较好。一般来说，该距离用作3D重建网络的损失函数。 
+
+它有助于量化两个点云之间的相似性，在许多计算机视觉和图形应用中非常有用。
+
