@@ -150,7 +150,32 @@ tag: cv
 
 ## docs
 
-Nothing to comment.
+### data_preparation.md
+
+这个是关于nuScenes数据集下载的文档。dataset被设在 `neural_map_prior/data/nuscenes`，下载之后，数据集结构为
+
+```
+neural_map_prior
+├── mmdet3d
+├── tools
+├── projects
+│   ├── nmp
+│   ├── configs
+├── ckpts
+├── data
+│   ├── nuscenes
+│   │   ├── maps <-- used
+│   │   ├── samples <-- key frames
+│   │   ├── sweeps  <-- frames without annotation
+│   │   ├── v1.0-mini <-- metadata and annotations
+│   │   ├── v1.0-test <-- metadata
+|   |   ├── v1.0-trainval <-- metadata and annotations
+│   │   ├── nuScences_map_trainval_infos_train.pkl <-- train annotations
+│   │   ├── nuScences_map_trainval_infos_val.pkl <-- val annotations
+│   ├── nuscenes_infos
+│   │   ├── train_city_infos.pkl
+│   │   ├── val_city_infos.pkl
+```
 
 ## figs
 
@@ -159,6 +184,29 @@ Nothing to comment.
 ## mmdetection3d
 
 Embedded git repository: [mmdetection3d](https://github.com/open-mmlab/mmdetection3d/tree/99ad831a8b04a7f5622c366d8e60745f92a62008)
+
+## tools
+
+```
+.
+├── create_data.py
+├── data_converter
+│   └── nuscenes_converter.py
+├── data_sampler.py
+├── dist_test.sh
+├── dist_train.sh
+├── mmdet_dataloader.py
+├── mmdet_train.py
+├── test.py
+├── train.py
+└── tree.txt
+
+1 directory, 10 files
+```
+
+### dist_test.sh
+
+Getting started: evaluation test 第一个需要运行的脚本。
 
 ## project
 
@@ -275,6 +323,10 @@ Embedded git repository: [mmdetection3d](https://github.com/open-mmlab/mmdetecti
 ### __init__.py
 
 ### neural_map_prior
+
+#### ckpts
+
+需要用户自己创建一个 `ckpts` 文件夹，在这里存储训练的 `checkpoint` 文件
 
 #### datasets
 
