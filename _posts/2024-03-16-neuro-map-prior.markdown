@@ -390,15 +390,31 @@ from .datasets import *
 
   - **chamfer_dist.py**
 
-    
+    一个计算倒角距离的脚本，主要是一些辅助功能。
 
   - **eval_dataloader.py**
 
+    定义了 `HDMapNetEvalDataset(object)`     
+
   - **hdmap_eval.py**
+
+    `Evaluate nuScenes local HD Map Construction Results`
+
+    和描述的一样，这里主要 `evaluate` 地图重建结果。这里主要调用了很多 `IoU` 而不是 `Chamfer Distance`，说明生成的仍然是 `bounding box` 而不是三维点云？
 
   - **__init__.py**
 
+    没有任何内容。
+
   - **iou.py**
+
+    计算 `IoU` 的辅助函数。
+
+    `get_batch_iou` 计算两个地图之间的IoU， 该函数首先将地图转换为布尔类型，然后逐通道计算交集和并集，并将结果返回（不相除，分别返回这一batch的intersection和union列表）。
+
+    `get_batch_iou_bound` 计算的 IoU 在 predict map 和 ground truth 的边界范围内（返回类型和上一个函数一样）。
+
+    `get_batched_iou_no_reduction` 返回的是将 intersection 和 union 相除后得到的数值。
 
   - **precision_recall**
 
@@ -410,9 +426,42 @@ from .datasets import *
 
   - **rasterize.py**
 
+    这个脚本做的事情是把矢量地图栅格化。
+
+    `get_patch_coord(self, patch_box, patch_angle=0.0)` 给定一个 patch 的框架信息，返回 patch 的坐标。第三个参数是指定角度进行旋转。
+
+    `mask_for_lines` 画栅格化的线条。
+
+    `line_geom_to_mask(self, geom, map_mask, thickness, color)` 将矢量线条集合对象 `geom` 转换为栅格化的线条集合
+
+    `preprocess_data(self, vectors)` 预处理矢量数据。根据 patch 的大小和画布的大小对矢量数据进行缩放和平移，然后返回处理后的数据字典。
+
+    `rasterize_map(self, vectors, thickness)` 根据矢量生成栅格化地图。
+
   - **utils.py**
 
+    辅助函数。
+
+    一个单独的 `get_pos_idx`，输入pos_msk: $b \times k$，输出 remain_idx: $b \times n$ remain_idx_mask: $b \times n$
+
+    然后单独定义了 `CaseLogger` 类，用于记录、找到典型 case 并保存等等。
+
   - **vectorized_map.py**
+
+    定义了 `class VectorizedLocalMap(object)` 和一系列关于矢量地图的方法。
+
+    `gen_vectorized_samples(...)`: 用于生成矢量化的局部地图数据。它接受位置信息、车辆到全局坐标系的平移和旋转信息，并返回过滤后的矢量数据。在该方法中，通过调用 `get_map_geom` 方法获取指定要素的几何信息，然后通过一系列方法将几何信息转换为矢量数据。最终将所有有效的矢量数据存储在 `filtered_vectors` 中并返回。
+
+    `get_map_geom(...)`: 这个方法用于获取指定范围内、指定 `layer` 的几何信息。它接受 `patch` 的尺寸和角度、`layer` 的类别和问询的位置，并返回符合条件目标的几何信息。具体是通过调用 `NuScenesMapExplorer` 来实现的。
+
+    `_one_type_line_geom_to_vectors(...)`: 这是一个辅助方法，用于将特定类型的线条几何转换为矢量。它接受线条几何信息，并返回矢量化的线条数据。
+
+    `poly_geoms_to_vectors(...)`, `line_geoms_to_vectors(...)`, `ped_geoms_to_vectors(...)`: 这三个方法分别用于将多边形、线条和人行横道几何转换为矢量数据。它们通过调用 `_one_type_line_geom_to_vectors` 方法实现。
+
+    `get_ped_crossing_line(...)`: 这个方法用于获取人行横道的线条信息。它通过解析地图中的人行横道多边形信息来获取相应的线条，并返回这些线条的列表。
+
+    `sample_pts_from_line(...)`: 这个方法用于从线条中抽样点。它接受线条几何信息，并返回采样后的点坐标以及有效点的数量。
+
 
 - **nuscenes_utils**
 
