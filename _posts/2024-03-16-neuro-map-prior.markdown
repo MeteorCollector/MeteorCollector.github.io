@@ -337,7 +337,9 @@ description='MMDet test (and eval) a model'
 
 ### configs
 
-这里存放的都是模型的`config`文件。
+这里存放的都是模型的`config`文件。训练/测试不同的文件只需要在运行 `tools/test` 或者 `tools/train` 时传入不同的文件作为 `config` 信息就可以了。
+
+在 `plugin_dir = 'project/neural_map_prior/'` 这一行中，以 `plugin_dir` 参数传入了 `neuro_map_prior`
 
 #### bevformer_30m_60m.py
 
@@ -345,11 +347,16 @@ description='MMDet test (and eval) a model'
 
 Getting started: evaluation test调用的默认模型`config`文件
 
-
-
 ### __init__.py
 
 ### neural_map_prior
+
+#### __init__.py
+
+```python
+from .models import *
+from .datasets import *
+```
 
 #### ckpts
 
@@ -413,7 +420,7 @@ Getting started: evaluation test调用的默认模型`config`文件
 
   - **map_transform.py**
 
-- **data_utils**
+#### data_utils
 
   - **boston_split_gen**
 
@@ -443,9 +450,7 @@ Getting started: evaluation test调用的默认模型`config`文件
 
   - **nusc_city_infos.py**
 
-- **__init__.py**
-
-- **map_tiles**
+#### map_tiles
 
   - **__init__.py**
 
@@ -455,7 +460,7 @@ Getting started: evaluation test调用的默认模型`config`文件
 
   - **nusc_split.py**
 
-- **models**
+#### models
 
   - **hdmapnet_utils**
 
