@@ -517,7 +517,7 @@ from .datasets import *
 
     定义了 `class VectorizedLocalMap(object)` 和一系列关于矢量地图的方法。
 
-    `gen_vectorized_samples(...)`: 用于生成矢量化的局部地图数据。它接受位置信息、车辆到全局坐标系的平移和旋转信息，并返回过滤后的矢量数据。在该方法中，通过调用 `get_map_geom` 方法获取指定要素的几何信息，然后通过一系列方法将几何信息转换为矢量数据。最终将所有有效的矢量数据存储在 `filtered_vectors` 中并返回。
+    `gen_vectorized_samples(...)`: 用于生成矢量化的局部地图数据。它接受位置信息、车辆到全局坐标系的平移和旋转信息，并返回过滤后的矢量数据。在该方法中，通过调用 `get_map_geom` 方法获取指定要素的几何信息(`shapely.geometry`)，然后通过一系列方法将几何信息转换为矢量数据。最终将所有有效的矢量数据存储在 `filtered_vectors` 中并返回。
 
     `get_map_geom(...)`: 这个方法用于获取指定范围内、指定 `layer` 的几何信息。它接受 `patch` 的尺寸和角度、`layer` 的类别和问询的位置，并返回符合条件目标的几何信息。具体是通过调用 `NuScenesMapExplorer` 来实现的。
 
@@ -570,17 +570,81 @@ from .datasets import *
 
   - **utils.py**
 
-    
+    这里都是关于地图的工具函数。
+
+    `get_rot(h)`：用于将向量绕原点旋转角度 h；
+
+    `plot_nusc_map(rec, nusc_maps, nusc, scene2map, dx, bx, alpha_poly=0.6, alpha_line=1.)`：绘制 NuScenes 地图的可视化效果。它从 NuScenes 地图中提取指定范围内的地图信息，并绘制不同类型的道路、车道、行人穿越等元素。参数 rec 是 NuScenes 的记录，nusc_maps 是地图数据，nusc 是 NuScenes 数据集对象，scene2map 是场景到地图的映射，dx 和 bx 是某种比例系数，alpha_poly 和 alpha_line 是绘制多边形和线条的透明度。
+
+    `get_discrete_degree(vec, angle_class=36)`：根据给定向量的角度，返回离散角度。参数 vec 是一个二维向量，angle_class 是角度分段数。
+
+    `get_local_map(nmap, center, stretch, layer_names, line_names)`：从地图中提取局部地图信息。该函数从地图中获取指定范围内的多边形和线条，并将它们转换为局部坐标系。参数 nmap 是地图对象，center 是局部坐标系的中心，stretch 是拉伸系数，layer_names 和 line_names 是地图中的多边形和线条的名称。
+
+    `get_lidar_data(nusc, sample_rec, nsweeps, min_distance)`：从 NuScenes 数据集中获取 LiDAR 数据。该函数返回一定数量的 LiDAR 扫描的点云数据。参数 nusc 是 NuScenes 数据集对象，sample_rec 是样本记录，nsweeps 是扫描的数量，min_distance 是距离阈值，用于去除距离太近的点。
+
+    `img_transform(img, post_rot, post_tran, resize, resize_dims, crop, flip, rotate)`：对图像进行变换，包括调整大小、裁剪、翻转和旋转。此外，该函数还返回变换后的旋转矩阵和平移向量。
+
+    `NormalizeInverse(mean, std)`：标准化的逆操作，用于将归一化后的图像恢复为原始图像。这个类在调用时会将张量进行复制，以避免修改原始张量。
+
+    `gen_dx_bx(xbound, ybound, zbound)`：生成偏移量和中心点，用于计算局部地图。
+
+    `get_nusc_maps(map_folder)`：从文件夹中加载 NuScenes 地图数据。
+
+    `label_onehot_encoding(label, num_classes=4)`：将标签转换为 one-hot 编码。
+
+    `pad_or_trim_to_np(x, shape, pad_val=0)`：将数组填充或裁剪到指定形状。
 
 - **pipelines**
 
+  这个文件夹是关于用于数据处理的自定义数据管道（pipeline）。用了很多`mmcv`库函数。所有类都注册到了 `mmdet.datasets.builder.PIPELINES` ,可以在数据加载时调用。这些自定义数据管道可以根据具体的数据和任务进行灵活配置，以实现不同的数据预处理和增强操作。
+
+  - **__init.py__**
+
+    ```python
+    from .loading import LoadMultiViewImagesFromFiles
+    from .map_transform import VectorizeLocalMap
+    from .formating import FormatBundleMap, Normalize3D, Pad3D, ResizeCameraImage
+
+    __all__ = [
+        'LoadMultiViewImagesFromFiles',
+        'VectorizeLocalMap',
+        'FormatBundleMap',
+        'Normalize3D',
+        'Pad3D',
+        'ResizeCameraImage'
+    ]
+    ```
+
   - **formating.py**
 
-  - **__init__.py**
+    定义了类 `FormatBundleMap(object)`
+
+    It simplifies the pipeline of formatting common fields for voxels,
+    including "proposals", "gt_bboxes", "gt_labels", "gt_masks" and
+    "gt_semantic_seg".
+    These fields are formatted as follows.
+
+    - img: (1)transpose, (2)to tensor, (3)to DataContainer (stack=True)
+    - proposals: (1)to tensor, (2)to DataContainer
+    - gt_bboxes: (1)to tensor, (2)to DataContainer
+    - gt_bboxes_ignore: (1)to tensor, (2)to DataContainer
+    - gt_labels: (1)to tensor, (2)to DataContainer
+
+    定义了 `Normalize3D` 类用于对图像进行归一化处理；
+
+    定义了 `Pad3D` 类用于对图像和掩码进行填充。它可以根据指定的大小或者大小的倍数对图像和掩码进行填充。
+
+    `ResizeMultiViewImages` 、`ResizeCameraImage` 调整多视图/摄像头图像的大小。
 
   - **loading.py**
 
+    `class LoadMultiViewImagesFromFiles(object)`:
+
+    Load multi channel images from a list of separate channel files.
+
   - **map_transform.py**
+
+    定义了 `VectorizeLocalMap` 类，提供了非常多的关于向量化的函数。
 
 #### data_utils
 
