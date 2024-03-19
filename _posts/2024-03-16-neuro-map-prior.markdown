@@ -534,15 +534,43 @@ from .datasets import *
 
   - **base_nusc_dataset.py**
 
+    定义了 `class NuscData(torch.utils.data.Dataset)` 类，还是老几样，以 pytorch 的 Dataset 为基类。
+
   - **hdmapnet.py**
+
+    把上一个文件中的 `NuscData` 作为基类，定义 `class RaseterizedData(NuscData)` （栅格化数据）。
+
+    同时还有一个 `gen_topdown_mask` 函数，生成鸟瞰视图的掩码。
 
   - **__init__.py**
 
-  - **map_api.py**
+    这里面什么也没有
 
   - **nuscene.py**
 
+    定义了 `MyNuScenesMap(NuScenesMap)` 和 `MyNuScenesMapExplorer(NuScenesMapExplorer)` 两个类。
+
+    `MyNuScenesMap` 里的方法只有 `get_map_mask`，描述是`Return list of map mask layers of the specified patch`，返回格式是 `Stacked numpy array of size [c x h x w] with c channels and the same width/height as the canvas`。
+
+    `MyNuScenesMapExplorer` 里的方法比较多，提供了各种几何图形类型（线段、多面体）往几何图形数据类型/掩码（本身的 `Numpy ndarray line/polygon mask` 或者在地图上鸟瞰的 $h \times w$ 二维掩码（需要指定生成的局部范围）。
+
+    单独定义了两个函数：
+
+    `def gen_topdown_mask(nuscene, nusc_maps, sample_record, patch_size, canvas_size, seg_layers, thickness=5, type='index', angle_class=36)` 生成鸟瞰掩码
+
+    `extract_contour(topdown_seg_mask, canvas_size, thickness=5, type='index', angle_class=36)` 生成轮廓
+
+  - **map_api.py**
+
+    定义了 `CNuScenesMapExplorer(NuScenesMapExplorer)`，但是初始化函数写成了 `__ini__`，这个类真的有在用吗？
+
+    然后额外定义了一个 `plot` 函数，看起来是把一系列 `Polygon` 画在图上。
+
+    很混乱，这个文件。
+
   - **utils.py**
+
+    
 
 - **pipelines**
 
