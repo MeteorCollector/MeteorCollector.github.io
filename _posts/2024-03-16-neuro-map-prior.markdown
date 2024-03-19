@@ -650,17 +650,83 @@ from .datasets import *
 
   - **boston_split_gen**
 
-    - **boston_data_split.py**
+    
+    - **doc.md**
+
+      Sequentially run the following commands to produce the Boston split in the paper.
+
+      1. `python detect_trip_overlap.py`
+      2. `python order_overlapping_trips_by_timestamp.py`
+      3. `python boston_data_split.py`
 
     - **detect_trip_overlap.py**
 
-    - **doc.md**
+      这个文件比较**重要**。
 
+      文件中的函数用来处理 NuScenes 数据集的相关操作，包括获取样本标记、样本姿态、转换记录、地图角度以及过滤场景等功能。
+
+      `get_sample_token`: 从给定的 NuScenes 数据集和场景中获取样本标记列表。样本标记是按照时间顺序组织的，通过首个样本标记的下一个标记来获取整个样本序列的标记列表。
+
+      `get_trans_from_record`: 根据给定的车辆姿态记录，获取转换矩阵和姿态信息。将姿态信息转换为四元数（Quaternion），并计算转换矩阵，以及姿态信息（位置和旋转角度）。
+
+      `get_map_angle`: 根据车辆姿态记录中的全局旋转角度，计算地图角度。使用四元数表示姿态，将其转换为欧拉角，并将角度值转换为以度为单位的角度。
+
+      `get_sample_pose`: 根据给定的 NuScenes 数据集和样本标记列表，获取样本的姿态信息。遍历样本标记列表，获取每个样本对应的激光雷达数据和车辆姿态记录，然后调用 `get_trans_from_record` 函数获取姿态信息。
+
+      `filter_scenes`: 从给定的 NuScenes 数据集和场景列表中过滤出符合条件的场景。根据场景名称和地理位置信息，判断是否属于指定的场景，并返回符合条件的场景列表。
+
+      最核心的函数是 `find_hdmap_history(args)`。这段代码的功能是根据输入参数从 NuScenes 数据集中查找历史高清地图（HDMap）数据。
+
+      使用 NuScenes 类初始化数据集对象 nusc，并根据参数设置 verbose 为 True。
+
+      调用 create_splits_scenes() 函数创建划分的场景，并通过 filter_scenes() 函数过滤出与指定 hist_set 匹配的场景。
+
+      获取划分场景的地理位置信息 split_scenes_loc 和样本标记信息 sample_tokens。
+
+      根据样本标记信息，通过调用 get_sample_pose() 函数获取样本的位置姿态信息 sample_poses_trans，将其转换为数组形式 sample_poses_array 和样本平移向量 sample_trans_array。
+
+      创建保存目录 args.save_dir_name（默认为`trip_overlap_val_h60_w30_thr0`），并将 `split_scenes`、`sample_tokens`、`sample_poses_array` 和 `sample_trans_array` 分别保存为 pkl 文件。（**下面很快就会用到**）
+
+      设置 HDMap 的高度 hdmap_height 和宽度 hdmap_width。
+
+      初始化 hdmap_history_dict 字典，用于存储历史 HDMap 数据。
+
+      遍历样本标记信息，对每个样本计算与其他样本的距离，并检查是否满足条件生成历史 HDMap 数据。
+
+      根据条件判断计算两个 HDMap 区域的交并比（IoU），并根据给定的阈值 args.iou_thr 进行筛选。
+
+      将符合条件的历史 HDMap 数据保存到 hdmap_history_dict 字典中，并将其保存为 pkl 文件。
+      
     - **order_overlapping_trips_by_timestamp.py**
+
+      这一段主要是对重叠行程数据进行处理，生成了 token 到遍历 ID 的映射，并将结果保存到文件中供后续使用。
+    
+      1. 加载样本标记序列（从`./trip_overlap_val_h60_w30_thr0/sample_tokens.pkl`加载）和重叠行程数据。
+
+      2. 通过遍历重叠行程数据（从`./trip_overlap_val_h60_w30_thr0/trip_overlap_val_60_30_1.pkl`加载），生成了 token 到重复序列和遍历 ID 的映射。
+
+      3. 根据加载的 NuScenes 数据集，计算了重复序列中每个样本的时间戳，并按时间对重复序列进行排序。
+
+      4. 更新 token 到遍历 ID 的映射，并将结果保存到文件（`val_token2traversal_id.pkl`）中。
+
+    - **boston_data_split.py**
+
+      这段代码是用于加载数据并根据城市名和地理位置对数据进行过滤和划分。
+
+      *不过这里的很多路径设定都是硬编码作者自己电脑里的路径，也没有相关文档，可能不太需要再去用这些脚本手动处理这些数据了吧*
 
     - **rotate_iou.py**
 
+      这里主要是一些手动实现的运算函数，把cpu运算搬到了gpu，狠狠加速。引用自[这里](https://github.com/hongzhenwang/RRPN-revise)。
+
+
+    - **nusc_city_infos.py**
+
+      把 `/public/MARS/datasets/nuScenes` 里的数据进行整理，存成 `train_city_infos.pkl` 和 `val_city_infos.pkl`。
+
     - **trip_overlap_val_h60_w30_thr0**
+
+      上文代码生成的 `pkl` 都在这里了。
 
       - **samples_poses_array.pkl**
 
@@ -674,7 +740,7 @@ from .datasets import *
 
       - **trip_overlap_val_60_30_1.pkl**
 
-  - **nusc_city_infos.py**
+  
 
 #### map_tiles
 
