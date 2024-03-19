@@ -746,51 +746,282 @@ from .datasets import *
 
   - **__init__.py**
 
+    什么也没有。
+
   - **lane_render.py**
+
+    上面是一大堆辅助函数，是为了实现`draw_global_map(args)`：
+
+    首先配置地图参数，包括保存路径、地图属性等信息；然后创建全局地图切片字典，用于存储地图切片的数据；加载数据集的信息，包括样本的城市名称、地图的最小和最大地理位置等；根据地图切片的大小和城市名称，获取样本 token 到地图索引的映射；遍历数据集中的样本信息，依次处理每个样本对应的地图切片；根据样本的城市名称和地图索引，获取地图切片的边界坐标；从结果根目录中加载处理后的 BEV 特征，将其投影到**全局地图切片**中；更新地图切片字典中的数据；保存处理后的**全局地图切片**到指定路径（默认是当前位置）；将保存的地图切片可视化，并保存为图像文件。
 
   - **local_multi_trips.py**
 
+    主要还是处理了`hdmap_history_loc_val_h60_w30_thr0/hdmap_history_{dataset}_30_60_1`，主要流程如下：
+
+    设置结果根目录和保存根目录，并定义 BEV（Bird's Eye View）属性，包括真实高度、真实宽度、BEV 高度和宽度。
+
+    加载历史轨迹信息，包括样本 token、样本姿态数组、样本变换数组和 HDMap 历史字典。
+
+    加载验证集数据信息，包括数据信息和数据城市名称。
+
+    统计每个样本的重叠轨迹数目，绘制直方图并保存。
+
+    对重叠轨迹数目进行排序，遍历每个样本，生成全局地图的可视化效果并保存到文件中。
+
   - **nusc_split.py**
 
+    根据 nuScenes 数据集的配置，提取训练集和验证集中所有样本的 token，并保存到相应的 pickle 文件中。
+
+    根据预定义的训练集和验证集场景列表，过滤出对应的场景信息；遍历训练集和验证集的场景信息，分别获取每个场景中的样本 token 列表；将所有样本 token 列表合并成一个列表，分别保存为训练集和验证集的样本 token pickle 文件；打印训练集和验证集中样本的数量。
+
+    主要目的是为后续的处理和训练准备数据，提供了训练集和验证集中所有样本的 token 列表。
+
+    存储路径：
+
+    ```python
+    with open('train_sample_tokens.pkl', 'wb') as f:
+        pickle.dump(sample_tokens_train, f)
+    with open('val_sample_tokens.pkl', 'wb') as f:
+        pickle.dump(sample_tokens_val, f)
+    ```
+
+
 #### models
+
+  - **__init.py__**
+
+    ```python
+    from .heads import *
+    from .losses import *
+    from .mapers import *
+    from .modules import *
+    from .view_transformation import *
+    ```
 
   - **hdmapnet_utils**
 
     - **angle_diff.py**
 
-    - **__init.py__**
+      这段代码是用于计算预测角度和真实角度之间的差异。
+
+      函数 `onehot_encoding_spread` 用于将预测的概率分布转换为 one-hot 编码，并将最大值的前后两个值也置为 1，以增强模型的稳定性。
+
+      函数 `get_pred_top2_direction` 获取预测概率分布中的前两个最大值的索引，然后将这两个索引值减去1，并组成一个张量返回，这个张量表示预测的角度范围。
+
+      函数 `calc_angle_diff` 计算预测角度和真实角度(注意传入的预测角度和真实角度都是数组)之间的差异。它首先根据预测(取top2)获取预测的角度范围，然后根据真实概率(取top2)获取真实的角度范围。最后计算平均差异。
+
 
   - **heads**
 
     - **bev_encoder.py**
 
+      这个文件较为**重要**。
+
+      首先定义了 `class Up(nn.Module)`，应当是上采样，是一个小模块。
+
+      然后就是 `class BevEncode(nn.Module)` 的代码了，用于将 BEV 特征进行编码。
+
+      在 `__init__(self, inC, outC, instance_seg=True, embedded_dim=16, direction_pred=True, direction_dim=37, return_feature=False)` 方法中，定义了 BEV 编码器的网络结构。通过上采样层将输入的 BEV 特征进行上采样，然后经过一系列的卷积层和批归一化层，最终得到编码后的 BEV 特征、实例嵌入特征和方向预测特征。根据参数 `instance_seg` 和 `direction_pred` 决定是否生成相应的特征。
+
+      在 `forward` 方法中，接收一个 BEV 特征列表 `bev_feature`，然后将其传入网络中进行前向传播。根据参数决定是否生成实例分割、嵌入特征和方向预测。最终返回一个字典，包含编码后的 BEV 特征以及可能的额外信息。
+
     - **__init__.py**
 
-  - **__init.py__**
+      ```python
+      from .bev_encoder import BevEncode
+
+      __all__ = [
+          'BevEncode',
+      ]
+      ```
+
+  
 
   - **losses**
 
     - **hdmapnet_loss.py**
 
+      这里定义3个loss函数。
+
+      这些损失函数还没太研究，等我再细看看。
+
+      **SimpleLoss**：
+
+      此损失函数采用二元交叉熵损失（BCEWithLogitsLoss）。
+
+      初始化参数包括 `pos_weight` 和 `loss_weight`。`pos_weight` 是正样本的权重，`loss_weight` 是损失函数的权重。
+
+      在前向传播过程中，将预测值和目标值传入二元交叉熵损失函数，并乘以 `loss_weight` 返回损失值。
+
+      **DiscriminativeLoss**：
+
+      此损失函数是差分损失函数（Discriminative Loss），用于实例分割任务。
+
+      初始化参数包括 `embed_dim`（嵌入维度）、`delta_v`（变异损失的阈值）、`delta_d`（距离损失的阈值）和 `loss_weight_cfg`（损失权重配置）。
+
+      在前向传播过程中，输入嵌入特征 `embedding` 和分割目标 `seg_gt`，计算变异损失、距离损失和正则化损失，然后返回这三种损失的加权和。
+
+      **DirectionLoss**：
+
+      此损失函数是用于方向预测任务的损失函数。
+
+      初始化参数包括 `loss_weight`，即损失函数的权重。
+
+      在前向传播过程中，输入预测的方向值 `direction` 和方向的目标值 `direction_mask`，计算二元交叉熵损失（BCELoss）。
+
+      损失值乘以车道掩码 `lane_mask` 后取平均，再乘以 loss_weight 返回。
+
     - **__init__.py**
+
+      ```python
+      from .hdmapnet_loss import SimpleLoss, DiscriminativeLoss, DirectionLoss
+
+      __all__ = [
+          'SimpleLoss', 'DiscriminativeLoss', 'DirectionLoss'
+      ]
+      ```
 
   - **mapers**
 
+      - **__init__.py**
+
+      ```python
+      from .original_hdmapnet import NeuralMapPrior
+      from .set_epoch_info_hook import SetEpochInfoHook
+
+      __all__ = [
+          'NeuralMapPrior',
+      ]
+      ```
+
     - **base_mapper.py**
 
-    - **__init__.py**
+      定义了 `class BaseMapper(nn.Module, metaclass=ABCMeta)`，是一个基类。
 
     - **loss_utils.py**
 
+      定义了 `class HdmapNetLosses(torch.nn.Module)`，用于处理损失函数。
+
+      `__init__` 方法， `build_loss` 函数构建了三个损失函数：
+
+      - `self.dir_loss`：方向预测损失函数。
+      - `self.embed_loss`：嵌入特征损失函数。
+      - `self.seg_loss`：分割损失函数。
+      
+      还保存了一些其他配置信息，如角度类别数量 `self.angle_class` 和是否进行方向预测 `self.direction_pred`。
+
+      `forward` 方法：
+      
+      接受输入：预测结果 `preds` 和真实标签 `gts`。
+      
+      分别计算了分割损失、嵌入特征损失和方向预测损失（如果进行方向预测），将各项损失加权求和作为最终的总损失。
+      
+      函数的返回值是总损失值 `loss` 和损失日志信息 `log_vars`。
+
     - **map_global_memory.py**
+
+      首先，从 `project.neural_map_prior.map_tiles.lane_render` 引入了大量的辅助函数。
+
+      然后就是定义一个巨大的类：`class MapGlobalMemory(object)`
+
+      `__init__`方法接受两个参数 `map_attribute` 和 `bev_attribute`，分别表示地图属性和 BEV 属性。
+    
+      首先保存了地图属性和 BEV 属性；然后根据配置信息，生成训练和验证数据的信息列表和城市列表；根据城市划分的方式或新数据划分的方式，确定了训练和验证数据的列表，并保存了一些数据统计信息；接着根据配置信息和数据信息生成了一些辅助信息，如 `train_gpu2city` 和 `val_gpu2city`。最后，初始化了一些空字典和参数，用于后续的数据处理和计算。
+
+      空字典：
+
+      ```python
+      self.map_slice_float_dict = {}
+      self.map_slice_int_dict = {}
+      self.map_center_dis_dict = {}
+      self.map_slice_onehot_dict = {}
+      ```
+
+      之后就是挂在这个类之下的函数：
+
+      `gen_token2map_info(self, split)`: 根据给定的数据集划分（如训练集或验证集），加载对应的数据信息和城市列表。如果批量大小不为1，则确保数据信息和城市列表长度一致，并且保证可以被批量大小整除后返回。
+
+      `gen_map_slice_int(map_attribute)`: 根据 `map_attribute` 生成一个新的 `map_attribute`，其中数据类型设置为int16，嵌入维度设置为1。
+
+      `reset_define_map(self, epoch, gpu_id, dataset, map_slices_name, map_attribute_func=None)`: 根据给定的地图片段名称，重置地图，并根据地图属性函数对地图属性进行更新。
+
+      `check_epoch(self, epoch, dataset)`: 检查当前训练/验证的周期是否与之前记录的周期不同，如果不同则更新并返回True。
+
+      `reset_map(self, epoch, gpu_id, dataset, map_slices_dict, map_attribute)`: 重置地图，并根据给定的地图切片字典、地图属性以及训练/验证的数据集、GPU ID等信息生成新的地图。
+
+      `gen_map_info(self, token, split)`: 根据给定的数据集划分和token生成地图信息，包括城市名称、地图索引、地图切片最小边界和最大边界。
+
+      `take_map_prior(self, bev_feature, token, img_meta, dataset, trans)`: 根据给定的token获取地图优先信息，并根据变换将BEV特征投影到地图上。
+
+      `replace_map_prior(self, bev_feature, token, img_metas, dataset, trans)`: 根据给定的token替换地图优先信息，并根据变换将BEV特征投影到地图上。
 
     - **original_hdmapnet_baseline.py**
 
+      **主干部分**，定义了 `class NeuralMapPrior(BaseMapper)`：
+
+      - `__init__` 方法接受一系列参数来初始化模型，包括地图 BEV 属性 (map_bev_attrs)、距离配置 (dist_cfg)、图像的骨干网络 (img_backbone)、图像的颈部网络 (img_neck)、视图变换配置 (view_transformation_cfg)、头部网络配置 (head_cfg)、损失配置 (loss_cfg)、地图属性 (map_attribute)、是否开启 NMP (open_nmp) 以及其他参数。
+
+      - `set_epoch` 方法用于设置当前的训练周期。
+
+      - `extract_img_feat` 方法用于提取图像特征。它接受图像作为输入，并返回**不同尺度的特征图**。（**重要**）
+
+      - `flatte_feat_and_transpose` 方法用于将特征张量展平并转置，以便进行后续处理。
+
+      - `reshape2bev` 方法用于将特征张量重塑为 BEV 格式。
+
+      - `get_bev_pos` 方法用于获取 BEV 的位置编码。
+
+      - `forward_single` 方法用于进行**单个样本的前向传播**。首先从输入图像中提取图像特征，然后通过视图变换模块将其转换为 BEV 特征。如果开启了神经地图先验 (NMP)，则从全局内存中获取**先验 BEV**。接下来，对当前 BEV 和先验 BEV 进行处理，并通过**卷积 GRU 网络**(定义在`modules/gru_fusion.py`)进行更新。最后，将更新后的 BEV 特征送入头部网络进行预测。
+
+      - `reset_map` 方法用于重置地图。
+
+      - `forward_train` 方法用于在训练过程中进行前向传播。首先从输入中获取图像数据和栅格化的 Ground Truth。如果开启了神经地图先验 (NMP)，则在训练阶段重置地图。然后调用 `forward_single` 方法进行单个样本的前向传播，并计算损失。最后返回损失值、日志变量和批量大小。
+
+      - `forward_test` 方法用于在测试过程中进行前向传播。与训练过程类似，首先获取图像数据和图像元数据。如果开启了神经地图先验 (NMP)，则在测试阶段同样重置地图。然后调用 `forward_single` 方法进行单个样本的前向传播，并进行后处理以生成最终的预测结果。
+
     - **original_hdmapnet_nmp_final.py**
+
+      定义了 `class OriginalHDMapNet(BaseMapper)`：
+
+      仅有`forward_single`函数和上一个文件有变化：内容增加了。
+
+      在`baseline`版本中，先提取图像特征 `imgs_feats`，然后根据是否开启神经地图先验 `open_nmp` 来处理 BEV 特征。如果开启了神经地图先验，会定义 `cur_bev` 和 `prior_bev`，然后通过全局内存获取 `prior_bev`，并使用卷积 GRU 网络对 `prior_bev` 和 `cur_bev` 进行更新。更新后的结果被展平为 `bev_feats`，然后传递给头部网络进行预测。
+
+      在`final`版本中不再区分 `cur_bev` 和 `prior_bev`，只定义了 `prior_bev`。然后同样通过全局内存获取 `prior_bev`。接下来，处理 BEV 特征，如果开启了神经地图先验，则对 cur_bev 和 `prior_bev` 进行进一步处理，然后通过卷积 GRU 网络进行更新。更新后的结果也被展平为 bev_feats，然后传递给头部网络进行预测。
 
     - **original_hdmapnet.py**
 
+      这里
+
+      这个类和final版本里的基本相同，但是增加了`positional_encoding_cur`和`positional_encoding_prior`两个参数。
+
+      多了一个 `get_bev_pos` 方法通过调用 `positional_encoding_cur` 和 `positional_encoding_prior` 来获取当前 BEV 特征和先前 BEV 特征的位置编码，并将其用于后续的神经地图先验更新过程中。
+
     - **set_epoch_info_hook.py**
+
+      定义了 `class SetEpochInfoHook(Hook)`:
+
+      用于在训练过程中设置模型的epoch信息。这里有大量print debug信息没有删除，看起来像惨烈的古战场。
+
+      `before_train_epoch(runner)`: 在每个训练epoch开始之前执行的操作。从模型中移除了`map_slice_float_dict`和`map_slice_int_dict`；
+
+      `after_train_epoch(runner)`: 在每个训练epoch结束之后执行的操作。同样地，从模型中移除了`map_slice_float_dict`和`map_slice_int_dict`；
+
+      此外，还定义了一个辅助方法 `_should_evaluate`(runner)，用于判断是否应该执行评估。
+
+      Here is the rule to judge whether to perform evaluation:
+        
+      1. It will not perform evaluation during the epoch/iteration interval, which is determined by ``self.interval``.
+
+      2. It will not perform evaluation if the start time is larger than current time.
+
+      3. It will not perform evaluation when current time is larger than the start time but during epoch/iteration interval.
+
+      Returns:
+
+      bool: The flag indicating whether to perform evaluation.
+
+
 
 - **modules**
 
@@ -820,14 +1051,14 @@ from .datasets import *
 
       - **window_cross_attention.py**
 
-    - **view_transformation**
+- **view_transformation**
 
-      - **bevformer.py**
+  - **bevformer.py**
 
-      - **hdmapnet.py**
+  - **hdmapnet.py**
 
-      - **homography.py**
+  - **homography.py**
 
-      - **__init__.py**
+  - **__init__.py**
 
-      - **lss.py**
+  - **lss.py**
