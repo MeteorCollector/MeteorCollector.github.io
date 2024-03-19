@@ -420,9 +420,76 @@ from .datasets import *
 
     - **average_precision_det.py**
 
+      这里面东西比较杂，主要是算准确度的。
+
+      首先是 `average_precision(recalls, precisions, mode='area')`，这是一个单纯的计算平均准确率的函数，当 `mode` 为 'area' 时，计算 Precision-Recall (PR) 曲线下的面积作为平均精度；当 `mode` 为 '11points' 时，计算召回率在 11 个点（0.0 到 1.0 之间，步长为 0.1）处的精度并求平均。返回值为计算得到的平均精度。
+
+      `tpfp_test`: 这个函数用于计算给定的检测结果（det, detection）与真实标注（gt, ground truth）之间的真正例（true positives）和假正例（false positives）。它接受检测结果det_bboxes和真实标注gt_bboxes，以及阈值threshold，然后，根据置信度阈值将检测结果分为真正例和假正例，并返回它们的数量。
+
+      `get_cls_results`: 这个函数用于从给定的检测结果和真实标注中获取特定类别的检测结果和标注信息。它接受检测结果det_results、标注信息annotations和指定的类别IDclass_id。然后，根据class_id筛选出特定类别的检测结果和标注信息，并返回`cls_dets`, `cls_gts`, `cls_gts_mask`。
+
+      `_eval_map(det_results, annotations, threshold=0.5, num_classes=3, class_name=None, logger=None, tpfp_fn_name='vec', nproc=4)`：
+
+      ```
+      det_results (list[list]): [[cls1_det, cls2_det, ...], ...].
+      The outer list indicates images, and the inner list indicates per-class detected bboxes.
+      annotations (list[dict]): Ground truth annotations where each item of he list indicates an image. Keys of annotations are:
+
+        - `bboxes`: numpy array of shape (n, 4)
+        - `labels`: numpy array of shape (n, )
+
+      scale_ranges (list[tuple] | None): canvas_size
+      Default: None.
+
+      iou_thr (float): IoU threshold to be considered as matched.
+      Default: 0.5.
+
+      logger (logging.Logger | str | None): The way to print the mAP summary. See `mmcv.utils.print_log()` for details. 
+      Default: None.
+      
+      tpfp_fn (callable | None): The function used to determine true/false positives. If None, :func:`tpfp_default` is used as default unless dataset is 'det' or 'vid' (:func:`tpfp_imagenet` in this case). If it is given as a function, then this function is used to evaluate tp & fp. Default None.
+      
+      nproc (int): Processes used for computing TP and FP. Default: 4.
+
+      Returns:
+      tuple: (mAP, [dict, dict, ...])
+      ```
+
+      `eval_map(cfg: dict, logger=None)`：是 `_eval_map` 外面套的一层，负责把 `cfg` 里的参数读出来传进去
+
+      `print_map_summary`：没什么好说的，就是打印信息
+
     - **tgtg_chamfer.py**
 
+      评估模型用的辅助函数。
+
+      `vec_iou`：用于计算 `pred_lines` 和 `gt_lines` 之间的IoU；
+
+      `convex_iou`：用于计算一个预测凸多边形与一个真实多边形之间的IoU；
+
+      `rbbox_iou`：用于计算一个预测旋转矩形与一个真实多边形之间的交并比；
+
+      `polyline_score`：用于计算两个多边形之间的评估分数，然后通过计算最近点之间的欧几里得距离来确定多边形的相似度，也就是chamfer距离。
+
     - **tgtg.py**
+
+      这里的函数是调用 **tgtgchamfer.py** 来计算 `tp` 和 `fp` 。其实一直想吐槽的是，这个文件名真的没写错吗？总感觉g要改成p才对。
+
+      `tpfp_bbox` 和 `tpfp_rbbox` 用于检查检测到的边界框是否为（true positive）还是误检的正样本（false positive）。
+
+      `tpfp_det` 的描述是 `Check if detected bboxes are true positive or false positive.`
+
+      传入参数：
+
+      `det_bboxes`：检测到的边界框，形状为 $(m, 5)$，其中 $m$ 是边界框的数量，每个边界框由 $4$ 个坐标和一个置信度组成。
+
+      `gt_bboxes`：真实的边界框，形状为 $(n, 4)$，其中 $n$ 是真实边界框的数量。
+
+      `threshold`：IoU 阈值，用于确定真正例和误检例，默认为 $0.5$。
+
+      然后返回 `tp` 和 `fp`，分别是两个数组，初始化为全$0$，分别在 `tp` 和 `fp` 对应 `id` 处置 $1$。
+
+      `tpfp_gen` 在源文件里的描述是 `tpfp_det` 内容的完全复制，感觉是搞错了。但是感觉确实只是上面的 `det_bboxes` 参数换成了 `gen_lines`，其他部分完全一致。
 
   - **rasterize.py**
 
