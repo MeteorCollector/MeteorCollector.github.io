@@ -1025,40 +1025,443 @@ from .datasets import *
 
 - **modules**
 
+    - **__init__**
+
+      ```python
+
+      from .transformer import PerceptionTransformer
+      from .spatial_cross_attention import SpatialCrossAttention, MSDeformableAttention3D
+      from .temporal_self_attention import TemporalSelfAttention
+      from .window_cross_attention import WindowCrossAttention
+      from .prior_cross_attention import PriorCrossAttention
+      from .encoder import BEVFormerEncoder, BEVFormerLayer
+      from .decoder import DetectionTransformerDecoder
+      ```
+
     - **custom_base_transformer_layer.py**
+
+      定义了 `class MyCustomBaseTransformerLayer(BaseModule)`。
+
+      Base `TransformerLayer` for vision transformer.
+      It can be built from `mmcv.ConfigDict` and support more flexible customization, for example, using any number of `FFN or LN ` and use different kinds of `attention` by specifying a list of `ConfigDict` named `attn_cfgs`. It is worth mentioning that it supports `prenorm` when you specifying `norm` as the first element of `operation_order`. More details about the `prenorm`: `On Layer Normalization in the Transformer Architecture <https://arxiv.org/abs/2002.04745>`_ .
+
+      这里只有 `__init__` 和 `forward` 函数。
 
     - **decoder.py**
 
+      首先定义 `DetectionTransformerDecoder`，用于实现DETR3D模型中的解码器部分（Implements the decoder in DETR3D transformer）。该解码器使用Transformer结构。
+
+
+
+      `__init__`：初始化解码器，设置是否返回中间输出以及是否启用FP16。
+
+      `forward`：前向传播函数，接收输入query和其他参数，并通过多个Transformer层进行处理。如果设置了return_intermediate=True，则返回每个Transformer层的中间输出。此外，如果提供了reg_branches参数（用于细化回归结果），则对回归分支进行处理，更新参考点信息。
+
+      之后定义 `CustomMSDeformableAttention(BaseModule)` 
+
+      ```
+      An attention module used in Deformable-Detr.
+
+      `Deformable DETR: Deformable Transformers for End-to-End Object Detection.
+      <https://arxiv.org/pdf/2010.04159.pdf>`_.
+
+      Args:
+        embed_dims (int): The embedding dimension of Attention. Default: 256.
+
+        num_heads (int): Parallel attention heads. Default: 64.
+
+        num_levels (int): The number of feature map used in Attention. Default: 4.
+
+        num_points (int): The number of sampling points for each query in each head. Default: 4.
+
+        im2col_step (int): The step used in image_to_column. Default: 64.
+
+        dropout (float): A Dropout layer on `inp_identity`. Default: 0.1.
+
+        batch_first (bool): Key, Query and Value are shape of (batch, n, embed_dim) or (n, batch, embed_dim). Default to False.
+
+        norm_cfg (dict): Config dict for normalization layer. Default: None.
+
+        init_cfg (obj:`mmcv.ConfigDict`): The Config for initialization. Default: None.
+      ```
+
+      `__init__`：初始化注意力模块，设置注意力头的数量、嵌入维度等参数，并初始化模块中的各个子模块，如线性映射层。
+
+      `init_weights`：初始化模型参数，主要是线性映射层的参数。
+
+      `forward`方法：前向传播函数，接收输入`query`、`key`、`value`等，并根据Deformable-Detr中提出的注意力机制进行处理。在这个方法中，使用多尺度变形注意力机制，根据输入的参考点、采样偏移量等参数，计算注意力权重，并根据这些权重对输入的`value`进行加权求和，最后再通过线性映射层得到输出。
+
     - **deformable_transformer.py**
 
+      定义了 `class Transformer(BaseModule)`
+
+      ```
+      Implements the DETR transformer.
+
+      Following the official DETR implementation, this module copy-paste from torch.nn.Transformer with modifications:
+
+      * positional encodings are passed in MultiheadAttention
+      * extra LN at the end of encoder is removed
+      * decoder returns a stack of activations from all decoding layers
+
+      See `paper: End-to-End Object Detection with Transformers <https://arxiv.org/pdf/2005.12872>`_ for details.
+      ```
+
+      `__init__`：初始化Transformer模块，接收`encoder`和`decoder`的配置，分别构建编码器和解码器。编码器和解码器的配置均由`mmcv.ConfigDict`或字典表示。
+
+      `init_weights`：用于初始化模型参数，遵循DETR官方实现的初始化方式，使用Xavier初始化方法对权重进行初始化。
+    
+      `forward`：前向传播函数，接收输入x、掩码mask、查询嵌入query_embed和位置编码pos_embed，然后通过编码器将输入编码为内存memory，最后通过解码器根据查询嵌入和编码器的内存生成输出out_dec。其中，解码器返回所有解码层的激活堆栈，out_dec的形状为`[num_dec_layers, bs, num_query, embed_dims]`，memory为编码器的输出，形状为`[bs, embed_dims, h, w]`。
+
+      定义了 `class DeformableDetrTransformerEncoder(Transformer)`:
+
+      Implements the DeformableDETR transformer.
+
+      `__init__`：初始化DeformableDetrTransformerEncoder模块，接收`num_feature_levels`和其他参数，然后调用父类的初始化方法初始化transformer。`num_feature_levels`指定了来自FPN的特征图的数量。
+    
+      `init_layers`：初始化DeformableDetrTransformer的层，包括特征级别的嵌入。
+
+      `init_weights`方法：初始化transformer的权重，其中还包括对多尺度可变注意力模块的权重初始化。
+
+      `forward`：前向传播函数，接收来自不同级别的特征图、掩码、查询嵌入、位置编码等信息，然后对特征进行展平和处理，最后通过编码器生成memory。在此过程中，还会计算特征图的参考点。最后，返回经过编码器处理的特征图。
+      
     - **encoder.py**
+
+      这个文件内容比较多，基本所有encoder都在这里了。
+
+      说实话我现在还不懂transformer，我觉得我必须学一下。这里先大概写成这样了，我今晚就开始学。
+
+      - BEVFormerEncoder (TransformerLayerSequence)
+
+        注册：@TRANSFORMER_LAYER.register_module()
+
+        `__init__`：初始化BEVFormerEncoder
+        
+        `forward`方法：前向传播函数，接收一系列参数，如bev_query、key、value等。在此方法中，首先通过`get_reference_points`和`point_sampling`获取2D和3D的参考点和BEV mask。然后，遍历所有的层，对BEV query进行处理，并生成新的BEV query。最后，根据是否需要返回中间结果，返回相应的结果。
+
+      - BEVFormerLayer(MyCustomBaseTransformerLayer)
+
+        注册：@TRANSFORMER_LAYER.register_module()
+
+        `__init__`：初始化BEVFormerLayer，接收一系列参数，如attn_cfgs、feedforward_channels等。其中，attn_cfgs包含了注意力机制的配置信息，feedforward_channels表示前馈网络的通道数。
+
+        `forward`：前向传播函数，接收一系列参数，并根据参数处理BEV query。在此方法中，首先判断输入是否为单个BEV图像，然后调用get_single_bev方法处理单个BEV图像。在get_single_bev方法中，通过注意力机制处理BEV query，然后经过规范化和前馈网络（feed forward）处理，最后返回处理后的结果。
+
+      - MapPriorLayer(MyCustomBaseTransformerLayer)
+
+        注册：@TRANSFORMER_LAYER.register_module()
+
+        `__init__`：初始化MapPriorLayer，接收一系列参数，如attn_cfgs、feedforward_channels等。其中，attn_cfgs包含了注意力机制的配置信息，feedforward_channels表示前馈网络的通道数。
+    
+        `forward`：前向传播函数，接收一系列参数，并根据参数处理BEV query。在此方法中，首先判断输入是否为单个BEV图像，然后调用`get_single_bev`方法处理单个BEV图像。在`get_single_bev`方法中，通过注意力机制处理BEV query，然后经过规范化和前馈网络处理，最后返回处理后的结果。
+      
+      - MapPriorDeformableLayer(MyCustomBaseTransformerLayer)
+
+        注册：@TRANSFORMER_LAYER.register_module()
+
+        用于处理形变的地图先验。
+
+        `__init__` 初始化；
+
+        `forward`:判断输入是否为单个BEV图像，然后调用`get_single_bev`方法处理单个BEV图像。
+
+        `get_single_bev`方法中，先通过注意力机制处理BEV query，然后经过规范化，再进行另一次注意力操作，并经过规范化。接着，将处理后的结果输入到前馈网络中，最后返回处理后的结果。
 
     - **gru_fusion.py**
 
-    - **__init__.py**
+      大名鼎鼎的GRU。
+
+      `gen_matrix(ego2global_rotation, ego2global_translation)`: 该函数用于生成从车体坐标系到全局坐标系的转换矩阵。
+
+      `gen_ego2ego_matrix(ori_ego2global_rotation, ref_ego2global_rotation, ori_ego2global_translation, ref_ego2global_translation)`: 该函数用于生成从一个车体坐标系到另一个车体坐标系的转换矩阵。
+
+      `get_sample_coords(bev_bound_w, bev_bound_h, bev_w, bev_h)`: 该函数用于生成BEV图像上采样点的坐标。
+
+      `get_coords_resample(bev_feature, pad_bev_feature, ego2ego, real_h=30, real_w=60)`: 该函数用于获取经过形变后的BEV特征。
+
+      `class ConvGRU(nn.Module)`: 基于卷积的GRU模型。
+
+      `class ConvGRUDeformable(nn.Module)`: 基于形变卷积的GRU模型。
 
     - **multi_scale_deformable_attn_function.py**
 
+      这个文件在init里没有引用。
+
+      定义了类：`MultiScaleDeformableAttnFunction_fp16(Function)`
+
     - **prior_cross_attention.py**
+
+      定义了类：`PriorCrossAttention(BaseModule)`
+
+      ```
+      An attention module used in BEVFormer based on Deformable-Detr.
+
+      `Deformable DETR: Deformable Transformers for End-to-End Object Detection.
+      <https://arxiv.org/pdf/2010.04159.pdf>`_.
+      ```
+
+      `__init__`：除了调用的模块之外还定义了一些线性层：
+      
+      sampling_offsets：用于生成采样偏移的线性层。
+      
+      attention_weights：用于计算注意力权重的线性层。
+      
+      value_proj：用于投影值的线性层。
+      
+      output_proj：用于投影输出的线性层。
+
+      `init_weight`：用于初始化线性层的权重的方法
+
+      `forward`：前向传播，流程：
+
+      保存原始查询张量作为 identity。
+
+      根据不同的配置确定值张量 value：
+
+      - 如果使用当前先验值，则将当前查询与关键字参数中的键值合并作为值。
+
+      - 如果使用先验值，则将关键字参数中的值作为值。
+
+      - 如果使用当前值，则直接使用当前查询作为值。
+
+      如果存在查询位置张量，则将查询张量与查询位置张量相加。
+
+      获取查询张量的形状信息，计算值张量的投影，并重塑形状以备用于后续操作。
+
+      计算采样偏移和注意力权重，并进行相应的归一化和重塑操作，以便后续的多尺度可变形注意力操作。
+
+      基于参考点和采样偏移计算采样位置。
+
+      使用多尺度可变形注意力函数处理值张量，并获得输出。
+
+      将输出张量的形状调整为 (bs, num_query, embed_dims)，并进行投影。
+
+      将投影后的张量与原始查询相加，并应用 Dropout。
+
+      返回处理后的查询张量。
 
     - **spatial_cross_attention.py**
 
+      这里的东西主要是BEVFormer用的。
+
+      ```python
+      @ATTENTION.register_module()
+      class SpatialCrossAttention(BaseModule):
+      """An attention module used in BEVFormer.
+      Args:
+        embed_dims (int): The embedding dimension of Attention. Default: 256.
+
+        num_cams (int): The number of cameras
+        dropout (float): A Dropout layer on `inp_residual`. Default: 0.
+        
+        init_cfg (obj:`mmcv.ConfigDict`): The Config for initialization. Default: None.
+
+        deformable_attention: (dict): The config for the deformable attention used in SCA.
+      ```
+
+      ```python
+      @ATTENTION.register_module()
+      class MSDeformableAttention3D(BaseModule):
+      """An attention module used in BEVFormer based on Deformable-Detr.
+      `Deformable DETR: Deformable Transformers for End-to-End Object Detection.
+      <https://arxiv.org/pdf/2010.04159.pdf>`_.
+      Args:
+        embed_dims (int): The embedding dimension of Attention. Default: 256.
+
+        num_heads (int): Parallel attention heads. Default: 64.
+
+        num_levels (int): The number of feature map used in Attention. Default: 4.
+
+        num_points (int): The number of sampling points for each query in each head. Default: 4.
+
+        im2col_step (int): The step used in image_to_column. Default: 64.
+
+        dropout (float): A Dropout layer on `inp_identity`. Default: 0.1.
+
+        batch_first (bool): Key, Query and Value are shape of (batch, n, embed_dim) or (n, batch, embed_dim). Default to False.
+
+        norm_cfg (dict): Config dict for normalization layer. Default: None.
+
+        init_cfg (obj:`mmcv.ConfigDict`): The Config for initialization. Default: None.
+      """
+      ```
+
     - **temporal_self_attention.py**
 
-      - **transformer.py**
+      见下。
 
-      - **utils.py**
+      ```python
+      @ATTENTION.register_module()
+      class TemporalSelfAttention(BaseModule):
+      """An attention module used in BEVFormer based on Deformable-Detr.
 
-      - **window_cross_attention.py**
+      `Deformable DETR: Deformable Transformers for End-to-End Object Detection.
+      <https://arxiv.org/pdf/2010.04159.pdf>`_.
+      """
+      ```
+
+    - **transformer.py**
+
+      ```python
+      @TRANSFORMER.register_module()
+      class PerceptionTransformer(BaseModule):
+      ```
+
+      这个类除了 `__init__`、`forward`之外，还有`get_bev_features`
+
+      “这个类主要用于感知变换器，它通过嵌入特征和查询张量来获取 BEV 特征，进而进行对象检测或其他任务的处理。”
+
+    - **utils.py**
+
+      又是辅助函数，但是感觉这里的函数`gru_fusion.py`里都有，很怪。
+
+    - **window_cross_attention.py**
+
+      几个数据处理相关的辅助函数，然后
+
+      `class FeedForward(nn.Sequential)`：用于变换器编码器中的前馈神经网络模块（**重要**）。
+
+      `unfold` 函数将给定特征图按照给定的窗口大小（步幅等于窗口大小）展开（非重叠）。
+
+      `fold` 函数将窗口的张量再次折叠成特征图。
+
+      `class WindowMultiHeadAttention(nn.Module)`：`update_resolution(new_window_size, **kwargs)`更新窗口大小并重新生成相对位置编码；`__get_relative_positional_encodings()`计算相对位置编码；_`_self_attention(query, key, value, batch_size_windows, tokens, mask)`执行标准的（非序列化的）缩放余弦自注意力；`forward(input, key, mask)`对输入执行 query、key、value 映射，然后执行自注意力操作，并应用投影映射和 dropout，最后将输出重塑回原始形状。
+
+      ```python
+      @ATTENTION.register_module()
+      class WindowCrossAttention(nn.Module)
+      ```
+
+      重要。 
+      `__init__`：初始化了窗口大小和 BEV 窗口大小、窗口注意力层、归一化层。
+
+      `forward(query, key, bev2win, win2bev, hist_index, **kwargs)`：执行前向传播。首先将输入的 query 和 key 重新形状为 4D 张量，然后创建注意力掩码。接着，对输入的 query 和 key 执行 patching 操作，将它们转换成相应的窗口大小的 patch。然后调用窗口注意力层来获取注意力加权的输出。最后，执行归一化操作，并添加跳跃连接，最终返回输出张量。
 
 - **view_transformation**
 
+  - **__init__.py**
+
+    ```python
+    from .bevformer import BEVFormer
+    from .lss import LSS
+    from .hdmapnet import HDMapNetBackbone
+
+    __all__ = [
+        'BEVFormer', 'LSS', 'HDMapNetBackbone']
+    ```
+
   - **bevformer.py**
+
+    这里定义了作为颈部网络的bevformer模块。
+
+    ```python
+    @NECKS.register_module()
+    class BEVFormer(nn.Module) 
+    ```
+
+    省略`__init__`不讲，
+
+    `_init_layers()`：初始化了 BEV 嵌入、特征级别嵌入和相机嵌入。
+
+    `_init_weight()`：初始化了模型参数的权重。
+
+    `get_bev_query_and_pos(imgs)`：获取 BEV 查询和位置编码。
+
+    `flatten_feats(img_feats)`：将图像特征展平，并进行嵌入和级别嵌入的操作。
+
+    `forward(imgs, imgs_feats, **kwargs)`：执行前向传播。首先将图像特征展平并进行嵌入和级别嵌入的操作，然后获取 BEV 查询和位置编码。接着调用 Transformer 编码器来获取 BEV 特征。最后返回 BEV 特征。
 
   - **hdmapnet.py**
 
+    定义 `class Up(nn.Module)`，上采样模块；
+
+    `class CamEncode(nn.Module)`：
+
+    - 引用 Up 模块用于上采样；
+
+    - `get_eff_depth(x)` 方法用于获取 EfficientNet 的深度特征。
+
+    - `forward(x)` 方法将输入特征 x 传递给 `get_eff_depth(x)` 方法，并返回深度特征。
+
+    `class ViewTransformation(nn.Module)`：
+
+    该类实现了视角变换。
+
+    构造函数中定义了一个线性变换模块列表，每个模块用于fv特征映射到bv特征。
+
+    `forward(feat)` 方法将输入特征图映射到bv特征。
+
+    ```python
+    @NECKS.register_module()
+    class HDMapNetBackbone(nn.Module)
+    ```
+
+    作为颈部网络的`HDMapNetBackbone`：
+
+    `__init__` 方法：初始化模型参数和各个子模块。初始化相机编码器 `CamEncode`，视角融合器 `ViewTransformation`，透视投影模块 `IPM` 等。如果需要，还会初始化点云编码器 `PointPillarEncoder`。
+
+    `get_Ks_RTs_and_post_RTs` 方法：用于生成相机内参、旋转矩阵、平移向量等参数。
+
+    `get_cam_feats` 方法：用于获取相机特征。
+
+    `forward` 方法：实现了模型的前向传播过程。首先获取相机特征，然后进行视角融合。接着根据图像的元信息，生成相机内参、旋转矩阵等参数，并将相机特征进行透视投影，将其转换到 BEV（鸟瞰图）空间。如果模型中包含点云编码器，则将点云特征与透视投影后的相机特征进行拼接。返回最终的特征输出。
+
   - **homography.py**
 
-  - **__init__.py**
+    这个文件中的函数基本是为了实现投影用的。
+
+    `rotation_from_euler(rolls, pitchs, yaws, cuda=True)`：从欧拉角计算旋转矩阵。参数 `rolls`、`pitchs` 和 `yaws` 分别表示滚转角、俯仰角和偏航角。返回的旋转矩阵大小为 [B, 4, 4]，其中 B 表示批量大小。
+
+    `perspective(cam_coords, proj_mat, h, w, extrinsic, offset=None)`：进行透视投影，将相机坐标投影到像素坐标。参数 `cam_coords` 是相机坐标，`proj_mat` 是投影矩阵，h 和 w 分别表示图像的高度和宽度，`extrinsic` 表示是否使用外参。返回投影后的像素坐标，大小为 [B, h, w, 2]。
+
+    `bilinear_sampler(imgs, pix_coords)`：根据像素坐标在输入图像中进行双线性插值采样。参数 imgs 是输入图像，`pix_coords` 是像素坐标。返回采样后的图像，大小为 [B, h, w, c]。
+
+    `plane_grid(xbound, ybound, zs, yaws, rolls, pitchs, cuda=True)`：生成一个平面网格，用于表示投影平面。参数 xbound 和 ybound 分别表示 x 和 y 方向的边界，zs 表示 z 方向上的坐标，`yaws`、`rolls` 和 `pitchs` 分别表示偏航角、滚转角和俯仰角。返回平面网格的坐标，大小为 [B, N, 4]，其中 B 表示批量大小，N 表示网格点数量。
+
+    剩下的是IPM（Inverse Perspective Mapping）模块，用于将车辆周围的多个摄像头图像映射到鸟瞰视图。
+
+    `ipm_from_parameters` 函数：输入：图像、3D 点云坐标、相机内参矩阵、相机外参矩阵、目标高度和宽度。输出：根据参数进行 IPM 映射后的图像。根据相机内外参矩阵和3D点云坐标，进行透视投影，得到图像中各点的像素坐标，然后进行双线性插值采样，得到映射后的图像。
+
+    `PlaneEstimationModule` 类：用于从输入图像中估计平面参数，即高度、滚转角和俯仰角。
+
+    `class IPM(nn.Module)`：
+
+    `__init__` 方法：初始化 IPM 模块，设定 IPM 参数，包括是否进行高度、滚转角和俯仰角的估计等。
+
+    `mask_warped` 方法：对映射后的图像进行遮罩处理，根据摄像头类型分别处理前后左右四个方向的摄像头。
+
+    `forward` 方法：模块的前向传播过程，根据输入的图像、相机内外参矩阵、姿态参数等，计算鸟瞰视图。
 
   - **lss.py**
+
+    最后的文件，只有一个类。
+
+    ```python
+    @NECKS.register_module()
+    class LSS(nn.Module)
+    ```
+
+    `__init__` 方法：初始化模块，通过构建 Transformer 构建器来创建 Transformer 模型。
+
+    `get_intri_and_extri` 方法：从图像的元数据中提取相机内参、相机到车辆坐标系的旋转矩阵和平移向量。
+
+    `forward` 方法：模块的前向传播过程。
+
+    - imgs：输入的图像。
+
+    - imgs_feats：图像特征，包括多个尺度的特征表示。
+
+    - img_metas：图像元数据，包括相机参数等。
+
+    - 将相机特征 cam_feats 重新整形成适合 Transformer 输入的形状。
+        
+    - 根据输入的图像元数据，构造相机的内外参数。
+
+    - 构造后处理的旋转矩阵和平移向量，用于将特征映射到标准尺度上。
+
+    - 调用 Transformer 模型处理特征。
+
+    - 调整输出特征的形状，最终得到鸟瞰视图的特征表示 bev_feats。
+
+
+$$\mathscr{Fin.}$$
