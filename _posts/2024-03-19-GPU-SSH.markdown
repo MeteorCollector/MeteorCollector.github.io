@@ -12,7 +12,7 @@ tag: util
 
 ## Carla transfuser 数据采集
 
-`transfuse` 的数据采集脚本在 `leaderboard/scripts/datagen.sh`，readme原文如下：
+`transfuser` 的数据采集脚本在 `leaderboard/scripts/datagen.sh`，readme原文如下：
 
 ### Data generation
 In addition to the dataset itself, we have provided the scripts for data generation with our autopilot agent. To generate data, the first step is to launch a CARLA server:
@@ -28,7 +28,15 @@ For more information on running CARLA servers (e.g. on a machine without a displ
 
 The main variables to set for this script are `SCENARIOS` and `ROUTES`. 
 
-实际上在运行脚本时terminal所在路径并不重要，只要`datagen.sh`里的变量设置正确就可以。
+
+
+实际上在运行脚本时terminal所在路径并不重要，只要
+
+1. 运行`./CarlaUE4.sh --world-port=2000 -opengl`；
+
+2. 运行`datagen.sh`，不用传入参数。
+
+不过要确保 `datagen.sh` 中变量的正确性：
 
 设置路径：
 
