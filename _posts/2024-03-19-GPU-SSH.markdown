@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "快回来，组里发显卡了"
+date:   2024-03-19 23:15:00 +0800
+categories: posts
+tag: util
+---
+
+<p><img src="{{site.url}}/images/gpu.png" width="75%" align="middle" /></p>
+
+可以用组里的显卡采数据了！怕自己忘了怎么弄，在这里记录一下。
+
+## Carla transfuser 数据采集
+
+`transfuse` 的数据采集脚本在 `leaderboard/scripts/datagen.sh`，readme原文如下：
+
+### Data generation
+In addition to the dataset itself, we have provided the scripts for data generation with our autopilot agent. To generate data, the first step is to launch a CARLA server:
+
+```Shell
+./CarlaUE4.sh --world-port=2000 -opengl
+```
+
+For more information on running CARLA servers (e.g. on a machine without a display), see the [official documentation.](https://carla.readthedocs.io/en/stable/carla_headless/) Once the server is running, use the script below for generating training data:
+```Shell
+./leaderboard/scripts/datagen.sh <carla root> <working directory of this repo (*/transfuser/)>
+```
+
+The main variables to set for this script are `SCENARIOS` and `ROUTES`. 
+
+实际上在运行脚本时terminal所在路径并不重要，只要`datagen.sh`里的变量设置正确就可以。
+
+设置路径：
+
+```bash
+export CARLA_ROOT=${1:path/to/carla}
+export WORK_DIR=${2:-/path/to/transfuser}
+```
+
+设置Town和Scenario：
+
+```bash
+export SCENARIOS=${WORK_DIR}/leaderboard/data/training/scenarios/Scenario10/Town05_Scenario10.json
+export ROUTES=${WORK_DIR}/leaderboard/data/training/routes/Scenario10/Town05_Scenario10.xml
+```
+
+## 外接显卡
+
