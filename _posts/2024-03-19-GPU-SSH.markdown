@@ -52,26 +52,68 @@ export SCENARIOS=${WORK_DIR}/leaderboard/data/training/scenarios/Scenario10/Town
 export ROUTES=${WORK_DIR}/leaderboard/data/training/routes/Scenario10/Town05_Scenario10.xml
 ```
 
-## 外接显卡
+## 搬运文件
 
-这时候就需要在带有显卡的服务器上跑自己的程序了。不过出现了一个小插曲：远程服务器的网络不似乎很顺畅，几乎没有办法用它自己下载任何东西。于是我们只好从自己的电脑传递文件过去。
+这时候就需要在带有显卡的服务器上跑自己的程序了。不过出现了一个小插曲：远程服务器的网络似乎不很顺畅，几乎没有办法用它自己下载任何东西。于是我们只好从自己的电脑传递文件过去。
 
-由于可以使用ssh，于是使用 `scp` 进行传输。
+由于可以使用 `ssh`，于是使用 `scp` 进行传输。
 
 传输文件夹：
 
-```bash
+```Shell
 scp -r /path/to/local/folder username@ipaddress:/path/to/remote/folder
 ```
 
-其中 `-r` 表示 `recursive` ，即上传文件夹和文件夹里所有文件。
+其中 `-r` 表示 `recursive` ，即上传文件夹和文件夹里所有文件。注意，`scp` 会把这个文件夹传送到目标文件夹**下**，我忘了这一点所以叠了两个同名文件夹，有点搞笑。
 
 首先本地下载了`anaconda`的安装包等等文件，传输到了远程机器进行安装；
 
 安装完毕之后，输入`conda --version`可以成功显示版本号。之后就要迁移`conda`环境了。
 
-### 迁移虚拟环境
+## 迁移虚拟环境
 
 首先用 `conda env list` 查看本地 `conda` 虚拟环境都存储在了哪里，然后将这个文件夹传送到远程机器上去。
 
+接着使用
 
+```Shell
+conda config --append envs_dirs /path/to/env
+```
+
+这里注意，后面的路径应当是你传入的虚拟环境所在路径的**上一个目录**，因为这个命令的本质是增加 `conda` 存放虚拟环境的文件夹，而每个虚拟环境都是这个文件夹下的子文件夹。
+
+这时候运行 `conda env list`，就可以发现我们的新虚拟环境已经被添加，然后使用 `conda activate` 激活环境就可以使用了。
+
+不过值得注意的是，新版 `conda` 取消了 `conda activate`，需要用 `source activate` 替代。但是退出虚拟环境仍然是 `conda deactivate`，十分神秘。
+
+## 运行数据采集
+
+然后就是按照上面的流程进行数据采集了。`cd` 到 `transfuser` 文件夹，首先运行 `Carla`：
+
+```Shell
+./carla/CarlaUE4.sh --world-port=2000 -opengl
+```
+
+然后运行数据采集脚本：
+
+```Shell
+./leaderboard/scripts/datagen.sh
+```
+
+注意，当终端退出时，挂在 `2000` 端口的 `Carla` 不会停止。停止它的一种方法是在原终端直接 `Ctrl + C`，另一种是直接杀掉进程。（`ps aux | grep Carla` 获得进程号，然后 `kill -9 <pid>`）；
+
+`datagen` 脚本比较烦人，对它进行 `Ctrl + C` 仅仅会停止当前组数据的采集，它还会开始下一组。直接关掉终端或者杀掉进程会比较管用。
+
+为了在退出终端后程序可以继续运行，可以使用`gnu screen`。我让 `iris` 一直运行使用的就是 `screen`，可以说是打过不少交道了。
+
+`screen` 常用指令：
+
+- `screen` 创建一个虚拟屏幕
+
+- `screen -ls` 查看已有的 `screen` 列表；
+
+- `screen -r <sid>` 将编号为`sid`的虚拟屏幕连接到当前的终端窗口；
+
+- `screen -d <sid>` 使编号为`sid`的虚拟屏幕解除挂载；
+
+- 在虚拟屏幕里输入 `exit` 终止该虚拟屏幕。
