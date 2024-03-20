@@ -38,3 +38,115 @@ Chamfer距离通过将一个点云中每个点与另一个点云中最近邻居�
 
 它有助于量化两个点云之间的相似性，在许多计算机视觉和图形应用中非常有用。
 
+## xavier 初始化
+
+当定义好网络模型之后，需要进行权重初始化，恰当的权重初始化方法，可以加快模型的收敛，不恰当的初始化方法，可能导致梯度消失或爆炸，导致模型不可用。如果权重太小，则输入信号通过网络中的每一层时，其方差就会开始减小，输入最终会降低到非常低的值，导致梯度消失。如果权重太大，则输入数据的方差往往会随着每个传递层而迅速增加。最终，变得很大以至于梯度爆炸。
+
+如果希望神经网络正常运行，则使用正确的权重初始化网络非常重要。在开始训练网络之前，我们需要确保权重在合理范围内，尽量控制在1附近。
+
+[reference1](https://zhuanlan.zhihu.com/p/458373836)
+
+[reference2](https://zhuanlan.zhihu.com/p/648576849)
+
+### xavier初始化推导过程：
+
+我们的核心思想是要让权重$w$在每一层的方差保持一致。
+
+约定输入为$x$，输出为$y$。对于任意隐藏层，有 $H_{i} = \sum^n_{j=0} x_j \cdot w_{ij}$。
+
+#### 假设与符号说明
+
+- 权重 $w_{i,j}^t$ (这里表示 第t层从t-1层的第i个神经单元连接到t层的第j个神经单元的权重)是从均值为0，方差为 $\sigma^2$的分布中抽取的，并且符合独立同分布，权重矩阵为 $\bold W_{n_{in}\times n_{out}}^t$ ，可以认为是 $n_{in}$ 批次大小，每行是一个样本，这些样本有 $n_{out}$ 个特征
+
+- $h_i^{t-1}$ （表示第t层的输入，即是t-1层的输出）服从均值为0，方差为 $\gamma_t$ （表示第t层输入的方差）的分布
+  
+- 没有非线性（即没有激活函数）的全连接层，输入维度为 $n_{in}$ ，$n_{out}$ ,满足 $\bold h^t=\bold (W^t)^Th^{t-1}$ ，即t层的输出是来自t-1层输出的加权和，注意这里权重矩阵被转置了，满足 $n_{out}\times n_{in}\quad n_{in}\times1\implies n_{out}\times 1$ 的维度关系
+
+#### 正向均值
+
+正向均值，就是对t层的输出求数学期望，对于t层的任意一个神经单元i，其期望满足
+
+$$ E[h_i^t]=E\left [\sum\limits_jw_{i,j}^th_{j}^{t-1}\right ]\xlongequal{i,i,d}\sum\limits_{j}E[w_{i,j}^t]E[h_j^{t-1}]=0 $$
+
+这里意思是，第t层的任意一个神经单元i的输出$h_i^t$，是来自t-1层的所有输出与其对应权重（从j连接到i对应权重）积的和。由于我们假定了权重和输入都是零均值，所以第t层输出的数学期望依然是0。
+
+并且注意这里的输入和权重的独立假设允许我们进行$E(XY)=EX+EY$
+
+由于t层每个神经单元的输出均值都是0，因此t层的输出均值就是一个零向量 $E(\bold h^t)=\bold 0$ 
+
+#### 正向方差
+
+$$Var(h_i^t)=E[(h_i^t)^2]-E[h_i^t]^2 $$
+注意这里由于上面证明了输出的正向均值为0，因此这里的均值的平方项为0，将t层的任意一个神经单元i的输出展开有
+
+$$ E[(h_i^t)^2]=E\left [\left (\sum\limits_jw_{i,j}^th_j^{t-1}\right )^2\right ]$$
+
+注意到，如果将这个和式的平方展开后，会产生很多交叉项，它们的最高次数都是1，根据前面我们知道，对一次项求期望会因为零均值的假设导致整项为0，因此我们只需要保留自身与自身相乘的项（二次项）
+
+$$\implies E\left [\sum\limits_j(w_{i,j}^t)^2(h_j^{t-1})^2\right ]$$
+
+再根据期望性质，并且注意到，由于是零均值，对二次项求期望相当于求其方差$VarX=E[X^2]-(EX)^2\xlongequal {EX=0}E[X^2]$ 有
+
+$$ Var[h^t_i]=\sum\limits_j Var[w_{i,j}^t]Var[h_j^{t-1}]=n_{in}\sigma^2Var[h_j^{t-1}] $$
+
+由于我们希望输入与输出的方差相同，只需要让输入维度乘以权重来自分布的方差为1
+
+$$n_{in}\sigma^2=1$$ 
+
+#### 反向均值
+
+根据反向传播的原理，先由损失函数对$h^t$求导，再由$h^t$对$h^{t-1}$求导,得到
+
+$$ \dfrac {\partial l}{\partial h^{t-1}}= \dfrac {\partial l}{\partial h^{t}}(W^t)^T $$
+
+而同理正向传播，反向传播的均值和方差结果也是类似的，这里权重表示的是从t层的神经单元i连向t-1层的神经单元j的权重
+
+$$ E[ \dfrac {\partial l}{\partial h^{t-1}_j}]=E\left[\sum\limits_i \dfrac {\partial l}{\partial h^{t}_i}w_{j,i}^t \right] $$
+
+根据权重的独立同分布且零均值特性，其依然为0
+
+#### 反向方差
+
+这里需要注意到，由于交叉项会出现一次项，而我们知道一次项的权重均值为0，因此我们只保留二次项（自己与自己相乘）
+
+$$ Var[ \dfrac {\partial l}{\partial h^{t-1}_j}]=E\left[\left(\sum\limits_i \dfrac {\partial l}{\partial h^{t}_i}w_{j,i}^t \right)^2\right]=\sum\limits_{i=1}^{n_{out}}E[ \dfrac {\partial l}{\partial h^{t}_i}]^2E[w^t_{j,i}]^2 $$
+
+注意我们权重方差是假定好的，并且从i连接到j和从j连接到i的权重是一样的，有
+
+$$ Var[ \dfrac {\partial l}{\partial h^{t-1}_j}]=n_{out}\sigma^2Var[ \dfrac {\partial l}{\partial h^{t}_i}] $$
+
+我们同样希望反向传播的输入与输出的方差相同，因此需要
+
+$$n_{out}\sigma^2=1 $$
+
+由于 $n_{out}\sigma^2=n_{in}\sigma^2$ 难以成立，因为我们不可能每次输入输出维度都相同，因此Xavier采用 $\sigma^2=\dfrac{2}{n_{out}+n_{in}}$ ，并将参数从正态分布 $N(0,\dfrac{2}{n_{out}+n_{in}})$ 中随机生成
+
+相比于原来我们指定方差例如用 $N(0,1)$ 初始化参数，Xavier通过计算得出其方差而不是我们人为指定。
+
+然而正如诸多参考资料指出的那样，xavier初始化只适用于关于0对称、呈线性的激活函数，比如 sigmoid、tanh、softsign 等。
+
+比如，对于ReLU激活函数，可以采用 Kaiming 初始化、He 初始化或采用 Batch Normalization。
+
+## Kaiming 初始化
+
+[reference](http://giantpandacv.com/academic/%E7%AE%97%E6%B3%95%E7%A7%91%E6%99%AE/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/Kaiming%20He%E5%88%9D%E5%A7%8B%E5%8C%96%E8%AF%A6%E8%A7%A3/)
+
+暂不搬运。核心是确保了前向传播的时候，每一层的卷积计算结果的方差为$1$；反向传播的时候，每一层的继续往前传的梯度方差也为$1$。
+
+## EfficientNet
+
+[reference](https://zhuanlan.zhihu.com/p/137089135)
+
+[paper](https://arxiv.org/abs/1905.11946)
+
+
+```
+总的来说，这篇文章做了2件事情：
+
+​提出一个新的网络尺寸缩放的方法(Propose a new scaling method).
+使用NAS搜索最优的网络结构(Use NAS).
+
+动机很简单，一般对于分类网络来说，网络的拓扑结构和网络尺寸是网络表现的关键因素。EfficientNet就是抓住这两个点展开的。先用NAS搜一个较小的拓扑结构(基础网络)，然后用一定的方法增大网络尺寸。这样，当基础网络表现超越其他同等尺寸网络时，增大网络尺寸后的表现也应该能够超越其他同等尺寸的网络。这样就得到了EfficientNet从B0到B7的backbone家族。
+```
+
+暂不更新详细内容，可能要先看看别的东西 (  = w = )
