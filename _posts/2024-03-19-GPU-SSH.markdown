@@ -100,11 +100,13 @@ conda config --append envs_dirs /path/to/env
 ./leaderboard/scripts/datagen.sh
 ```
 
-注意，当终端退出时，挂在 `2000` 端口的 `Carla` 不会停止。停止它的一种方法是在原终端直接 `Ctrl + C`，另一种是直接杀掉进程。（`ps aux | grep Carla` 获得进程号，然后 `kill -9 <pid>`）；
+注意，当终端退出时，挂在 `2000` 端口的 `Carla` 不会停止。停止它的一种方法是在原终端直接 `Ctrl + C`，另一种是直接杀掉进程。（可以使用 `ps aux | grep Carla` 获得进程号，然后 `kill -9 <pid>`）；
 
-`datagen` 脚本比较烦人，对它进行 `Ctrl + C` 仅仅会停止当前组数据的采集，它还会开始下一组。直接关掉终端或者杀掉进程会比较管用。
+`datagen` 脚本比较烦人，对它进行 `Ctrl + C` 仅仅会停止当前组数据的采集，它还会开始下一组。直接关掉终端或者杀掉进程（`ps aux | grep leaderboard` 获得进程号）会比较管用。
 
 为了在退出终端后程序可以继续运行，可以使用`gnu screen`。我让 `iris` 一直运行使用的就是 `screen`，可以说是打过不少交道了。
+
+但是需要注意一下：`screen` 对 `conda` 虚拟环境的支持似乎存在bug，**请在创建 `screen` 之前退出虚拟环境**，在正确的路径下用 `screen` 创建虚拟屏幕之后再 `conda activate` 或者 `source activate` ，否则可能出现问题。
 
 `screen` 常用指令：
 
