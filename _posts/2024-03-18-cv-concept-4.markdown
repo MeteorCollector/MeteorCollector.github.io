@@ -56,11 +56,11 @@ Chamfer距离通过将一个点云中每个点与另一个点云中最近邻居�
 
 #### 假设与符号说明
 
-- 权重 $w_{i,j}^t$ (这里表示 第t层从t-1层的第i个神经单元连接到t层的第j个神经单元的权重)是从均值为0，方差为 $\sigma^2$的分布中抽取的，并且符合独立同分布，权重矩阵为 $\bold W_{n_{in}\times n_{out}}^t$ ，可以认为是 $n_{in}$ 批次大小，每行是一个样本，这些样本有 $n_{out}$ 个特征
+- 权重 $w_{i,j}^t$ (这里表示 第t层从t-1层的第i个神经单元连接到t层的第j个神经单元的权重)是从均值为0，方差为 $\sigma^2$的分布中抽取的，并且符合独立同分布，权重矩阵为 $\mathbf{W}_{n_{in}\times n_{out}}^t$ ，可以认为是 $n_{in}$ 批次大小，每行是一个样本，这些样本有 $n_{out}$ 个特征
 
 - $h_i^{t-1}$ （表示第t层的输入，即是t-1层的输出）服从均值为0，方差为 $\gamma_t$ （表示第t层输入的方差）的分布
   
-- 没有非线性（即没有激活函数）的全连接层，输入维度为 $n_{in}$ ，$n_{out}$ ,满足 $\bold h^t=\bold (W^t)^Th^{t-1}$ ，即t层的输出是来自t-1层输出的加权和，注意这里权重矩阵被转置了，满足 $n_{out}\times n_{in}\quad n_{in}\times1\implies n_{out}\times 1$ 的维度关系
+- 没有非线性（即没有激活函数）的全连接层，输入维度为 $n_{in}$ ，$n_{out}$ ,满足 $\mathbf{h}^t=(\mathbf{W}^t)^Th^{t-1}$ ，即t层的输出是来自t-1层输出的加权和，注意这里权重矩阵被转置了，满足 $n_{out}\times n_{in}\quad n_{in}\times1\implies n_{out}\times 1$ 的维度关系
 
 #### 正向均值
 
@@ -72,7 +72,7 @@ $$ E[h_i^t]=E\left [\sum\limits_jw_{i,j}^th_{j}^{t-1}\right ]\xlongequal{i,i,d}\
 
 并且注意这里的输入和权重的独立假设允许我们进行$E(XY)=EX+EY$
 
-由于t层每个神经单元的输出均值都是0，因此t层的输出均值就是一个零向量 $E(\bold h^t)=\bold 0$ 
+由于t层每个神经单元的输出均值都是0，因此t层的输出均值就是一个零向量 $E(\mathbf{h}^t)=\mathbf{0}$ 
 
 #### 正向方差
 
@@ -85,7 +85,7 @@ $$ E[(h_i^t)^2]=E\left [\left (\sum\limits_jw_{i,j}^th_j^{t-1}\right )^2\right ]
 
 $$\implies E\left [\sum\limits_j(w_{i,j}^t)^2(h_j^{t-1})^2\right ]$$
 
-再根据期望性质，并且注意到，由于是零均值，对二次项求期望相当于求其方差$VarX=E[X^2]-(EX)^2\xlongequal {EX=0}E[X^2]$ 有
+再根据期望性质，并且注意到，由于是零均值，对二次项求期望相当于求其方差$VarX=E[X^2]-(EX)^2\overset {EX=0}{=}E[X^2]$ 有
 
 $$ Var[h^t_i]=\sum\limits_j Var[w_{i,j}^t]Var[h_j^{t-1}]=n_{in}\sigma^2Var[h_j^{t-1}] $$
 
