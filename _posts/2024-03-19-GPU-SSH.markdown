@@ -54,3 +54,24 @@ export ROUTES=${WORK_DIR}/leaderboard/data/training/routes/Scenario10/Town05_Sce
 
 ## 外接显卡
 
+这时候就需要在带有显卡的服务器上跑自己的程序了。不过出现了一个小插曲：远程服务器的网络不似乎很顺畅，几乎没有办法用它自己下载任何东西。于是我们只好从自己的电脑传递文件过去。
+
+由于可以使用ssh，于是使用 `scp` 进行传输。
+
+传输文件夹：
+
+```bash
+scp -r /path/to/local/folder username@ipaddress:/path/to/remote/folder
+```
+
+其中 `-r` 表示 `recursive` ，即上传文件夹和文件夹里所有文件。
+
+首先本地下载了`anaconda`的安装包等等文件，传输到了远程机器进行安装；
+
+安装完毕之后，输入`conda --version`可以成功显示版本号。之后就要迁移`conda`环境了。
+
+### 迁移虚拟环境
+
+首先用 `conda env list` 查看本地 `conda` 虚拟环境都存储在了哪里，然后将这个文件夹传送到远程机器上去。
+
+
