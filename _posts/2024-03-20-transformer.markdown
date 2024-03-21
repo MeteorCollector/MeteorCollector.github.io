@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV概念（五）: Transformer专辑"
+title:  "CV笔记（五）: Transformer与DETR"
 date:   2024-03-20 11:03:00 +0800
 categories: posts
 tag: cv
@@ -136,8 +136,28 @@ Decoder block 的第一个 Multi-Head Attention 采用了 Masked 操作。这是
 
 这就是Transformer的结构了。
 
-### Reference
+## DETR
+
+毕竟是为了CV学这个的，那必须提到一下DETR。DETR就是DEtection TRansformer的缩写。
+
+<p><img src="{{site.url}}/images/DETR.png" width="75%" align="middle" /></p>
+
+非常相像的结构。其实感觉DETR和transformer本尊的区别可能就是编码方式的不同。spatial positional encoding是作者自己提出的二维空间位置编码方法，该位置编码分别被加入到了encoder的self attention和decoder的cross attention，同时object queries也被加入到了decoder的两个attention中。而原版的Transformer将位置编码加到了input和output embedding中。
+
+DETR的思路和传统的目标检测的本质思路有相似之处，但表现方式很不一样。传统的方法比如Anchor-based方法本质上是对预定义的密集anchors进行类别的分类和边框系数的回归。DETR则是将目标检测视为一个集合预测问题（集合和anchors的作用类似）。由于Transformer本质上是一个序列转换的作用，因此，可以将DETR视为一个从图像序列到一个集合序列的转换过程。该集合实际上就是一个可学习的位置编码（文章中也称为object queries或者output positional encoding，代码中叫作query_embed）。
+
+<p><img src="{{site.url}}/images/detr1.png" width="90%" align="middle" /></p>
+
+在预测过程中，DETR 预测了一组固定大小的 N = 100 个边界框。为了把预测框和ground truth匹配，DETR 将 ground-truth 也扩展成 N = 100 个检测框，同时使用了一个额外的特殊类标签 $\phi$ 来表示在未检测到任何对象，或者认为是背景类别的框。这样预测和真实都是两个 100 个元素的集合了。这时候采用匈牙利算法进行二分图匹配，即对预测集合和真实集合的元素进行一一对应，使得匹配损失最小。
+
+## Reference
 
 [Transformer 修炼之道（一）、Input Embedding](https://zhuanlan.zhihu.com/p/372279569)
 
 [Transformer模型详解](https://zhuanlan.zhihu.com/p/338817680)
+
+[Transformer - 李宏毅](https://www.youtube.com/watch?v=ugWDIIOHtPA&list=PLJV_el3uVTsOK_ZK5L0Iv_EQoL1JefRL4&index=60)
+
+[理解DETR](https://zhuanlan.zhihu.com/p/348060767)
+
+[DETR详解](https://blog.csdn.net/baidu_36913330/article/details/120495817)
