@@ -136,6 +136,22 @@ Decoder block 的第一个 Multi-Head Attention 采用了 Masked 操作。这是
 
 这就是Transformer的结构了。
 
+## cross-attention
+
+Transformer 的原始模型里使用的是 self-attention，毕竟他还是依据同一段信息的上下文来进行推理；但是在多模态的应用方面要使用 cross-attention。
+
+Cross-Attention是两端的注意力机制，然后合起来，输入不同。Cross-attention将两个相同维度的嵌入序列不对称地组合在一起，而其中一个序列用作查询Q输入，而另一个序列用作键K和值V输入。
+
+- Transformer架构中混合两种不同嵌入序列的注意力机制
+- 两个序列必须具有相同的维度
+- 两个序列可以是不同的模式形态（如：文本、声音、图像）
+- 一个序列作为输入的 $Q$，定义了输出的序列长度，另一个序列提供输入的 $K$ & $V$
+
+也就是说Cross-attention的输入来自不同的序列，Self-attention的输入来自同序列，也就是所谓的输入不同，但是除此之外，基本一致。
+
+也就是：
+$$\mathrm{softmax}((W_Q S_2)(W_K S_1))W_VS_1$$
+
 ## DETR
 
 毕竟是为了CV学这个的，那必须提到一下DETR。DETR就是DEtection TRansformer的缩写。
@@ -161,3 +177,5 @@ DETR的思路和传统的目标检测的本质思路有相似之处，但表现�
 [理解DETR](https://zhuanlan.zhihu.com/p/348060767)
 
 [DETR详解](https://blog.csdn.net/baidu_36913330/article/details/120495817)
+
+[Self-attention和Cross-attention](https://blog.csdn.net/philosophyatmath/article/details/128013258)
