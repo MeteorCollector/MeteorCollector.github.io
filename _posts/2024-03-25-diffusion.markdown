@@ -181,3 +181,25 @@ We explore the following architectural changes:
 Classifier Guidance可以通过score function直观地解释，用贝叶斯定理将条件生成概率进行对数分解：
 
 $$\begin{aligned} \nabla \log p\left(\boldsymbol{x}_{t} \mid y\right) & = \nabla \log \left(\frac{p\left(\boldsymbol{x}_{t}\right) p\left(y \mid \boldsymbol{x}_{t}\right)}{p(y)}\right) \\ & =\nabla \log p\left(\boldsymbol{x}_{t}\right)+\nabla \log p\left(y \mid \boldsymbol{x}_{t}\right)-\nabla \log p(y) \\ & =\underbrace{\nabla \log p\left(\boldsymbol{x}_{t}\right)}_{\text {unconditional score }}+\underbrace{\nabla \log p\left(y \mid \boldsymbol{x}_{t}\right)}_{\text {classifier gradient }} \end{aligned}$$
+
+从上式可以看到，Classifier Guidance**条件生成只需额外添加一个classifier的梯度来引导。从成本上看，Classifier Guidance 需要训练噪声数据版本的classifier网络，推理时每一步都需要额外计算classifier的梯度。**
+
+#### 横向拓展：Classifire-Free Guidance Diffusion
+
+**Classifier Guidance 使用显式的分类器引导条件生成有几个问题**：一是需要额外训练一个噪声版本的图像分类器。二是该分类器的质量会影响按类别生成的效果。三是通过梯度更新图像会导致对抗攻击效应，生成图像可能会通过人眼不可察觉的细节欺骗分类器，实际上并没有按条件生成。
+
+2022年谷歌提出**Classifier-Free Guidance方**案，可以规避上述问题，而且可以通过调节引导权重，控制生成图像的逼真性和多样性的平衡，**DALL·E 2和Imagen等模型都是以它为基础进行训练和推理。**
+
+**Classifier-Free Guidance的核心是通过一个隐式分类器来替代显示分类器，而无需直接计算显式分类器及其梯度**。根据贝叶斯公式，**分类器的梯度可以用条件生成概率和无条件生成概率表示**：
+
+$$\begin{aligned} \nabla_{\mathbf{x}_{t}} \log p\left(y \mid \mathbf{x}_{t}\right) & =\nabla_{\mathbf{x}_{t}} \log p\left(\mathbf{x}_{t} \mid y\right)-\nabla_{\mathbf{x}_{t}} \log p\left(\mathbf{x}_{t}\right) \\ & =-\frac{1}{\sqrt{1-\bar{\alpha}_{t}}}\left(\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t, y\right)-\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t\right)\right) \end{aligned}$$
+
+把上面的分类器梯度代入到**classifier guidance**的分类器梯度中可得：
+
+$$\begin{aligned} \overline{\boldsymbol{\epsilon}}_{\theta}\left(\mathbf{x}_{t}, t, y\right) & =\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t, y\right)-\sqrt{1-\bar{\alpha}_{t}} w \nabla_{\mathbf{x}_{t}} \log p\left(y \mid \mathbf{x}_{t}\right) \\ & =\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t, y\right)+w\left(\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t, y\right)-\boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t\right)\right) \\ & =(w+1) \boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t, y\right)-w \boldsymbol{\epsilon}_{\theta}\left(\mathbf{x}_{t}, t\right) \end{aligned}$$
+
+由上可知，新的生成过程**不再依赖显示的classifier**，因而解决了上述Classifier Guidance的几个问题。
+
+**总的来说，训练时，Classifier-Free Guidance需要训练两个模型，一个是无条件生成模型，另一个是条件生成模型。**但这两个模型可以用同一个模型表示，**训练时只需要以一定概率将条件置空即可。**
+
+**推理时，最终结果可以由条件生成和无条件生成的线性外推获得，生成效果可以引导系数可以调节，控制生成样本的逼真性和多样性的平衡。**

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV算法笔记"
+title:  "CV算法笔记: Selective Search, Hierarchical Grouping, Graph Based Image Segmentation, Bounding-Box Regression"
 date:   2024-03-05 00:28:00 +0800
 categories: posts
 tag: cv

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV论文笔记（2）"
+title:  "CV论文笔记（2）: Inception, SSD, YOLO, Squeeze-and-Excitation, VGG, AlexNet"
 date:   2024-03-07 14:25:00 +0800
 categories: posts
 tag: cv

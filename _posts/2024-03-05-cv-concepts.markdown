@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV概念笔记"
+title:  "CV概念笔记: ResNet, CNN, ROI, RPN, SPP, FPN, FCN"
 date:   2024-03-05 12:48:00 +0800
 categories: posts
 tag: cv

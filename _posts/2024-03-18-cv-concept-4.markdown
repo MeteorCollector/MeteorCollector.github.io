@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV概念笔记（四）"
+title:  "CV概念笔记（四）: Chamfer Distance, Xavier/Kaiming initialize, EfficientNet"
 date:   2024-03-18 23:36:00 +0800
 categories: posts
 tag: cv
@@ -27,7 +27,7 @@ $$D_{Chamfer}(A,B) = \sum_{a \in A}\min_{b\in B} \left\| a - b \right\|^2_2 + \s
 - $A$ 和 $B$ 是分别表示为点云的两组点。
   
 - $\left\| \cdot \right\|_2$​ 表示欧氏距离。
- 
+
 - $a$ 和 $b$ 分别是来自集合 $A$ 和 $B$ 的点。
 
 Chamfer距离通过将一个点云中每个点与另一个点云中最近邻居的距离的平方相加，并将结果相加，以衡量两个点云的匹配程度。

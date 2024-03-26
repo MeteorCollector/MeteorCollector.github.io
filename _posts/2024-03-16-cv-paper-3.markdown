@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV笔记（三）"
+title:  "CV笔记（三）: NMS, RNN, LSTM, RNN"
 date:   2024-03-16 15:10:00 +0800
 categories: posts
 tag: cv
