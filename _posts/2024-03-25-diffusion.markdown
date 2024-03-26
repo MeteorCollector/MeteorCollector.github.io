@@ -26,9 +26,9 @@ Diffusion Model 的开山之作。
 
 <p><img src="{{site.url}}/images/dif1.png" width="80%" align="middle" /></p>
 
-(在图中，后向过程的PDF(概率密度函数)是 $p_\theta$，前向过程的则是$q$，我们在后文维持这个符号)
+(在图中，后向过程的PDF(概率密度函数)是 $p_{\theta}$，前向过程的则是$q$，我们在后文维持这个符号)
 
-$\mathbf{x}_T$表示纯高斯噪声，$\mathbf{x}_0$表示生成的样本，因此我们要估计 $\mathbf{x}_0$ 的概率密度函数 $p_\theta(\mathbf{x}_0)$。我们可以利用马尔科夫链的性质根据条件概率逐步推导。对概率密度估计的一个经典方法就是最大似然估计，我们将会给出 $p_\theta(\mathbf{x}_0)$ 的最大似然估计。
+$\mathbf{x}_T$表示纯高斯噪声，$\mathbf{x}_0$表示生成的样本，因此我们要估计 $\mathbf{x}_0$ 的概率密度函数 $p_{\theta}(\mathbf{x}_0)$。我们可以利用马尔科夫链的性质根据条件概率逐步推导。对概率密度估计的一个经典方法就是最大似然估计，我们将会给出 $p_{\theta}(\mathbf{x}_0)$ 的最大似然估计。
 
 ### 前向过程 Forward Process
 
@@ -45,16 +45,16 @@ $$\mathbf{x}_t=\sqrt{1-\beta_{t}}\mathbf{x}_{t-1}+\sqrt{\beta_{t}}\mathbf{z}_{t-
 现在我们可以根据 $\mathbf{x}_{t-1}$ 得到 $\mathbf{x}_tx$，那么如果我们给出了原始图像 $\mathbf{x}_0$。能不能通过一次计算就得到加噪任意 $t$ 次之后的 $\mathbf{x}_t$？答案是可以的。
 
 首先令 $\alpha_{t}=1-\beta_{t}$ ，$\bar{\alpha}_{t}=\alpha_1\ast\alpha_2\ast\dots\ast\alpha_{t}$，$\tilde{\mathbf{z}}_{t}\sim\mathcal{N}(0,\mathbf{I})$，则
-$$
-\begin{align}
+
+$$\begin{align}
 \mathbf{x}_t & = \sqrt{\alpha_t}\mathbf{x}_{t-1} + \sqrt{1 - \alpha_t}\mathbf{z}_{t-1} \\
 & = \sqrt{\alpha_t} * (\sqrt{\alpha_{t-1}} \mathbf{x}_{t-2} + \sqrt{1 - \alpha_{t-1}}\mathbf{z}_{t-2}) + \sqrt{1 - \alpha_t}\mathbf{z}_{t-1} \\
 & = \sqrt{\alpha_t \alpha_{t-1}}\mathbf{x}_{t-2} + \sqrt{\alpha_t - \alpha_t \alpha_{t-1}}\mathbf{z}_{t-2} + \sqrt{1 - \alpha_t}\mathbf{z}_{t-1} (*) \\
 & = \sqrt{\alpha_t \alpha_{t-1}}\mathbf{x}_{t-2} + \sqrt{\alpha_t - \alpha_t \alpha_{t-1}}\mathbf{\bar{z}}_{t-2} \\
 & = \ldots \\
 & = \sqrt{\bar{\alpha_t}}\mathbf{x}_0 + \sqrt{1 - \bar{\alpha_t}}\overset{\sim}{\mathbf{z}_t}
-\end{align}
-$$
+\end{align}$$
+
 通过重参数化，我们能得到
 
 $$q(\mathbf{x}_t\mid\mathbf{x}_0)=\mathcal{N}(\mathbf{x}_t;\sqrt{\bar{\alpha}_t}\mathbf{x}_0,(1-\bar{\alpha}_t)\mathbf{I})$$
@@ -117,3 +117,67 @@ $$\tilde{\mu}_t(\mathbf{x}_t)=\frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t-\frac{1-\al
 
 这就要请出深度学习了，我们可以设计一个网络去预测在 $\mathbf{x}_t$ 时刻的噪音 $\tilde{\mathbf{z}}_t$ 。网络的输入是 $\mathbf{x}_t$，网络的输出是 $\tilde{\mathbf{z}}_t$，这是一个预测值，那么真实值在哪呢？我们只有得到真实值，我们才能计算预测值和真值之间的损失，从而训练网络。这时我们考虑前向过程，前向过程中，后一时刻等于前一时刻加上一个噪音 $\mathbf{z}$，$\mathbf{z}$ 是我们采样得来的，是已知的，也就是之前我们所谓的标签。假设我们前向过程由 $\mathbf{x}_{t-1}$ 到 $\mathbf{x}_t$ 加的噪音为 $\mathbf{z}$，那么 $\tilde{\mathbf{z}}_t $ 的真值就是 $\mathbf{z}$，所以我们这个网络训练的 $\tilde{\mathbf{z}}_t$ 就去不断拟合噪声 $\mathbf{z}$。
 至此前向过程和后向过程已经介绍结束了。
+
+### DDPM算法
+
+<p><img src="{{site.url}}/images/dif2.png" width="80%" align="middle" /></p>
+
+#### 训练部分
+
+- 首先在真实图像分布 $q(\mathbf{x}_0)$ 中采样出 $\mathbf{x}_0$，也即我们的训练图像；
+- 在区间 $1,...,T$ 中随机生成生成一个 $t$，代表扩散(加噪)次数；
+- 从标准正态分布中采样一个随机噪声 $\epsilon$ 计算损失函数，其中的真值是我们刚刚采样得到的噪声 $\epsilon$，网络预测值是 $\epsilon_{\theta}(\sqrt{\bar{\alpha}_t}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_t}\epsilon,t)$，而 $\sqrt{\bar{\alpha}_t}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_t}\epsilon$ 是我们在前向过程中求得的 $\mathbf{x}_t$，这其实可以改写为 $\epsilon_{\theta}(\mathbf{x}_t,t)$，这里的 $t$ 做一个时间编码喂入网络中，因为在后向过程中，每一次迭代的网络都是相同的，即参数共享，那怎么让网络知道现在迭代到哪一步呢，那么我们就将 $t$ 一同传进去参与训练，用 $t$ 来告诉网络我现在进行到第几次迭代了。时间编码和transformer中的位置编码类似。
+
+
+
+总结一下，训练过程就是给定 $\mathbf{x}_0$ 和随机噪声 $\epsilon$，然后生成一个扩散(加噪)次数 $t$，进行 $t$ 次扩散过程得到 $\mathbf{x}_t$，然后通过一个网络 $\epsilon_{\theta}$ 来预测一个合适的噪声，也就是 $\tilde{\mathbf{z}}_t$。
+
+#### 采样部分
+
+首先从标准正态分布中采样一个随机噪声 $\mathbf{x}_T$ 。因为我们在前向过程中认为在原图扩散 $T$ 次之后，原图服从于一个各相同性的高斯分布。
+
+然后进行 $T$ 次迭代，对于每一次迭代，首先采样一个标准高斯噪声，但是最后一步就不采样了。然后通过公式计算去噪一次的结果，公式中的 $\epsilon_{\theta}$ 就是我们在训练过程得到的结果。
+
+
+
+## Denoising Diffusion Implicit Models
+
+[论文链接](https://arxiv.org/abs/2010.02502)
+
+[reference 1](https://zhuanlan.zhihu.com/p/565698027)    [reference 2 (论文翻译)](https://zhuanlan.zhihu.com/p/631248776)
+
+**DDIM和DDPM有相同的训练目标**，但是它不再限制扩散过程必须是一个马尔卡夫链，这使得DDIM可以**采用更小的采样步数来加速生成过程**，DDIM的另外是一个特点是从一个随机噪音**生成样本的过程是一个确定的过程**（中间没有加入随机噪音）。
+
+> 在第 3 节中，我们将 DDPM 使用的前向*扩散过程*（马尔可夫过程）推广到*非马尔可夫*过程，为此，我们仍然能够设计合适的反向生成马尔可夫链。我们表明，由此得出的变分训练目标有一个相同的替代目标，其刚好就是训练 DDPM 的目标。因此，我们可以从一大类使用相同神经网络的生成模型中自由选择，只需选择不同的*非马尔可夫*扩散过程（4.1 节）和相应的反向生成马尔可夫链即可。特别是，我们能够使用*非马尔可夫*扩散过程产生更“短”的生成马尔可夫链（4.2 节），从而可以在更少步中进行模拟。这可以极大地提高生成样本的效率，而在质量方面的只有极小的损失。
+
+> 在第 5 节中，我们展示了 DDIM 相对于 DDPM 的几个经验优势。*首先*，当我们使用自己的方法，将采样过程加速 10× 到 100× 时，DDIM 与 DDPM 相比样本生成质量更好。*其次*，DDIM 样本具有“一致性（consistency）”，而 DDPM 没有；这里“一致性”是指如果我们从相同的初始隐变量开始，并生成多个不同长度马尔可夫链的样本，这些样本会有相似的高级功能。*第三*，由于 DDIM 中的“一致性”，我们可以通过控制 DDIM 中的初始隐变量来执行语义上有意义的图像插值；这与 DDPM 不同，由于随机生成过程，DDPM 在图像空间附近插值。
+
+
+
+## Diffusion Models Beat GANs on Image Synthesis
+
+[论文链接](https://arxiv.org/abs/2105.05233)
+
+[reference: 通俗理解 Classifier Guidance 和 Classifier-Free Guidance 的扩散模型](https://zhuanlan.zhihu.com/p/640631667)
+
+由于数学推导很多，Diffusion这边的论文有点看不懂了，读得有些慢。因此摘要得有些粗略，抱歉——
+
+这篇论文是 OpenAI 的手笔，主要创新点如下：
+
+#### 结构上 (在 Unet 基础上)
+
+We explore the following architectural changes:
+
+- Increasing depth versus width, holding model size relatively constant.
+- Increasing the number of attention heads.
+- Using attention at $32 \times 32$, $16 \times 16$, and $8 \times 8$ resolutions rather then only at $16 \times 16$.
+- Using the BigGAN residual block for upsampling and downsampling the activations.
+- Rescaling residual connections with $\frac{1}{\sqrt{2}}$.
+
+### classifier-guidance
+
+2021年OpenAI在*「Diffusion Models Beat GANs on Image Synthesis」*中提出Classifier Guidance，使得扩散模型**能够按类生成**。后来*「More Control for Free! Image Synthesis with Semantic Diffusion Guidance」*把Classifier Guidance推广到了Semantic Diffusion，使得扩散模型**可以按图像、按文本和多模态条件来生成，**例如，风格化可以通过content和style两者共同进行引导，这些都是通过梯度引导来实现。
+
+Classifier Guidance可以通过score function直观地解释，用贝叶斯定理将条件生成概率进行对数分解：
+
+$$\begin{aligned} \nabla \log p\left(\boldsymbol{x}_{t} \mid y\right) & = \nabla \log \left(\frac{p\left(\boldsymbol{x}_{t}\right) p\left(y \mid \boldsymbol{x}_{t}\right)}{p(y)}\right) \\ & =\nabla \log p\left(\boldsymbol{x}_{t}\right)+\nabla \log p\left(y \mid \boldsymbol{x}_{t}\right)-\nabla \log p(y) \\ & =\underbrace{\nabla \log p\left(\boldsymbol{x}_{t}\right)}_{\text {unconditional score }}+\underbrace{\nabla \log p\left(y \mid \boldsymbol{x}_{t}\right)}_{\text {classifier gradient }} \end{aligned}$$
