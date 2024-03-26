@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV笔记（六）: Diffusion专辑"
+title:  "CV笔记（六）: Diffusion专辑, GAN, VAE, U-Net"
 date:   2024-03-25 11:03:00 +0800
 categories: posts
 tag: cv
@@ -203,3 +203,29 @@ $$\begin{aligned} \overline{\boldsymbol{\epsilon}}_{\theta}\left(\mathbf{x}_{t},
 **总的来说，训练时，Classifier-Free Guidance需要训练两个模型，一个是无条件生成模型，另一个是条件生成模型。**但这两个模型可以用同一个模型表示，**训练时只需要以一定概率将条件置空即可。**
 
 **推理时，最终结果可以由条件生成和无条件生成的线性外推获得，生成效果可以引导系数可以调节，控制生成样本的逼真性和多样性的平衡。**
+
+
+
+## GAN: Generative Adversarial Networks
+
+[论文链接](https://arxiv.org/abs/1406.2661)
+
+GAN包含有两个模型，一个是生成模型（generative model），一个是判别模型(discriminative model)。生成模型的任务是生成看起来自然真实的、和原始数据相似的实例。判别模型的任务是判断给定的实例看起来是自然真实的还是人为伪造的（真实实例来源于数据集，伪造实例来源于生成模型）。
+
+（等待补充）
+
+## VAE: 变分自编码器
+
+（等待补充）
+
+## U-Net
+
+[论文链接](https://arxiv.org/pdf/1505.04597.pdf)    [reference 1](https://zhuanlan.zhihu.com/p/389949794)
+
+U-Net 是做语义分割用的，它最早被应用于医学影像的细胞级识别。全卷积网络FCN（在之前的[CV概念笔记: ResNet, CNN, ROI, RPN, SPP, FPN, FCN (meteorcollector.github.io)](https://meteorcollector.github.io/2024/03/cv-concepts/)有提到过）是它的前辈。
+
+<p><img src="{{site.url}}/images/unet.png" width="80%" align="middle" /></p>
+
+U-Net网络非常简单，**前半部分（左边）作用是特征提取，后半部分（右边）是上采样**。在一些文献中也把这样的结构叫做Encoder-Decoder结构。因为此网络整体结构类似于大写的英文字母U，故得名U-Net。
+
+（等待补充）
