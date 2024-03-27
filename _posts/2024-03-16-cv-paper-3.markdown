@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CV笔记（三）: NMS, RNN, LSTM, RNN"
+title:  "CV笔记（三）: NMS, RNN, LSTM, GRU, RNN"
 date:   2024-03-16 15:10:00 +0800
 categories: posts
 tag: cv
@@ -138,12 +138,28 @@ LSTM用两个门来控制单元状态c的内容，一个是遗忘门（forget ga
 
 [reference](https://zybuluo.com/hanbingtao/note/581764)
 
+[reference](https://zhuanlan.zhihu.com/p/32481747)
+
 GRU是LSTM的变体。更改在于：
 
 - 将输入门、遗忘门、输出门变为两个门：更新门（Update Gate）和重置门（Reset Gate）。
 
 - 将单元状态与输出合并为一个状态：$\textbf{h}$。
 
+简单示意：
+有一个当前的输入 $x^t$，和上一个节点传递下来的隐状态（hidden state）$h^{t-1}$ ，这个隐状态包含了之前节点的相关信息。
+
+结合 $x^t$ 和 $h^{t-1}$，GRU会得到当前隐藏节点的输出 $y^t$ 和传递给下一个节点的隐状态 $h^t$。
+
+```
+         y^t
+         /|\
+          |
+h^{t-1}->GRU->h^t
+         /|\
+          |
+         x^t
+```
 
 ## 递归神经网络 Recursive Neural Network (RNN)
 
