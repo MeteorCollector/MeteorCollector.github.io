@@ -16,6 +16,8 @@ tag: util
 
 事实上我发现现在 vscode 的引导已经十分完善，首页上 Welcome 页面点击 connect to... 然后一路点下来配置就可以了，十分地方便。
 
+<p><img src="{{site.url}}/images/start.png" width="80%" align="middle" /></p>
+
 ### 网络远程代理
 
 我们的机器十分奇葩，我们可以在内网中访问到它，但它本身没法上网，甚至不能 `git clone`。一个自然的想法就是把远程机器的网络转发到本地代理上。我在本地配置了一个在 `local_port` 的代理，那么在本地运行
