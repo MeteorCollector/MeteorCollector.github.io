@@ -38,3 +38,15 @@ NVML library version: 535.171
 [很详细的blog](https://comzyh.com/blog/archives/967/)
 
 [stackoverflow](https://stackoverflow.com/questions/43022843/nvidia-nvml-driver-library-version-mismatch)
+
+### mm相关：`TypeError: FormatCode() got an unexpected keyword argument ‘verify‘`
+
+用 `mm` 框架的时候报的错。这是因为环境里yapf版本过高，目前版本为 0.40.2。直接卸载重装：
+
+```shell
+pip uninstall yapf
+
+pip install yapf==0.40.1
+```
+
+即可解决问题。
