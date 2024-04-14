@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "快回来，组里发显卡了（二）"
+date:   2024-04-14 17:48:00 +0800
+categories: posts
+tag: util
+---
+
+## 写在前面
+
+这是第二篇关于使用实验室显卡的文章。
+
+### vscode远程开发
+
+由于我们的项目只能在拥有强劲显卡的实验室机器上跑，所以使用 SSH + vscode 进行远程开发才是首选。网上的教程也很多，比如[这一篇](https://blog.csdn.net/Oxford1151/article/details/137228119)，核心就是配置 Remote-SSH 插件。
+
+事实上我发现现在 vscode 的引导已经十分完善，首页上 Welcome 页面点击 connect to... 然后一路点下来配置就可以了，十分地方便。
+
+### 网络远程代理
+
+我们的机器十分奇葩，我们可以在内网中访问到它，但它本身没法上网，甚至不能 `git clone`。一个自然的想法就是把远程机器的网络转发到本地代理上。我在本地配置了一个在 `local_port` 的代理，那么在本地运行
+
+```shell
+ssh -fCNR local_port:localhost:remote_port username@remote_ip
+```
+
+就可以将 `remote_ip` 的远程主机网络从它的 `remote_port` 端口转发到本地的 `local_port` 端口。这时候在远程主机的终端里面设置终端代理：
+
+```shell
+export http_proxy=http://localhost:remote_port
+export https_proxy=http://localhost:remote_port
+```
+
+就可以愉快地用本地梯子上网了！
+
+顺带一提，由于为了减少记忆量，我一般会把 `remote_port` 和 `local_port` 设为同样的端口...
+
+[reference](https://cloud.tencent.com/developer/article/1524095)
