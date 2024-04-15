@@ -50,3 +50,9 @@ pip install yapf==0.40.1
 ```
 
 即可解决问题。
+
+### mm安装相关
+
+类似 pytorch, mm相关库也有自己的安装命令生成网站：
+
+[https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html](https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html)
