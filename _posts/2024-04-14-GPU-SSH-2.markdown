@@ -38,3 +38,9 @@ export https_proxy=http://localhost:remote_port
 顺带一提，由于为了减少记忆量，我一般会把 `remote_port` 和 `local_port` 设为同样的端口...
 
 [reference](https://cloud.tencent.com/developer/article/1524095)
+
+### SSH 出错
+
+配置了代理之后，在机器上下载包时还是会出错，例如 `Connection error [SSL CERTIFICATE_VERIFY_FAILED]`；
+
+目前还没解决，可以参考[这里](https://bobbyhadz.com/blog/python-connection-error-ssl-certificate-verify-failed#disable-ssl-certificate-validation-when-using-requests)
