@@ -67,6 +67,15 @@ from mmengine.config import Config
 
 *这里必须吐槽一句，作为mars自己的项目，在自己的框架已经更新了2年之后还不迁移一下，只能在旧框架上堆代码。最后我还是放弃了升级mm库，因为问题实在是太多了。*
 
+*不过事实上 [NMP](https://github.com/Tsinghua-MARS-Lab/neural_map_prior/blob/main/docs/getting_started.md) 不需要严格按照文档配置*
+
+```shell
+cd neural_map_prior/mmdetection3d
+python setup.py develop
+```
+
+*这一步的成功率很低，事实上它除了mmdetection3d之外还会装一些没用的东西，不管就好，只要能跑起来就ok*
+
 
 ### c 相关
 
