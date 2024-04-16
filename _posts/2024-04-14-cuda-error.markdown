@@ -65,6 +65,8 @@ from mmengine.config import Config
 
 [https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html](https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html)
 
+*这里必须吐槽一句，作为mars自己的项目，在自己的框架已经更新了2年之后还不迁移一下，只能在旧框架上堆代码。最后我还是放弃了升级mm库，因为问题实在是太多了。*
+
 
 ### c 相关
 
