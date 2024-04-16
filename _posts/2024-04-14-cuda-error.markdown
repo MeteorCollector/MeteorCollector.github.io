@@ -51,6 +51,14 @@ pip install yapf==0.40.1
 
 即可解决问题。
 
+### mm相关：`ImportError: cannot import name 'Config' from 'mmcv'`
+
+在mmcv 2.0.0中，Config已移动到mmengine，进行如下修改即可：
+
+```python
+from mmengine.config import Config
+```
+
 ### mm安装相关
 
 类似 pytorch, mm相关库也有自己的安装命令生成网站：
