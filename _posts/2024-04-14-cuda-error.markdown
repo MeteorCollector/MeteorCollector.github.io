@@ -56,3 +56,22 @@ pip install yapf==0.40.1
 类似 pytorch, mm相关库也有自己的安装命令生成网站：
 
 [https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html](https://mmcv.readthedocs.io/zh-cn/latest/get_started/installation.html)
+
+
+### c 相关
+
+有时候与C相关的库比python相关库更容易出问题。mm里面就有大量用C写的部分。当然用C会写得更快，但是可能会消耗程序员的时间去处理版本问题。
+
+#### `error: parameter packs not expanded with ‘...’`
+
+这是编译的时候报的错误，和 gcc g++ 版本有关。可以手动降版本：
+
+```shell
+sudo apt install gcc-10 g++-10
+export CC=/usr/bin/gcc-10
+export CXX=/usr/bin/g++-10
+```
+
+#### `THC/THC.h: No such file or directory`
+
+这是因为 `pytorch` 在 1.11 移除了 `THC/THC.h` ，所以降 `pytorch` 版本是可以解决这个问题的。
