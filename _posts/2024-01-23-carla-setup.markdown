@@ -51,3 +51,45 @@ watch -n 1 nvidia-smi
 很显然，我们是不希望我们的电脑一天到晚开着carla进行采集的，最好把它搬到其他服务器上去，术业有专攻。但是服务器上一般是没有图形化界面的，所以需要配置Carla的无头模式。
 
 官方文档：[carla_headless](https://carla.readthedocs.io/en/stable/carla_headless/)
+
+## 关于高版本的问题（2024.04.18）
+
+有可能出现类似这样的错误：
+
+```
+X Error of failed request: BadDrawable (invalid Pixmap or Window parameter)
+Major opcode of failed request: 149 ()
+Minor opcode of failed request: 4
+Resource id in failed request: 0x3e00041
+Serial number of failed request: 361
+```
+
+或者 mismatch 之类，这大概率是高版本 Carla 的 Vulkan 硬件支持出错导致的。参考 Carla 的 [issue #2232](https://github.com/carla-simulator/carla/issues/2232)：
+
+It turns out the root problem for me was that Vulkan was using Intel graphics by default instead of my NVIDIA GPU. No idea why.
+
+For anyone who is getting errors preceded by:
+
+`INTEL-MESA: <Error or warning>`
+
+Even though you have an NVIDIA GPU that is active. Run this:
+
+```bash
+export VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
+```
+
+Carla should then run normally with Vulkan.
+
+```bash
+./CarlaUE4.sh
+```
+
+...
+
+The nvidia_icd.json file was missing in my case. Had to create one like this one
+
+```bash
+{ "file_format_version" : "1.0.0", "ICD": { "library_path": "libGLX_nvidia.so.0", "api_version" : "1.2.131" } }
+```
+
+But now Carla 0.9.12 works. 
