@@ -64,7 +64,8 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
 
 **关注：1）在什么数据集上验证？数据集的难度与挑战如何？2）方法的基本框架是怎样的，创新点在何处？3）算法的效果如何，相比其他方法优势在哪里？**
 
-   - Image Caption
+   - **Image Caption**
+     
      - **Auto-encoding_and_Distilling_Scene_Graphs_for_Image_Captioning**
      
        - end-to-end encoder-decoder模型存在一个问题：当将一张包括未见过的场景输入到网络中时，返回的结果仅仅就是一些显著的object，比如“there is a dog on the floor”，这样的结果与object detection几乎没有区别
@@ -122,7 +123,7 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
        
      - **Dense-Captioning_Events_in_Videos**
      
-         - 也是李飞飞的工作
+         - 也是李飞飞的工作，提出了 **Activity Net**。
          - Abstract: 大多数自然视频包含大量事件。例如，在一个“男子弹钢琴”的视频中，视频可能还包含“另一个男子跳舞”或“人群鼓掌”的场景。我们介绍了密集事件字幕任务，涉及在视频中检测和描述事件。我们提出了一种新模型，能够在单次视频通过中识别所有事件，同时用自然语言描述检测到的事件。我们的模型引入了现有提议模块的变体，旨在捕获持续几分钟的短事件和长事件。为了捕获视频中事件之间的依赖关系，我们的模型引入了一个新的字幕模块，利用过去和未来事件的上下文信息共同描述所有事件。我们还介绍了ActivityNet Captions，一个用于密集事件字幕的大规模基准。ActivityNet Captions 包含20,000个视频，总计849个视频小时，其中包含100,000个总描述，每个描述都有其独特的开始和结束时间。最后，我们报告了我们的模型在密集事件字幕、视频检索和定位方面的性能。
          - 感觉就是把 2D 的工作拓展到 3D 了（工作量升了一维）。
          - 结构：Input Video $\to$ Conv3D $\to$ Video features $\to$ Proposal module $\to$ Proposals $\to$ **Captioning Module** $\to$ Output Captions
@@ -130,11 +131,48 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
          - 损失函数：$\mathcal{L} = \lambda_1 \mathcal{L}_{cap}$ （字幕）和 $\lambda_2 \mathcal{L}_{prop}$ （proposal）
          - 感觉目前不太做视频相关的项目，所以先略过了。
      
-   - Visual Question Answering
-     - FVQA_Fact-Based_Visual_Question_Answering
-     - Out of the Box：Reasoning with Graph Convolution Nets for Factual Visual Question Answering
-     - Visual_Genome
-     - zs-f-vqa
+   - **Visual Question Answering**
+     
+     - **FVQA_Fact-Based_Visual_Question_Answering**
+     
+       - Abstract: 视觉问答（VQA）在计算机视觉和自然语言处理社区引起了广泛关注，部分原因是它提供了对两个重要信息源之间关系的洞察。当前的数据集及建立在其上的模型主要关注那些仅通过对问题和图像进行直接分析即可回答的问题。这种不需要外部信息即可回答的问题集合很有意思，但非常有限。例如，它排除了需要常识或基本事实知识来回答的问题。在这里，我们介绍了FVQA（基于事实的VQA），这是一个需要更深层次推理的VQA数据集。FVQA主要包含需要外部信息才能回答的问题。因此，我们通过额外的图像-问题-答案-支持事实元组扩展了传统的视觉问答数据集，每个支持事实都表示为结构三元组，例如<Cat，CapableOf，ClimbingTrees>。我们在FVQA数据集上评估了几种基线模型，并描述了一种新颖的模型，该模型能够根据支持事实对图像进行推理。
+       - dataset (previous): DAQUAR, COCO, Visual Gnome, MadLib
+       - 这篇文章引入了 Fact，提出了 FVQA 数据集；
+       - 建构了知识库 (Knowledge Base, **KB**)，基于 DBpedia，ConcaptNet，WebChild；
+       - Question-Query Mapping $\to$ Querying the KB $\to$ answer；
+     
+     - **Out of the Box：Reasoning with Graph Convolution Nets for Factual Visual Question Answering**
+     
+       - Abstract: 准确回答关于给定图像的问题需要将观察结果与常识知识相结合。虽然这对人类来说是轻而易举的，但使用常识知识进行推理仍然是一个算法挑战。为了推动这个方向的研究，最近引入了一项新颖的“基于事实”的视觉问答（FVQA）任务，同时提供了一个大量策划好的事实集，这些事实通过一个关系连接了两个实体，即两个可能的答案。给定一个问题-图像对，深度网络技术已被用来逐步减少大量事实，直到最终剩下的事实中的两个实体中的一个被预测为答案。我们观察到，逐步考虑一个事实来形成局部决策的过程是次优的。相反，我们开发了一个实体图，并使用图卷积网络来通过同时考虑所有实体来“推理”正确答案。我们在具有挑战性的FVQA数据集上展示了这一点，与最先进技术相比，这导致了准确率提高约7%。
+       - 有解析文章：[NeurIPS 2018亮点选读：深度推理学习中的图网络与关系表征 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/50995189)
+       - 提出了基于图卷积的网络试图同步学习事实上下文的推理过程与图像内容理解，之前深度网络筛选事实的这一训练过程用图卷积网络代替它成为一个端到端的推理系统，基于此思想，文章最终取得的准确度比之前的 State of the art 工作高出 7%。
+       - 基于事实的图像问答任务（FVQA）输入数据由成对的图像与其对应的问题，外加包含大量事实的知识库（Knowledge Base, KB），图像均为常见的 RGB 彩图，问题则是简单的短句问句，值得一提的是额外的事实（Fact）在知识库中以形如 f=(x,y,r) 的三元组来表示，x 指代图像中的实体信息，y 指代属性或者短语，r 则是关系介词（比如从属关系，是非关系，位置关系等）。
+       - 文章提出的方法由两大模块构成：事实追溯（Fact Retrieval）与答案预测（Answer Prediction）。
+       - 在第一个模块中，首先得到处理后事实（Fact）、图像中的视觉概念（Visual Concept）与问题（Question）的 Glove 词嵌入（Glove Embeddings）信息，之后计算 Fact 与二者之间的余弦相关性（Cosine Similarity）并按照相关性对追溯到的 Fact 进行排序，同时取正相关的前一百条事实（Top-rank 100 Fact）作为一个初筛的小型知识库，之后根据 LSTM 处理后提取出来的问题中的关系（Relation in Question）作为 Ground-Truth 进一步提取过滤符合该关系下的 Facts，得到最终的相关实体集合 E（Relevant entities under certain relation）
+       - 至此第一模块类似于预处理和预筛选的功能全部完成。
+       - 进入第二个答案预测（Answer Prediction）的模块，将图像中的视觉概念（Visual Concept）与问题的 Glove 词嵌入表示（Glove Embeddings）以及相关事实的词嵌入表示作为三部分的特征进行连接形成完整的一条大特征实体 e（feature entity）, e 则代表图卷积网络（Graph Convolution Network, GCN）中的一个节点（Node），由两个隐层的 GCN 与一层 MLP 形成的网络进行训练，网络采用随机梯度下降（SGD）与交叉熵损失（Cross-entropy Loss）进行最终的答案预测。
+       - 相较于以往的图像问答任务，FVQA 在问题的设计中添加了需要进行关系分析与推理（reason）的部分，在图像理解和自然语言处理方面是一个非常有意义的跨模态任务，而文章采用一种端到端（end-to-end）的形式把涉及到的数据输入做了一个特征拼接，同时用图卷积网络介入尝试完成推理过程，并在该任务上达到了 state of the art，这些都是不错的亮点。但是稍有不足之处在于采用图卷积网络所做的『推理』仍然是功能非常有限，更多只是在基于 LSTM 的特征提取上做了一个分类工作，并没有太看到利用图的联通特性进行更多有效的推理过程，以及在第一部分处理过程中也变相的进行了知识库中的事实筛选，且其中部分筛选器目前还是独立于整个系统之外的，无法实现真正意义上的端到端学习训练。
+     
+     - **Visual_Genome**
+     
+       - 解析：[Visual Genome数据集梳理 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/102403048)
+     
+       - [Visual Genome（VG）](https://link.zhihu.com/?target=http%3A//visualgenome.org/)是斯坦福大学李飞飞组于2016年发布的大规模图片语义理解数据集，他们希望该数据集能像ImageNet那样推动图片高级语义理解方面的研究。
+     
+         在视觉关系检测（VRD）的研究中，VG几乎成了的标准数据集，然而，该数据集的许多缺陷也一直饱受诟病，当前的VRD研究者实在很有必要将该数据集的构建过程梳理清楚。
+     
+         简单地概括，VG数据集主要由4个部分组成：
+     
+         - **Region Description**：图片被划分成一个个region，每个region都有与其对应的一句自然语言描述。
+         - **Region Graph**：每个region中的object、attribute、relationship被提取出来，构成局部的“Scene Graph”。
+         - **Scene Graph**：把一张图片中的所有Region Graph合并成一个全局的Scene Graph。
+         - **QA**：每张图片会有多对QA，分为两种类型：region-based和freeform。前者基于Region Description提出，与局部region的内容直接相关；后者则基于整张图片来提出。
+     
+     - **zs-f-vqa**
+     
+       - 将外部知识纳入视觉问答（VQA）已成为一项重要的实际需求。现有方法大多采用流水线方法，其中包括不同组件用于知识匹配和提取、特征学习等。然而，这种流水线方法在某些组件表现不佳时容易受到影响，导致错误级联和整体性能不佳。此外，现有方法大多忽视了答案偏差问题，即在实际应用中，许多答案可能在训练过程中从未出现（即未见答案）。为了弥合这些差距，在本文中，我们提出了一种使用知识图谱和基于掩码的学习机制的零样本VQA算法，以更好地纳入外部知识，并针对F-VQA数据集提出了新的基于答案的零样本VQA划分。实验证明，我们的方法在零样本VQA中可以实现最先进的性能，同时在普通F-VQA任务上显著增强了现有的端到端模型。
+     
+       这一段可以看看[【论文小综】基于外部知识的VQA（视觉问答） - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/389798289)
 
 ## 3. 语言模型
 
