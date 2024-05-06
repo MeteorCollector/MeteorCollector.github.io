@@ -49,7 +49,12 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
        - 是一篇综述论文。
      - 我的世界论文
        - 摘要：本文介绍了在《我的世界》中实施的第一个基于游戏的智力评估，这是一款非常受欢迎的电子游戏，销量超过2亿份。在游戏的三维沉浸式环境中，实现了基于矩阵的模式补全任务（PC）、心理旋转任务（MR）和空间构建任务（SC）。PC旨在衡量归纳推理能力，而MR和SC则是空间能力的衡量指标。我们测试了129名年龄在10至12岁之间的儿童，分别进行了基于《我的世界》的测试和等价的纸笔测试。所有三个量表符合拉斯模型（Rasch model），并且具有中等可靠性。在区分PC和SC之间的区分方面，因子效度良好，但在MR方面没有找到明确的因子。在潜在水平上，使用《我的世界》和传统测试测量的能力之间的相关性很高（r = 0.72），收敛效度良好。子测试级别的相关性在中等范围内。此外，我们发现从游戏环境中收集的行为日志数据对《我的世界》测试的表现具有很高的预测能力，并在较小程度上也预测了传统测试的得分。我们确定了与空间推理能力相关的许多行为特征，证明了分析粒度化行为数据的实用性，除了传统的答题格式之外。总的来说，我们的研究结果表明，《我的世界》是一个适合于基于游戏的智力评估的平台，并鼓励未来的工作探索在纸上或传统计算机测试中不可行的基于游戏的问题解决任务。
-     - A Hierarchical Theme Recognition Model for Sandplay Therapy
+       - 这篇论文并不像我预期的那样是类似沙盒测试的物品摆放分析，而是利用mc进行一系列测试，让我觉得有点捞。主要评估方式是与传统心理测试方法做对比。
+     - **A Hierarchical Theme Recognition Model for Sandplay Therapy**
+       - **HI**erarchical **S**andplay **T**heme recognition
+       - Abstract: 沙盘游戏疗法作为心理投射的关键工具，测试者构建一个场景来反映他们内心世界，而精神分析师则审视测试者的心理状态。在这个过程中，识别沙盘游戏图像的主题（即识别内容和情感色调）是促进更高水平分析的关键步骤。与传统的视觉识别不同，后者仅关注基本信息（例如类别、位置、形状等），沙盘游戏主题识别需要考虑图像的整体内容，然后依赖于分层知识结构来完成推理过程。然而，沙盘游戏主题识别的研究受到以下挑战的阻碍：（1）收集高质量且足够的沙盘游戏图像，并配对专家分析以形成科学数据集具有挑战性，因为此任务依赖于专业的沙盘游戏环境。（2）主题是综合且高水平的信息，使得难以直接采用现有的工作来完成此任务。总之，我们从以下几个方面应对了上述挑战：（1）基于对挑战的仔细分析（例如，小规模数据集和复杂信息），我们提出了 **HIST**（分层沙盘游戏主题识别）模型，该模型融合了外部知识来模拟精神分析师的推理过程。（2）以分裂主题（代表性且均匀分布的主题）为例，我们提出了一个名为 $SP^2$（沙盘游戏分裂）的高质量数据集，用于评估我们提出的方法。实验结果表明，与其他基线方法相比，我们的算法表现出更优异的性能，并且消融实验证实了整合外部知识的重要性。我们期待这项工作将有助于沙盘游戏主题识别的研究。相关数据集和代码将持续发布。
+       - 结构：输入图片 $\to$ 语义识别 $\to$ 根据外部信息提取特征 (External Knowledge Incorporation Module) $\to$ 沙盘主题识别 (Theme Classification Module)
+       - $SP^2$ 数据集，Considering the challenge of gathering high-quality sandplay images paired with theme annotation from psychoanalysts, we take the representative split theme as the example, and construct the SP2 dataset.
 
 ## 2. 视觉理解与分析
 
@@ -60,11 +65,56 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
 **关注：1）在什么数据集上验证？数据集的难度与挑战如何？2）方法的基本框架是怎样的，创新点在何处？3）算法的效果如何，相比其他方法优势在哪里？**
 
    - Image Caption
-     - Auto-encoding_and_Distilling_Scene_Graphs_for_Image_Captioning
-     - Dense_Captioning_with_Joint_Inference_and_Visual_Context
-     - Dense_Relational_Captioning_Triple-Stream_Networks_for_Relationship-Based_Captioning
-     - DenseCap_Fully_Convolutional_Localization_Networks_for_Dense_Captioning
+     - **Auto-encoding_and_Distilling_Scene_Graphs_for_Image_Captioning**
+     
+       - end-to-end encoder-decoder模型存在一个问题：当将一张包括未见过的场景输入到网络中时，返回的结果仅仅就是一些显著的object，比如“there is a dog on the floor”，这样的结果与object detection几乎没有区别
+     
+         认知上的证据表明，基于视觉的语言并非是end-to-end的，而是与高层抽象的符号相关。
+     
+         例如，对于一张图片，scene abstraction是“helmet-on-human”和"road dirty"，我们则可以生成"a man with a helmet in contryside"通过使用一个常识：country road is dirty，这种推断就是inductive bias。
+     
+         本文将inductive bias融合到encoder-decoder中来进行image captioning，利用符号推理和端到端多模型特征映射互补，通过scene graph($ \mathcal{G}$)来bridge它们，一个scene graph($ \mathcal{G}$)是一个统一的表示，它连接了以下几个部分
+     
+         - objects(or entities)
+     - their attributes
+         - their relationships in an image($\mathcal{I}$) or a sentence($\mathcal{S}$)，通过有向边表示
+     
+         作者提出了Scene Graph Auto-Encoder(SGAE)，作为一个句子重建网络，其过程是 $\mathcal{S}\rightarrow\mathcal{G}\rightarrow\mathcal{D}\rightarrow\mathcal{S}$
+         其中 $\mathcal{D}$ 是一个 可训练的字典，用来记录结点特征，$\mathcal{S}\rightarrow\mathcal{G}$ 使用现成的scene graph language parser，$\mathcal{D}\rightarrow\mathcal{S}$ 是一个可训练的RNN decoder，注意 $\mathcal{D}$ 是"juice"——即language inductive bias，在训练SGAE中得到，通过将 $\mathcal{D}$ 共享给encoder-decoder的pipline：$\mathcal{I}\rightarrow\mathcal{G}\rightarrow\mathcal{D}\rightarrow\mathcal{S}$，即可利用语言先验来指导端到端模型，具体的 $\mathcal{I}\rightarrow\mathcal{G}$ 是一个visual scene graph detector，引入multi-modal GCN来进行 $\mathcal{G}\rightarrow\mathcal{D}$ 的过程，来补足detection的不足之处，有趣的是，$\mathcal{D}$ 可以被视作为一个working memory，用来从 $ \mathcal{I}\rightarrow\mathcal{S}$ re-key encoded nodes，以更小的domain gap来得到一个更一般的表达。
+     
+         - **Contrubution**
+         - 一个先进的SGAE模型，可以学习language inductive bias的特征表达
+     - 一个multi-model 图卷积网络，用来调节scene graph到视觉表达
+         - 一个基于SGAE的 encoder-decoder image captioner with a shared dictionary guiding the language decoding
+         
+         搬运自 [Auto-Encoding Scene Graphs for Image Captioning 论文阅读笔记-CSDN博客](https://blog.csdn.net/luo3300612/article/details/90042843)
+       
+     - **Dense_Captioning_with_Joint_Inference_and_Visual_Context**
+     
+       - Abstract: Dense Captioning 是一种新兴的计算机视觉主题，用于理解具有密集语言描述的图像。其目标是从图像中密集地检测视觉概念（例如对象、对象部分以及它们之间的交互），并为每个概念标注一个简短的描述性短语。我们确定了密集字幕面临的两个关键挑战，在解决该问题时需要妥善处理这两个挑战。首先，每个图像中密集的视觉概念注释与高度重叠的目标区域相关联，使得每个视觉概念的准确定位具有挑战性。其次，大量的视觉概念使得仅通过外观来识别它们变得困难。我们提出了一个基于两个新思想（联合推理和上下文融合）的新模型管道，以缓解这两个挑战。我们以系统的方式设计了模型架构，并对架构的变化进行了彻底评估。我们的最终模型，紧凑高效，实现了在Visual Genome [23]上密集字幕的最先进准确度，相对于先前最佳算法取得了73％的相对增益。定性实验还展示了我们模型在密集字幕中的语义能力。
+       - 与传统标注任务的区别是，Dense Captioning 要求尽可能详细地描述目标的特征。
+       - 结构：通过卷积分别获得 region proposal、region feature、context feature，region feature 的分割结果 (基于 Faster R-CNN)(获取 RoI) 可以获得一个 detection scrore，由 region feature 和 context feature 获得 caption (Faster R-CNN & LSTM 缝合) 和 bounding box；
+       - 验证数据集：Visual Genome dataset (主要), Flicker30k, MS COCO；
+     
+     - **Dense_Relational_Captioning_Triple-Stream_Networks_for_Relationship-Based_Captioning**
+     
+       - 提出了 **MTTSNet** 模型 which facilitates POS aware relational captioning，**relational captioning** 方法。
+       - 验证数据集：Visual Genome，MS COCO，UCF101 (human interactions with other objects or surroundings)；
+       - 所谓 Triple-Stream 是指处理 Union Region、Subject Region、Object Region 的三条 LSTM。
+       - 例如“人在骑马”，人和马的整体是 union，人是 subject，马是 object。
+       - 模型结构：首先将图片输入 RPN （Region Proposal Network）生成 Region Proposal。接着经过 Combination Layer，每次取一对 Subject 和 Object。Union 区域应该是根据这两个直接计算出来的。接着将这三个区域经过 ROI 池化获得特征图，再过两次全卷积，扔进 Triple-LSTM，最后输入 Multi-task Module。
+       - 最后的结果是 POS (subj-pred-obj)；
+       - 损失函数：$\mathcal{L} = \mathcal{L}_{cap} + \alpha \mathcal{L}_{POS} + \beta \mathcal{L}_{det} + \gamma \mathcal{L}_{box}$
+       - 总损失 = captioning loss + alpha * POS classification loss + beta * detection loss + gamma * bounding box regression loss。其中 alpha bata gamma 是平衡权重。
+       - 这篇论文还需要再具体看看。
+     
+     - **DenseCap_Fully_Convolutional_Localization_Networks_for_Dense_Captioning**
+       - 提出了 **DenseCap**，李飞飞他们的工作。
+       - Abstract: 我们引入了密集字幕任务，该任务要求计算机视觉系统在自然语言中同时定位并描述图像中的显著区域。密集字幕任务将对象检测泛化为当描述由单个词组成时，以及当一个预测区域覆盖整个图像时的图像字幕生成任务。为了共同解决定位和描述任务，我们提出了一个完全卷积定位网络（FCLN）（Fully Convolutional Localization Network）架构，它通过单一高效的前向传播处理图像，不需要外部区域提议，并且可以通过单轮优化进行端到端训练。该架构由一个卷积网络、一个新颖的密集定位层和一个生成标签序列的递归神经网络语言模型组成。我们在Visual Genome数据集上评估了我们的网络，该数据集包含94,000张图像和4,100,000个区域标注的字幕。我们观察到，与基于当前最先进方法的基线相比，我们的网络在生成和检索设置中都实现了速度和准确性的提高。
+       - 有解析文章：[论文笔记-DenseCap - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/91023126)
+       - 
      - Dense-Captioning_Events_in_Videos
+     
    - Visual Question Answering
      - FVQA_Fact-Based_Visual_Question_Answering
      - Out of the Box：Reasoning with Graph Convolution Nets for Factual Visual Question Answering
