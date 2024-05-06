@@ -76,6 +76,7 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
          本文将inductive bias融合到encoder-decoder中来进行image captioning，利用符号推理和端到端多模型特征映射互补，通过scene graph($ \mathcal{G}$)来bridge它们，一个scene graph($ \mathcal{G}$)是一个统一的表示，它连接了以下几个部分
      
          - objects(or entities)
+       
      - their attributes
          - their relationships in an image($\mathcal{I}$) or a sentence($\mathcal{S}$)，通过有向边表示
      
@@ -84,6 +85,7 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
      
          - **Contrubution**
          - 一个先进的SGAE模型，可以学习language inductive bias的特征表达
+         
      - 一个multi-model 图卷积网络，用来调节scene graph到视觉表达
          - 一个基于SGAE的 encoder-decoder image captioner with a shared dictionary guiding the language decoding
          
@@ -117,7 +119,16 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
        - 感觉这里的重点是 RNN Language Model，剩下的都是 RCNN 之流玩过的东西了，和其他图像识别任务差别不大。但是论文里并没有讲得太详细......还是要再看看。
        - Language Model 的本质是要预测下一个词语。这篇文章就是用这些识别出来的标注信息来输入（原文用的是 condition）自然语言模型。
        - Concretely, given a training sequence of tokens s1, . . . , sT , we feed the RNN T + 2 word vectors x−1, x0, x1, . . . , xT , where x−1 = CNN(I) is the region code encoded with a linear layer and followed by a ReLU non-linearity, x0 corresponds to a special START token, and xt encode each of the tokens st, t = 1, . . . , T . The RNN computes a sequence of hidden states ht and output vectors yt using a recurrence formula ht, yt = f(ht−1, xt) (we use the LSTM [18] recurrence). The vectors yt have size |V |+1 where V is the token vocabulary, and where the additional one is for a special END token. The loss function on the vectors yt is the average cross entropy, where the targets at times t = 0, . . . , T − 1 are the token indices for st+1, and the target at t = T is the END token.
+       
      - **Dense-Captioning_Events_in_Videos**
+     
+         - 也是李飞飞的工作
+         - Abstract: 大多数自然视频包含大量事件。例如，在一个“男子弹钢琴”的视频中，视频可能还包含“另一个男子跳舞”或“人群鼓掌”的场景。我们介绍了密集事件字幕任务，涉及在视频中检测和描述事件。我们提出了一种新模型，能够在单次视频通过中识别所有事件，同时用自然语言描述检测到的事件。我们的模型引入了现有提议模块的变体，旨在捕获持续几分钟的短事件和长事件。为了捕获视频中事件之间的依赖关系，我们的模型引入了一个新的字幕模块，利用过去和未来事件的上下文信息共同描述所有事件。我们还介绍了ActivityNet Captions，一个用于密集事件字幕的大规模基准。ActivityNet Captions 包含20,000个视频，总计849个视频小时，其中包含100,000个总描述，每个描述都有其独特的开始和结束时间。最后，我们报告了我们的模型在密集事件字幕、视频检索和定位方面的性能。
+         - 感觉就是把 2D 的工作拓展到 3D 了（工作量升了一维）。
+         - 结构：Input Video $\to$ Conv3D $\to$ Video features $\to$ Proposal module $\to$ Proposals $\to$ **Captioning Module** $\to$ Output Captions
+         - **Captioning Module**: Proposals $\to$ Representation $\to$ Attention $\to$ Context (引入了past和future) $\to$ LSTM
+         - 损失函数：$\mathcal{L} = \lambda_1 \mathcal{L}_{cap}$ （字幕）和 $\lambda_2 \mathcal{L}_{prop}$ （proposal）
+         - 感觉目前不太做视频相关的项目，所以先略过了。
      
    - Visual Question Answering
      - FVQA_Fact-Based_Visual_Question_Answering
