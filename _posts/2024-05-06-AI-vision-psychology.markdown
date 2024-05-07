@@ -195,7 +195,38 @@ Anyway，现在开始要做一个关于计算机视觉和心理学交叉的项�
 
 **关注：1）如何构建环境；2）使用了什么方法、模拟了人类的哪些特性；3）采用什么算法，取得怎样的效果**
 
-   - Agent Sims: An Open-Source Sandbox for Large Language Model Evaluation
-   - Emergent Social Learning via Multi-agent Reinforcement Learning
-   - Humanoid Agents: Platform for Simulating Human-like Generative Agents
-   - Social diversity and social preferences in mixed-motive reinforcement learning
+   - **Agent Sims: An Open-Source Sandbox for Large Language Model Evaluation**
+
+        - Abstract: 随着类似于ChatGPT的大型语言模型（LLM）在社区中盛行，如何评估LLM的能力是一个悬而未决的问题。现有的评估方法存在以下缺点：（1）评估能力受限，（2）基准测试易受攻击，（3）评估指标不客观。我们建议采用基于任务的评估方法，即LLM代理在模拟环境中完成任务，这是解决上述问题的一劳永逸的解决方案。我们提出了AgentSims，这是一个易于使用的基础设施，供所有学科的研究人员测试他们感兴趣的特定能力。研究人员可以通过在交互式GUI上添加代理和建筑来构建评估任务，也可以通过几行代码部署和测试新的支持机制，例如记忆、规划和工具使用系统。我们的演示可在 [https://agentsims.com](https://agentsims.com/) 上访问。
+
+        - **AgentSims**是一个开放式、自定义的沙盒评估基建设施。并且它还贴心地设置了专业开发者模式和普通用户模式，对那些不那么精通大模型和代码的研究人员还挺友好。具体操作中，研究人员可以**通过GUI**（交互式图形用户界面）**添加AI角色、建筑物**来设置不同的评估任务。此外，也可以通过少量代码来部署和测试新的支持机制，比如规划和记忆系统。并且可以设置角色的长期记忆，以及规划能力。
+
+        - 众所周知，大模型对对话的上下文窗口有限制性。
+
+          在AgentSims这里，团队用了一种辅助系统，让AI角色直追人类水平。
+
+          具体抽象为三个部分：
+
+          - **计划系统**，用来将目标分解为子任务，并记录当前状态，生成下一步行动。
+          - **记忆系统**，将每日经历编码为向量，存储在数据库中，用于维持行为一致性。
+          - **工具使用系统**，存储了使用设备的反馈，可以推断设备的操作方法。
+
+          因为这个机制的存在，AgentSims的灵活度更高，用户可以自己“排列组合”不同的计划、记忆和学习系统。
+
+   - **Emergent Social Learning via Multi-agent Reinforcement Learning**
+
+        - 这篇文章的重点是 “Social Learning”，促使智能体以与其他智能体交互的形式学习。
+        - Abstract: 社会学习是人类和动物智能的关键组成部分。通过从其环境中专家的行为中获取线索，社会学习者可以获得复杂的行为并迅速适应新的环境。本文调查了在多智能体环境中，独立的强化学习（RL）代理是否能够学会利用社会学习来提高其性能。我们发现，在大多数情况下，普通的无模型RL代理不会使用社会学习。我们分析了这种不足的原因，并表明通过对训练环境施加约束并引入基于模型的辅助损失，我们能够获得通用的社会学习策略，使代理能够：i）发现复杂的技能，这些技能不是通过单一代理的训练获得的，并且ii）通过从新环境中的专家获取线索，在线适应新的环境。相比之下，通过无模型RL或模仿学习训练的代理的泛化能力较差，并且在转移任务中不成功。通过混合多智能体和单独训练，我们可以获得使用社会学习获取技能的代理，这些技能代理在独处时也能够发挥作用，甚至胜过从一开始就单独训练的代理。
+        - 引入了 “Social Learning with Auxiliary Losses”: We refer to our approach as social learning with an auxiliary predictive loss, and hypothesize that it will improve agents’ ability to learn from the cues of experts.
+        - Agents can achieve high rewards by efficiently traversing between the goals in the correct order, and skilled agents are able to identify the correct order while incurring minimal
+          penalties. Agents can accomplish this either by trial and error, or by observing other agents. In practice, since the behavior of other agents can be unpredictable and potentially non-stationary, agents more easily learn to solve the task directly through trial and error. But by adjusting the penalty for navigating to goals in the wrong order, we can penalize individual exploration and thereby encourage social learning.
+
+   - **Humanoid Agents: Platform for Simulating Human-like Generative Agents**
+        - 这个评估模拟系统加入了需求层次来让AI以人类的逻辑进行行动。
+        - Abstract: 就像对原子、分子和细胞的计算机模拟塑造了我们对科学的研究方式一样，真实模拟人类样式的代理可以成为研究人类行为的有价值工具。我们提出了Humanoid Agents，这是一个指导生成式代理更像人类行为的系统，通过引入系统处理的三个元素：基本需求（例如饥饿、健康和能量）、情感和人际关系的亲密度。Humanoid Agents能够利用这些动态元素来调整他们的日常活动（Activity Planning）和与其他代理的对话（Dialogue Generation），这得到了实证实验的支持。我们的系统设计成可扩展到各种设置，我们演示了其中的三种，并且扩展到影响人类行为的其他元素（例如同理心、道德价值观和文化背景）。我们的平台还包括一个Unity WebGL游戏界面用于可视化，以及一个交互式分析仪表板，显示代理随时间的状态。我们的平台可在 https://www.humanoidagents.com/ 上获得，并且代码在 https://github.com/HumanoidAgents/HumanoidAgents 上。
+   - **Social diversity and social preferences in mixed-motive reinforcement learning**
+        - Abstract: 最近关于在纯冲突和纯共同利益游戏中的强化学习的研究强调了种群异质性的重要性。相比之下，在混合动机游戏中的强化学习研究主要采用了同质化的方法。鉴于混合动机游戏的定义特征——群体成员之间激励的不完全相关性，我们研究了种群异质性对混合动机强化学习的影响。我们借鉴社会心理学中的相互依赖理论，并赋予强化学习代理人社会价值取向（Social Value Orientation, SVO），这是对群体结果分布的偏好的灵活形式化。随后，我们探讨了SVO多样性对两个混合动机马尔可夫游戏中的强化学习代理人群体的影响。我们证明了SVO的异质性在代理人之间产生了有意义且复杂的行为变化，类似于相互依赖理论所建议的那样。在这些混合动机困境中的实证结果表明，在异质种群中训练的代理人相对于在同质种群中训练的代理人，发展出了特别泛化、高性能的策略。
+        - 这篇没太看懂，因为还不太懂强化学习。这篇工作似乎是用多人游戏来验证的。
+        - AGENTS: Multi-agent reinforcement learning and Markov games, Social Value Oriantation ...
+        - 引入了 SVO 来 prefer certain group reward distributions between self and others.
+        - MIXED-MOTIVE GAMES: Intertemporal social dilemmas，验证时使用了多人游戏，we consider two temporally and spatially extended mixed-motive games played with group size n = 5
