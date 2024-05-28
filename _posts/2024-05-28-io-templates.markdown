@@ -198,6 +198,27 @@ void __union_rank(int x, int y) {
 
 ## 数论
 
+### 费马小定理
+
+当 $p$ 是质数时，$a^{p-1} \equiv 1\quad (\text{mod }p)$，$a \times a^{p-2} \equiv 1\quad (\text{mod }p)$，因此 $a$ 在 $\text{mod }p$ 意义下乘法逆元为 $a^{p-1}$。常结合快速幂求解。
+
+### 快速幂
+
+```
+int quickPower(int a, int b)
+{
+	int ans = 1, base = a;
+	while (b)
+    {
+		if(b & 1)
+			ans *= base;
+        base *= base;
+		b >>= 1;
+	}
+	return ans;
+}
+```
+
 ### 线性筛质数
 
 ```c++
