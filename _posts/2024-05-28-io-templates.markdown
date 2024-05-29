@@ -497,6 +497,31 @@ void floyd(int *edge[], int n)
 }
 ```
 
+### Dijkstra
+
+```cpp
+void Dijkstra() {
+    memset(vis, 0, sizeof(vis));
+    memset(d, 0x3f, sizeof(d));
+    priority_queue<pair<int, int> > q;
+    q.push(make_pair(0, 1));
+    d[1] = 0;
+    while (q.size()) {
+        int u = q.top().second;
+        q.pop();
+        if (vis[u]) continue;
+        vis[u] = 1;
+        for (vector<Edge>::iterator it = G1[u].begin(); it != G1[u].end(); it++) {
+            int v = it->v, w = it->w;
+            if (d[u] + w < d[v]) {
+                d[v] = d[u] + w;
+                q.push(make_pair(-d[v], v));
+            }
+        }
+    }
+}
+```
+
 
 
 ## 动态规划
@@ -506,6 +531,8 @@ void floyd(int *edge[], int n)
 初始化：求最值时初始化为 0，如果要求必须消耗完则 dp[0] = 0，剩下赋为无穷值。
 
 #### 0-1 背包
+
+多重背包可以二进制优化为01背包问题。
 
 ```cpp
 for (int i=1; i<=n; i++)
