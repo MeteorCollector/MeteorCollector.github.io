@@ -124,6 +124,57 @@ int multiset_upper_lower_bound()
 }
 ```
 
+### P1725 琪露诺 单调队列
+
+```cpp
+typedef long long ll;
+using namespace std;
+const int maxn = 2e5 + 1000;
+ll a[maxn], dp[maxn];
+
+class node
+{
+public:
+	ll val; int id;
+	node(int a = 0, ll b = 0) { val = b; id = a; }
+};
+
+bool operator< (node a, node b)
+{
+	return a.val < b.val; // 大根堆
+}
+
+priority_queue<node> que;
+
+int main()
+{
+	int N, L, R;
+	cin >> N >> L >> R;
+	for (int i = 0; i <= N; i++)
+	{
+		cin >> a[i];
+		dp[i] = - LLONG_MIN / 2;
+	}
+	dp[0] = a[0];
+
+	for (int i = L; i <= N; i++)
+	{
+		que.push(node(i - L, dp[i - L]));
+		while (que.top().id < i - R) { que.pop(); }
+		ll maxval = que.top().val;
+		dp[i] = a[i] + maxval;
+	}
+
+	ll ans = LLONG_MIN / 2;
+	for (int i = N - R + 1; i <= N; i++)
+	{
+		ans = max(dp[i], ans);
+	}
+
+	cout << ans;
+}
+```
+
 ### kth_element (qsort)
 
 ```c++
