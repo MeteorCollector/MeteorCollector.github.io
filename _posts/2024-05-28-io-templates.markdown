@@ -412,6 +412,24 @@ void floyd(int *edge[], int n)
 
 ## 动态规划
 
+### 背包问题
+
+#### 0-1 背包
+
+```cpp
+for (int i=1; i<=n; i++)
+	for (int j=m; j>=w[i]; j--)
+		f[j] = max(f[j], f[j-w[i]]+v[i]);
+```
+
+#### 完全背包（没有数量限制）
+
+```cpp
+for (int i=1; i<=n; i++)
+	for (int j=w[i]; j<=m; j++)
+		f[j] = max(f[j], f[j-w[i]]+v[i]);
+```
+
 ### 状压dp
 
 ```c++
