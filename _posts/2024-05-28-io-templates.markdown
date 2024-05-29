@@ -414,6 +414,8 @@ void floyd(int *edge[], int n)
 
 ### 背包问题
 
+初始化：求最值时初始化为 0，如果要求必须消耗完则 dp[0] = 0，剩下赋为无穷值。
+
 #### 0-1 背包
 
 ```cpp
@@ -498,5 +500,33 @@ int compress_main()
 	return 0;
 }
 
+```
+
+### 导弹拦截：最长不增子序列与 Dilworth 定理 (P1020)
+
+```C++
+typedef long long ll;
+using namespace std;
+const int maxn = 1e5 + 10;
+
+int n, r1, r2;
+int arr[maxn], l[maxn], h[maxn];
+int main() {
+    int i = 0;
+    while (cin >> arr[i]) { i++; }
+    n = i;
+    l[0] = h[0] = arr[0]; r1 = r2 = 0;
+    for (int i = 1; i < n; ++i) {
+        if (l[r1] >= arr[i]) { // 求单调不增
+            r1++; l[r1] = arr[i];
+        }
+        else *upper_bound(l, l + r1, arr[i], greater<int>()) = arr[i]; // 第一个小于 arr[i] 的数
+        if (h[r2] < arr[i]) { // 求单调增 (Dilworth)
+            r2++; h[r2] = arr[i];
+        }
+        else *lower_bound(h, h + r2, arr[i]) = arr[i]; // 第一个大于等于 arr[i] 的数
+    } printf("%d\n%d", r1 + 1, r2 + 1); // 下标 -> 数量
+    return 0;
+}
 ```
 
