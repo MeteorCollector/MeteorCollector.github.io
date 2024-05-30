@@ -522,6 +522,105 @@ void Dijkstra() {
 }
 ```
 
+### Dinic
+
+```cpp
+typedef long long ll;
+using namespace std;
+
+const int N = 10010, M = 200010;
+const ll INF = 1e15;
+
+class edge
+{
+public:
+	int ed;
+	ll len;
+	int id;
+	edge(int a, ll b, int i) { ed = a; len = b; id = i; }
+};
+
+vector <edge> e[N];
+
+int n, m, S, T;
+int dep[N], cur[N];
+
+bool bfs()
+{
+	memset(dep, -1, sizeof dep);
+	queue <int> q;
+	q.push(S);
+	dep[S] = 0;
+	while (!q.empty())
+	{
+		int src = q.front();
+		q.pop();
+		for (int i = 0; i < e[src].size(); i = i + 1)
+		{
+			int dst = e[src][i].ed;
+			if (dep[dst] == -1 && e[src][i].len)
+			{
+				dep[dst] = dep[src] + 1;
+				q.push(dst);
+			}
+		}
+	}
+	memset(cur, 0, sizeof(cur));
+	return (dep[T] != -1);
+}
+
+ll dfs(int st, ll limit)
+{
+	if (st == T)
+		return limit;
+	for (int i = cur[st]; i < e[st].size(); i = i + 1)
+	{
+		cur[st] = i;  // 当前弧优化
+		int ed = e[st][i].ed;
+		if (dep[ed] == dep[st] + 1 && e[st][i].len)
+		{
+			int t = dfs(ed, min(e[st][i].len, limit));
+			if (t)
+			{
+				e[st][i].len -= t;
+				e[ed][e[st][i].id].len += t;
+				return t;
+			}
+			else
+				dep[ed] = -1;
+		}
+	}
+	return 0;
+}
+
+int dinic()
+{
+	int r = 0, flow;
+	while (bfs())
+	{
+		while (flow = dfs(S, INF)) r += flow;
+	}
+	return r;
+}
+
+int main()
+{
+	cin >> n >> m >> S >> T;
+	while (m--)
+	{
+		int u, v; ll len;
+		cin >> u >> v >> len;
+		int uid = e[u].size(); // 反向边的 id，方便访问
+		int vid = e[v].size();
+		e[u].push_back(edge(v, len, vid));
+		e[v].push_back(edge(u, 0, uid));
+	}
+	cout << dinic();
+
+	return 0;
+}
+```
+
 
 
 ## 动态规划
