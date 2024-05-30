@@ -360,6 +360,35 @@ void euler_pre(int n, int B, int p[], int vis[], int cnt) {
 
 ## 图论
 
+### Prim
+
+```cpp
+void Prim() {
+  memset(dis, 0x3f, sizeof(dis));
+  dis[1] = 0;
+  q.push({1, 0});
+  while (!q.empty()) {
+    if (cnt >= n) break;
+    int u = q.top().u, d = q.top().d;
+    q.pop();
+    if (vis[u]) continue;
+    vis[u] = 1;
+    ++cnt;
+    res += d;
+    for (int i = h[u]; i; i = e[i].x) {
+      int v = e[i].v, w = e[i].w;
+      if (w < dis[v]) {
+        dis[v] = w, q.push({v, w});
+      }
+    }
+  }
+}
+```
+
+### Tarjan 缩点
+
+[P3387 【模板】缩点 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)](https://www.luogu.com.cn/problem/solution/P3387)
+
 ### LCA 最小公共祖先 倍增算法
 
 ```c++
