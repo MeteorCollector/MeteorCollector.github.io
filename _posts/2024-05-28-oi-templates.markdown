@@ -501,6 +501,8 @@ int toposort()
 
 ### Floyd
 
+犯过的错：k没放在最外面，想想为什么要。
+
 ```c++
 void floyd(int *edge[], int n)
 {
@@ -513,11 +515,11 @@ void floyd(int *edge[], int n)
 		edge[i][i] = 0;
 	}
 
-	for (int i = 1; i <= n; i++)
+	for (int k = 1; k <= n; k++)
 	{
-		for (int j = 1; j <= n; j++)
+		for (int i = 1; i <= n; i++)
 		{
-			for (int k = 1; k <= n; k++)
+			for (int j = 1; j <= n; j++)
 			{
 				edge[i][j] = min(edge[i][j], edge[i][k] + edge[k][j]);
 			}
@@ -527,6 +529,8 @@ void floyd(int *edge[], int n)
 ```
 
 ### Bellman-Ford
+
+注意外层 $\left| V \right|$ 次，内层 $\left| E \right|$ 次。
 
 ```cpp
 struct Edge {
