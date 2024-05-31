@@ -289,7 +289,7 @@ public:
 
 ### 费马小定理
 
-当 $p$ 是质数时，$a^{p-1} \equiv 1\quad (\text{mod }p)$，$a \times a^{p-2} \equiv 1\quad (\text{mod }p)$，因此 $a$ 在 $\text{mod }p$ 意义下乘法逆元为 $a^{p-1}$。常结合快速幂求解。
+当 $p$ 是质数时，$a^{p-1} \equiv 1\quad (\text{mod }p)$，$a \times a^{p-2} \equiv 1\quad (\text{mod }p)$，因此 $a$ 在 $\text{mod }p$ 意义下乘法逆元为 $a^{p-2}$。常结合快速幂求解。
 
 ### 快速幂
 
