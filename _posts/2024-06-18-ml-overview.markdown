@@ -16,11 +16,13 @@ tag: ml
 
 ## 数学基础
 
-梯度 gradient:
+### 矩阵论
+
+#### 梯度 gradient:
 
 `$$\nabla f(\mathbf{x}) = \begin{bmatrix} \frac{\partial f}{\partial x_1}(\mathbf{x}) \\ \vdots  \\ \frac{\partial f}{\partial x_d}(\mathbf{x}) \end{bmatrix}$$`
 
-Hessian Matrix:
+#### Hessian Matrix:
 
 `$$\nabla^2 f(\mathbf{x}) = \begin{bmatrix}
 \frac{\partial^2 f}{\partial x_1 \partial x_1}(\mathbf{x}) & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_d}(\mathbf{x})\\
@@ -28,15 +30,56 @@ Hessian Matrix:
 \frac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x})  & \cdots & \frac{\partial^2 f}{\partial x_d \partial x_d}(\mathbf{x})
 \end{bmatrix}$$`
 
-卡方分布
+### 概率论
+
+#### 卡方分布
 
 若有 `$\mathrm{i.i.d.}\quad x_1, x_2, \cdots x_n \sim \mathcal{N}(0, 1)$`
 
 `$$\chi^2(n) = \sum^n_i x_i^2$$`
 
-学生t分布
+#### 学生t分布
 
 假设 `$X \sim \mathcal{N}(0, 1)$` 且 `$Y \sim \chi^2(n)$` 且两者独立，那么 `$Z = \frac{X}{\sqrt{Y / n}}$` 的分布就是自由度为 $n$ 的学生T分布。
+
+
+### 优化
+
+- 对于只有等式约束的优化问题，可以直接用拉格朗日乘子法列出拉格朗日函数，将其转化为无约束优化问题求解
+- 对于包含不等式约束的优化问题，仍然可以像只有等式约束时一样列出拉格朗日函数，但此时函数中会包含对拉格朗日乘子的新约束，优化它得到的最优值结果一定满足 KKT 条件（KKT 是取最优参数值的必要条件，对于某些特殊的凸优化问题是充要条件）
+- 含有不等式约束的问题列出拉格朗日函数后仍有约束不好处理，这时我们可以将其转化为拉格朗日对偶问题，这个对偶问题一定是凸优化问题，因此易于求解。优化问题一定具有弱对偶性，但要想对偶问题和原问题同解其必须满足强对偶性，强对偶性的充分条件是Slater 条件，必要条件是 KKT 条件
+
+#### KKT 条件
+
+[约束优化方法之拉格朗日乘子法与KKT条件 - ooon - 博客园 (cnblogs.com)](https://www.cnblogs.com/ooon/p/5721119.html)
+
+对于形式化的不等式约束优化问题
+
+`$$\underset{x}{\min} f(x) \\ s.t.\; h_i(x) = 0,\; i = 1, 2, \ldots, m \\ \quad \quad  g_i(x) \leq 0, \; j = 1, 2, \ldots, n$$`
+
+列出拉格朗日方程
+
+`$$L(x, \alpha, \beta) = f(x) + \sum^m_{i=1}\alpha_ih_i(x) + \sum^n_{j=1}\beta_ig_i(x)$$`
+
+可行解 $x$ 需要满足以下 KKT 条件：
+
+`$$\begin{aligned}\nabla_xL(x, \alpha, \beta) & = 0 &(1) \\ \beta_j g_j (x) & = 0, \;j = 1, 2, \ldots, n & (2) \\ h_i(x) &= 0,\; i = 1, 2, \ldots ,m & (3) \\ g_j(x) & \leq 0, \; j = 1, 2, \ldots ,n &(4) \\ \beta_j &\geq 0, \; j = 1, 2, \ldots ,n & (5)\end{aligned}$$`
+
+**满足 KKT 条件后极小化 Lagrangian 即可得到在不等式约束条件下的可行解。** KKT 条件看起来很多，其实很好理解:
+
+(1) ：拉格朗日取得可行解的必要条件；
+
+(2) ：这就是以上分析的一个比较有意思的约束，称作松弛互补条件；
+
+(3) ∼ (4) ：初始的约束条件；
+
+(5) ：不等式约束的 Lagrange Multiplier 需满足的条件。
+
+主要的KKT条件便是 (3) 和 (5) ，只要满足这两个条件便可直接用拉格朗日乘子法。
+
+#### 费马最优条件 Fermat's Optimality Condition
+
+TODO
 
 ## 模型评估方法
 
