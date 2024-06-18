@@ -27,3 +27,69 @@ Hessian Matrix:
 \vdots  & \ddots  & \vdots \\
 \frac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x})  & \cdots & \frac{\partial^2 f}{\partial x_d \partial x_d}(\mathbf{x})
 \end{bmatrix}$$`
+
+卡方分布
+
+若有 `$\mathrm{i.i.d.}\quad x_1, x_2, \cdots x_n \sim \mathcal{N}(0, 1)$`
+
+`$$\chi^2(n) = \sum^n_i x_i^2$$`
+
+学生t分布
+
+假设 `$X \sim \mathcal{N}(0, 1)$` 且 `$Y \sim \chi^2(n)$` 且两者独立，那么 `$Z = \frac{X}{\sqrt{Y / n}}$` 的分布就是自由度为 $n$ 的学生T分布。
+
+## 模型评估方法
+
+防止过拟合
+
+- 正则化
+- 数据增强
+- Dropout
+- Early Stopping
+
+评估方法
+
+- 留出法(hold-out)：划出不相交的训练集和测试集
+- 交叉验证法(cross validation)：划分为k个子集，用k-1个训练，用1个验证(k-fold)
+- 自助法(bootstrap)：有放回的采样
+
+## 模型评价标准
+
+精度(Accuracy) = 预测正确的样本数 / 总样本数 = 1 - ErrorRate
+
+错误率(Error Rate) = 预测错误的样本数 / 总样本数 = 1 - Accuracy
+
+查准率(Precision) = 真阳性 / (真阳性 + 假阳性) = 对于二分类模型，正确的阳性占所有查出来阳性的比例
+
+查全率(Recall) = 真阳性 / (真阳性 + 假阴性) = 对于二分类模型，正确的阳性占所有真正阳性的比例
+
+宏查准率(Macro Presision) = (1 / n) * (类别1的查准率 + 类别2的查准率 + ... + 类别n的查准率)
+
+微查准率(Micro Precision) = (类别1的真阳性 + 类别2的真阳性 + ...... + 类别n的真阳性) / (类别1查出来的阳性 +  类别2查出来的阳性 + ...... + 类别n查出来的阳性)
+
+宏查全率(Macro Recall) = (1 / n) * (类别1的查全率 + 类别2的查全率 + ... + 类别n的查全率)
+
+微查全率(Micro Recall) = (类别1的真阳性 + 类别2的真阳性 + ...... + 类别n的真阳性) / (类别1真正的阳性 +  类别2真正的阳性 + ...... + 类别n真正的阳性)
+
+宏F1度量(Macro F1) = (2 * Macro-P * Macro-R) / (Macro-P + Macro-R)
+
+微F1度量(Micro F1) = (2 * Micro-P * Micro-R) / (Micro-P + Micro-R)
+
+**ROC**：受试者工作特征(Receiver Operating Characteristic)
+
+根据学习器的预测结果对样例进行排序，按此顺序逐个把样本作为正例进行预测，纵轴为真正例率 TPR = TP / (TP + FN)，横轴为正例率 FPR = FP / (TN + FP)。
+
+**AUC**：Area Under Curve
+
+若ROC曲线上坐标分别为 `$\{(x_1, y_1), (x_2, y_2), \cdots , (x_m, y_m)\}$`
+
+`$$\mathbf{AUC} = \frac{1}{2} \sum^{m-1}_{i=1} (x_{i+1} - x_i) \cdot (y_i + y_{i+1})$$`
+
+`$$l_{rank} = \frac{m^+}{m^-} \sum_{x^+ \in D^+} \sum_{x^- \in D^-} \left(\mathbb{I} (f(x^+) < f(x^-)) + \frac{1}{2}\mathbb{I} (f(x^+) = f(x^-))\right)$$`
+
+`$$\mathbf{AUC} = 1 - l_{rank}$$`
+
+`$$\mathbf{AUC} = \frac{m^+}{m^-} \sum_{x^+ \in D^+} \sum_{x^- \in D^-} \left(\mathbb{I} (f(x^+) > f(x^-)) + \frac{1}{2}\mathbb{I} (f(x^+) = f(x^-))\right)$$`
+
+## 线性回归
+
