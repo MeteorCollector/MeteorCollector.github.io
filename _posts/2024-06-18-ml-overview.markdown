@@ -93,3 +93,28 @@ Hessian Matrix:
 
 ## 线性回归
 
+对于多元线性回归
+
+`$$f(\mathbf{x}_i) = \mathbf{w}^\mathrm{T}\mathbf{x}_i + b \simeq y_i$$`
+
+为了便于讨论，将常数项吸收，记
+
+`$$\mathbf{X} = \begin{pmatrix}
+ \mathbf{x}_1^\mathrm{T} & 1\\
+ \mathbf{x}_2^\mathrm{T} & 1\\
+ \vdots & \vdots \\
+ \mathbf{x}_1^\mathrm{T} & 1
+\end{pmatrix}$$`
+
+我们想要的是
+
+`$$\hat{\mathbf{w}}^* = \underset{\mathbf{\hat{w}}}{\arg \min} (\mathbf{y} - \mathbf{X}\mathbf{\hat{w}})^\mathrm{T}(\mathbf{y} - \mathbf{X}\mathbf{\hat{w}})$$`
+
+对 `$\mathbf{\hat{w}}$` 求偏导并令式子为0，得
+
+`$$\mathbf{\hat{w}}^* = (\mathbf{X}^\mathrm{T}\mathbf{X})^{-1} \mathbf{X}^\mathrm{T} \mathbf{y}$$`
+
+额外地，对数线性回归为
+
+`$$\ln y = \mathbf{w}^\mathrm{T} \mathbf{x} + b$$`
+
