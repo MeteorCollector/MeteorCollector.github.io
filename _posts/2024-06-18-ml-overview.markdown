@@ -218,7 +218,7 @@ TODO: PPT上内容
 
 `$$\mathrm{IV} = - \sum^{V}_{v=1} \frac{\left|D^v\right|}{\left|D\right|}\log_2 \frac{\left|D^v\right|}{\left|D\right|}$$`
 
- #### 基尼系数
+#### 基尼系数
 
 数据集的纯度可以用基尼值度量：
 
@@ -263,7 +263,35 @@ $\mathrm{Gini}(D)$ 越小，数据集 $D$ 的纯度越高。
 
 ## 支持向量机 Support Vector Machine
 
+间隔 `$\gamma = \frac{2}{\left\| \boldsymbol{w} \right\|}$`
+
+原形式
+
+`$$\underset{\boldsymbol{w}, b}{\max} \frac{2}{\left\| \boldsymbol{w} \right\|} \\ \text{s.t.}\; y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b) \geq 1,\quad i = 1, 2, \ldots, m.$$`
+
+等价为
+
+`$$\underset{\boldsymbol{w}, b}{\min} \frac{1}{2}\left\| \boldsymbol{w} \right\|^2 \\ \text{s.t.}\; y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b) \geq 1,\quad i = 1, 2, \ldots, m.$$`
+
 #### 对偶问题
+
+对原式的每条约束添加拉格朗日乘子 `$\alpha_i \geq 0$`，则该问题的拉格朗日函数可写为
+
+`$$L(\boldsymbol{w}, b, \boldsymbol{\alpha}) = \frac{1}{2}\left\|\boldsymbol{w}\right\|^2 + \sum^m_{i=1} \alpha_i (1 - y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b))$$ `
+
+其中 `$\boldsymbol{\alpha} = (\alpha_1;\alpha_2;\ldots;\alpha_m)$` ，令 `$L(\boldsymbol{w}, b, \boldsymbol{\alpha})$` 对 $\boldsymbol{w}$ 和 $b$ 偏导为零得
+
+`$$\boldsymbol{w} = \sum^m_{i=1}\alpha_i y_i \boldsymbol{x}_i$$`
+
+`$$0 = \sum^m_{i=1}\alpha_i y_i$$`
+
+将其代入拉格朗日方程，就获得了对偶问题
+
+`$$\begin{aligned}
+\underset{\boldsymbol{\alpha}}{\max} & \sum^m_{i=1} \alpha_i - \frac{1}{2} \sum^m_{i=1} \sum^m_{j=1} \alpha_i \alpha_j y_i y_j \boldsymbol{x}_i^\mathrm{T} \boldsymbol{x}_j \\
+s.t. & \sum^m_{i=1} \alpha_i y_i = 0, \\
+& \alpha_i \geq 0,\quad i = 1, 2, \ldots, m.
+\end{aligned}$$`
 
 #### 核函数
 
