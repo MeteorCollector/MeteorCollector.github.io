@@ -40,6 +40,10 @@ tag: ml
 
 ### 概率论
 
+#### 高斯（正态）分布
+
+`$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp \left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$$`
+
 #### 卡方分布
 
 若有 `$\mathrm{i.i.d.}\quad x_1, x_2, \cdots x_n \sim \mathcal{N}(0, 1)$`
@@ -279,6 +283,8 @@ $\mathrm{Gini}(D)$ 越小，数据集 $D$ 的纯度越高。
 
 `$$L(\boldsymbol{w}, b, \boldsymbol{\alpha}) = \frac{1}{2}\left\|\boldsymbol{w}\right\|^2 + \sum^m_{i=1} \alpha_i (1 - y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b))$$ `
 
+**注意正负**
+
 其中 `$\boldsymbol{\alpha} = (\alpha_1;\alpha_2;\ldots;\alpha_m)$` ，令 `$L(\boldsymbol{w}, b, \boldsymbol{\alpha})$` 对 $\boldsymbol{w}$ 和 $b$ 偏导为零得
 
 `$$\boldsymbol{w} = \sum^m_{i=1}\alpha_i y_i \boldsymbol{x}_i$$`
@@ -304,3 +310,48 @@ s.t. & \sum^m_{i=1} \alpha_i y_i = 0, \\
 \vdots & \ddots & \vdots & \ddots & \vdots \\
 \kappa(\mathbf{x}_m, \mathbf{x}_1) & \cdots & \kappa(\mathbf{x}_m, \mathbf{x}_j) & \cdots & \kappa(\mathbf{x}_m, \mathbf{x}_m)
 \end{bmatrix}$$`
+
+若样本数量大于维度，适合求解原问题；
+
+当维度高于样本数量，适合求解对偶问题。
+
+#### 软间隔
+
+毕竟数据不一定真正能够分开，所以引入软间隔 SVM 问题，原问题为
+
+`$$\begin{aligned}
+\underset{\boldsymbol{w}, b, \xi_i }{\min} \quad & \frac{1}{2}\left\| \boldsymbol{w} \right\|^2 + C \sum^m_{i=1} \text{loss function}\\
+\text{s.t.}\quad & y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b) \geq 1 - \xi_i \\
+&\xi \geq 0,\; i \in [m].
+\end{aligned}$$`
+
+松弛后为
+
+`$$\begin{aligned}
+\underset{\boldsymbol{w}, b, \xi_i }{\min} \quad & \frac{1}{2}\left\| \boldsymbol{w} \right\|^2 + C \sum^m_{i=1} \xi^p_i\\
+\text{s.t.}\quad & y_i(\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b) \geq 1 - \xi_i \\
+&\xi \geq 0,\; i \in [m].
+\end{aligned}$$`
+
+其中松弛变量 $\boldsymbol{\xi} = \{\xi_i\}^m_{i=1}$，$\xi_i > 0$  用以替代**损失函数**，例如 hinge 损失为 `$\max (0, 1 - y_i (\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b))$`。西瓜书上只讲了 $p = 1$ 的情况，相当于对 $\boldsymbol{\xi}$ 使用 `$L_1$` 范数惩罚：`$\left\|\boldsymbol{\xi}\right\|_1 = \sum_i \left|\xi_i\right|$` 
+
+## 贝叶斯分类器
+
+#### 极大似然估计
+
+令 $D_c$ 表示训练集 $D$ 中第 $c$ 类样本组成的集合，假设这些样本是独立同分布的，则参数 $\boldsymbol{\theta}c$ 对于数据集 $D_c$ 的似然是
+
+`$$P(D_c \mid \boldsymbol{\theta}_c) = \prod_{\boldsymbol{x} \in D_c} P(\boldsymbol{x} \mid \boldsymbol{\theta}_c)$$ `
+
+连乘操作容易下溢，通常使用对数似然(log-likelihood)
+
+`$$\begin{aligned}
+LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
+& = \sum_{\boldsymbol{x}\in D_c} \log P(\boldsymbol{x} \mid \boldsymbol{\theta}_c)
+\end{aligned}$$`
+
+此时参数 `$\boldsymbol{\theta}_c$` 的极大似然估计 `$\hat{\boldsymbol{\theta}_c}$` 为
+
+`$$\hat{\boldsymbol{\theta}_c} = \underset{\boldsymbol{\theta}_c}{\arg \max} LL(\boldsymbol{\theta}_c)$$`
+
+参数 $\boldsymbol{w}$ 的后验正比于其先验与数据似然的乘积......（参见作业4-4）
