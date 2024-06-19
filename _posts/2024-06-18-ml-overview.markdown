@@ -183,10 +183,10 @@ TODO: PPT上内容
 - 计算均值，标准差
 - 获得标准化后的样本矩阵 $\mathbf{X}_{\mathrm{std}}$ （减去均值，除以标准差）
 - 获得协方差矩阵 `$\mathbf{S} = \frac{1}{n - 1} \mathbf{X}_{\mathrm{std}} \mathbf{X}_{\mathrm{std}}^\mathrm{T}$`
-- 计算协方差矩阵的特征值，即计算 $\left|\mathbf{S} - \lambda\mathbf{I}\right| = 0$ 的解，记为 $\lambda_1, \lambda_2, \ldots , \lambda_n$
+- 计算协方差矩阵的特征值，即计算 `$\left|\mathbf{S} - \lambda\mathbf{I}\right| = 0$` 的解，记为 `$\lambda_1, \lambda_2, \ldots , \lambda_n$`
 - 假若降至 $m$ 维，取最大的 $m$ 个特征值所对应的单位特征向量 $w_1, w_2, \ldots, w_m$ （注意，求出特征向量之后还需要归一化。特征向量即 $\left(\mathbf{S} - \lambda\mathbf{I}\right)\mathbf{x} = 0$ 的解，再等比例缩放为**单位向量**）
-- 投影矩阵 $\mathbf{W} = (w_1, w_2, \ldots , w_m)$
-- $\mathbf{X}_\mathrm{new} = \mathbf{W}^\mathrm{T}\mathbf{X}_{\mathrm{std}}$
+- 投影矩阵 `$\mathbf{W} = (w_1, w_2, \ldots , w_m)$`
+- `$\mathbf{X}_\mathrm{new} = \mathbf{W}^\mathrm{T}\mathbf{X}_{\mathrm{std}}$`
 
 在选择压缩到的维度时，可以设计一个重构阈值 $t$，然后选择使下式成立的最小 $d^\prime$ 值：
 
@@ -198,7 +198,7 @@ TODO: PPT上内容
 
 #### 信息增益
 
-假定当前样本集合 $D$ 中第 $k$ 类样本所占的比例为 $p_k (k = 1, 2, \ldots , \left| \mathcal{Y} \right|)$，则 $D$ 的信息熵定义为
+假定当前样本集合 $D$ 中第 $k$ 类样本所占的比例为 `$p_k (k = 1, 2, \ldots , \left| \mathcal{Y} \right|)$`，则 $D$ 的信息熵定义为
 
 `$$\mathrm{Ent}(D) = - \sum^{\left| \mathcal{Y} \right|}_{k=1} p_k \log_2 p_k$$`
 
@@ -244,7 +244,7 @@ $\mathrm{Gini}(D)$ 越小，数据集 $D$ 的纯度越高。
 
 #### 基础原理
 
-首先, 考虑一个多层前馈神经网络, 规定网络的输入层是第 $0$ 层, 输入为 $\mathbf{x} \in \mathbb{R}^d$. 网络有 $M$ 个隐层, 第 $h$ 个隐层的神经元个数为 $N_h$, 输入为 $\mathbf{z}_h\in \mathbb{R}^{N_{h-1}}$, 输出为 $\mathbf{a}_h \in \mathbb{R}^{N_h}$, 权重矩阵为 $\mathbf{W}_h \in \mathbb{R}^{N_{h-1} \times N_{h}}$, 偏置参数为 $\mathbf{b}_h \in \mathbb{R}^{N_h}$. 网络的输出层是第 $M+1$ 层, 神经元个数为 $C$, 权重矩阵为 $\mathbf{W}_{M+1} \in \mathbb{R}^{N_M \times C}$, 偏置参数为 $\mathbf{b}_{M+1} \in \mathbb{R}^C$, 输出为 $\mathbf{y} \in \mathbb{R}^C$. 网络隐层和输出层的激活函数均为 $f$, 网络训练时的损失函数为 $\mathcal{L}$, 且 $f$ 与 $\mathcal{L}$ 均可微.
+首先, 考虑一个多层前馈神经网络, 规定网络的输入层是第 $0$ 层, 输入为 `$\mathbf{x} \in \mathbb{R}^d$`. 网络有 $M$ 个隐层, 第 $h$ 个隐层的神经元个数为 `$N_h$`, 输入为 `$\mathbf{z}_h\in \mathbb{R}^{N_{h-1}}$`, 输出为 `$\mathbf{a}_h \in \mathbb{R}^{N_h}$`, 权重矩阵为 `$\mathbf{W}_h \in \mathbb{R}^{N_{h-1} \times N_{h}}$`, 偏置参数为 `$\mathbf{b}_h \in \mathbb{R}^{N_h}$`. 网络的输出层是第 $M+1$ 层, 神经元个数为 $C$, 权重矩阵为 `$\mathbf{W}_{M+1} \in \mathbb{R}^{N_M \times C}$`, 偏置参数为 `$\mathbf{b}_{M+1} \in \mathbb{R}^C$`, 输出为 `$\mathbf{y} \in \mathbb{R}^C$`. 网络隐层和输出层的激活函数均为 $f$, 网络训练时的损失函数为 $\mathcal{L}$, 且 $f$ 与 $\mathcal{L}$ 均可微.
 
 有
 
