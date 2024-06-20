@@ -109,6 +109,8 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 
 ## 模型评价标准
 
+(*)**NFL(No Free Lunch)定理**： 一个算法 `$\mathfrak{L}_a$` 若在某些问题上比另一个算法 `$\mathfrak{L}_b$` 好，必存在另一些问题，`\mathfrak{L}_b` 比 `\mathfrak{L}_a ` 好。
+
 精度(Accuracy) = 预测正确的样本数 / 总样本数 = 1 - ErrorRate
 
 错误率(Error Rate) = 预测错误的样本数 / 总样本数 = 1 - Accuracy
@@ -171,6 +173,14 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 额外地，对数线性回归为
 
 `$$\ln y = \mathbf{w}^\mathrm{T} \mathbf{x} + b$$`
+
+#### 对数几率回归
+
+可以用线性回归解决二分类任务，此时训练集 $y \in \{0, 1\}$
+
+线性回归模型产生的实值输出是 $z = \boldsymbol{w}^\mathrm{T} \boldsymbol{x} + b$，需要将其映射到 $[0, 1]$，往往使用logistic function：
+
+`$$y = \frac{1}{1 + \mathrm{e}^{-z}}$$`
 
 ## LDA 线性判别分析
 
