@@ -14,6 +14,8 @@ tag: ml
 
 有时间一定要把个人站的风格改一下，现在这个风格对于笔记来说太不友好了。
 
+带 * 为作业中未出现但是 PPT 里出现。
+
 ## 数学基础
 
 ### 矩阵论
@@ -109,7 +111,7 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 
 ## 模型评价标准
 
-(*)**NFL(No Free Lunch)定理**： 一个算法 `$\mathfrak{L}_a$` 若在某些问题上比另一个算法 `$\mathfrak{L}_b$` 好，必存在另一些问题，`\mathfrak{L}_b` 比 `\mathfrak{L}_a ` 好。
+**NFL(No Free Lunch)定理** *： 一个算法 `$\mathfrak{L}_a$` 若在某些问题上比另一个算法 `$\mathfrak{L}_b$` 好，必存在另一些问题，`$\mathfrak{L}_b$` 比 `$\mathfrak{L}_a$ ` 好。
 
 精度(Accuracy) = 预测正确的样本数 / 总样本数 = 1 - ErrorRate
 
@@ -147,7 +149,9 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 
 `$$\mathbf{AUC} = \frac{m^+}{m^-} \sum_{x^+ \in D^+} \sum_{x^- \in D^-} \left(\mathbb{I} (f(x^+) > f(x^-)) + \frac{1}{2}\mathbb{I} (f(x^+) = f(x^-))\right)$$`
 
-## 线性回归
+## 线性模型
+
+### 线性回归
 
 对于多元线性回归
 
@@ -174,7 +178,7 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 
 `$$\ln y = \mathbf{w}^\mathrm{T} \mathbf{x} + b$$`
 
-#### 对数几率回归
+### 对数几率回归*
 
 可以用线性回归解决二分类任务，此时训练集 $y \in \{0, 1\}$
 
@@ -182,13 +186,41 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 
 `$$y = \frac{1}{1 + \mathrm{e}^{-z}}$$`
 
-## LDA 线性判别分析
+即
+
+`$$\ln \frac{1}{1-y} = \boldsymbol{w}^\mathrm{T} \boldsymbol{x} + b$$`
+
+这被称作“对数几率”。
+
+### LDA 线性判别分析
 
 同类投影尽可能近，异类投影尽可能远
 
-TODO: PPT上内容
+记第 $i$ 类示例的集合为 `$X_i$` ，均值向量为 `$\boldsymbol{\mu}_i$`，协方差矩阵为 `$\boldsymbol{\Sigma}_i$`
 
-## PCA 主成分分析
+则两类样本的中心在支线上的投影是 `$\boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_0$` 和 `$\boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_1$`，两类样本在投影后的协方差分别为  `$\boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_0 \boldsymbol{w}$` 和 `$\boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_1 \boldsymbol{w}$`
+
+我们的目标是使 `$\boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_0 \boldsymbol{w} + \boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_1 \boldsymbol{w}$` 尽可能小，`$\left\| \boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_0 - \boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_1 \right\|_2^2$` 尽可能大，即最大化
+
+`$$J = \frac{\left\| \boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_0 - \boldsymbol{w}^\mathrm{T} \boldsymbol{\mu}_1 \right\|_2^2}{\boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_0 \boldsymbol{w} + \boldsymbol{w}^\mathrm{T} \boldsymbol{\Sigma}_1 \boldsymbol{w}} = \frac{\boldsymbol{w}^\mathrm{T}(\boldsymbol{\mu}_0 - \boldsymbol{\mu}_1)(\boldsymbol{\mu}_0 - \boldsymbol{\mu}_1)^\mathrm{T}\boldsymbol{w}}{\boldsymbol{w}^\mathrm{T} (\boldsymbol{\Sigma}_0 + \boldsymbol{\Sigma}_1) \boldsymbol{w}}$$`
+
+定义类内散度矩阵
+
+`$$\boldsymbol{S}_w = \boldsymbol{\Sigma}_0 + \boldsymbol{\Sigma}_1 = \sum_{\boldsymbol{x} \in X_0} (\boldsymbol{x} - \boldsymbol{\mu}_0)(\boldsymbol{x} - \boldsymbol{\mu}_0)^\mathrm{T} + \sum_{\boldsymbol{x} \in X_1} (\boldsymbol{x} - \boldsymbol{\mu}_1)(\boldsymbol{x} - \boldsymbol{\mu}_1)^\mathrm{T}$$`
+
+定义类间散度矩阵
+
+`$$\boldsymbol{S}_b = (\boldsymbol{\mu}_0 - \boldsymbol{\mu}_1)(\boldsymbol{\mu}_0 - \boldsymbol{\mu}_1)^\mathrm{T}$$`
+
+目标重写为最大化广义瑞利商
+
+`$$J = \frac{\boldsymbol{w}^\mathrm{T}\boldsymbol{S}_b\boldsymbol{w}}{\boldsymbol{w}^\mathrm{T}\boldsymbol{S}_w\boldsymbol{w}}$$`
+
+之后是使用奇异值分解进行求解。
+
+推广到多分类任务中......详见书/PPT
+
+### PCA 主成分分析
 
 最大化类别无关的全局散度
 
@@ -209,6 +241,14 @@ TODO: PPT上内容
 `$$\frac{\sum^{d^\prime}_{i=1}\lambda_i}{\sum^{d}_{i=1}\lambda_i} \geq t$$`
 
 TODO: PPT上内容
+
+### 多分类任务*
+
+若从二分上推广，有 OvO、OvR、MvM 几种方法，最常用的 MvM 技术是纠错输出码 (Error Correcting Output Codes, ECOC)
+
+### 类别不平衡问题*
+
+“再缩放”，$\frac{y^\prime}{1 - y^\prime} = \frac{y}{1-y} \times \frac{m^-}{m^+}$
 
 ## 决策树
 
@@ -256,6 +296,16 @@ $\mathrm{Gini}(D)$ 越小，数据集 $D$ 的纯度越高。
 
 在西瓜书上，两者的考察标准都是在验证集上的精度(precision)。
 
+#### 连续值问题*
+
+基本思路：将连续属性离散化
+
+#### 缺失值问题*
+
+基本思路：样本赋权，权重划分
+
+#### 轴平行划分/多变量决策树*
+
 ## 神经网络 Neural Networks
 
 #### 基础原理
@@ -276,6 +326,10 @@ $\mathrm{Gini}(D)$ 越小，数据集 $D$ 的纯度越高。
 - 数据增强
 - Dropout
 - Early Stopping
+
+#### BP算法*
+
+#### RBF, SOM, 级联相关, Elman 网络, 深度学习......
 
 ## 支持向量机 Support Vector Machine
 
@@ -345,7 +399,13 @@ s.t. & \sum^m_{i=1} \alpha_i y_i = 0, \\
 &\xi \geq 0,\; i \in [m].
 \end{aligned}$$`
 
-其中松弛变量 $\boldsymbol{\xi} = \{\xi_i\}^m_{i=1}$，$\xi_i > 0$  用以替代**损失函数**，例如 hinge 损失为 `$\max (0, 1 - y_i (\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b))$`。西瓜书上只讲了 $p = 1$ 的情况，相当于对 $\boldsymbol{\xi}$ 使用 `$L_1$` 范数惩罚：`$\left\|\boldsymbol{\xi}\right\|_1 = \sum_i \left|\xi_i\right|$` 
+其中松弛变量 $\boldsymbol{\xi} = \{\xi_i\}^m_{i=1}$，$\xi_i > 0$  用以松弛**替代损失函数**，例如 hinge 损失为 `$\max (0, 1 - y_i (\boldsymbol{w}^\mathrm{T}\boldsymbol{x}_i + b))$`。西瓜书上只讲了 $p = 1$ 的情况，相当于对 $\boldsymbol{\xi}$ 使用 `$L_1$` 范数惩罚：`$\left\|\boldsymbol{\xi}\right\|_1 = \sum_i \left|\xi_i\right|$` 
+
+#### 正则化*
+
+#### $\epsilon$-不敏感损失函数，支持向量回归*
+
+#### 表示定理，核方法*
 
 ## 贝叶斯分类器
 
@@ -394,11 +454,21 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 
 #### 半朴素贝叶斯分类器
 
+**SPODE, AODE**
+
 适当考虑一部分属性间的相互依赖信息。常用“独依赖估计”，假设每个属性在类别之外最多仅依赖于一个其他属性
 
 `$$P(c \mid \boldsymbol{x}) \propto P(c) \prod^d_{i=1}P(x_i \mid c,pa_i)$$`
 
 其中 $pa_i$ 为属性 $x_i$ 所依赖的属性，称为 $x_i$ 的父属性。
+
+**TAN***
+
+#### 高阶依赖*
+
+#### 贝叶斯网*
+
+#### 结构学习，推断，吉布斯采样*
 
 ### EM算法
 
@@ -409,6 +479,16 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 - M步，寻找参数最大化期望似然。
 
 ## 聚类
+
+#### 性能度量*
+
+外部指标，将聚类结果与某个“参考模型”进行比较 (Jaccard 系数，FM 指数，Rand 指数)
+
+内部指标，直接考察聚类结果而不用任何参考模型 (DB指数，Dunn指数)
+
+#### 距离度量*
+
+非负性、同一性、对称性、直递性
 
 #### k-means 算法
 
@@ -458,6 +538,24 @@ LL(D) &= \ln \left(\prod^m_{j=1} p_{\mathcal{M}} (\boldsymbol{x}_j)\right) \\
 
 `$$p(\boldsymbol{x}_i \mid \boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i) = \frac{1}{\sqrt{2\pi\boldsymbol{\Sigma}_i}}\exp \left(-\frac{\left\|\boldsymbol{x}_i - \boldsymbol{\mu}_i\right\|^2}{2\boldsymbol{\Sigma}_i}\right)$$`
 
+**请关注用EM求解高斯混合聚类，PPT有**
+
+#### 密度聚类*
+
+假设：聚类结构能通过样本分布的紧密程度确定
+
+代表：DBSCAN
+
+#### 层次聚类*
+
+假设：能够产生不同粒度的聚类结果
+
+代表：AGNES（自底向上）、DIANA（自顶向下）
+
 ## 集成学习 Ensemble Learning
 
-Adaboost, Bagging
+序列化方法 Adaboost, 并行化方法 Bagging
+
+Stacking
+
+多样性问题和多样性度量
