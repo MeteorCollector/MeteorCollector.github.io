@@ -355,3 +355,35 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 `$$\hat{\boldsymbol{\theta}_c} = \underset{\boldsymbol{\theta}_c}{\arg \max} LL(\boldsymbol{\theta}_c)$$`
 
 参数 $\boldsymbol{w}$ 的后验正比于其先验与数据似然的乘积......（参见作业4-4）
+
+#### 朴素贝叶斯
+
+朴素贝叶斯分类器的假设：所有属性相互独立
+
+`$$P(c \mid \boldsymbol{x}) = \frac{P(c)P(\boldsymbol{x} \mid c)}{P(\boldsymbol{x})} = \frac{P(c)}{P(\boldsymbol{x})} \prod^d_{i=1}P(x_i \mid c)$$`
+
+计算过程详见 hw5-1，记属性集合为 $\boldsymbol{X}$ ，结果为 $\boldsymbol{Y}$
+
+- 计算 $\boldsymbol{Y}$ 各种取值的先验概率
+- 计算各种属性取值以 $Y$ 特定取值为前提的条件概率，即 $P(X^{(i)} = i \mid Y = j)$ 的集合
+- 对于每一种输入，带入上式，获取 $P(c \mid \boldsymbol{x})$ 最大者，即
+
+`$$h_{nb}(\boldsymbol{x}) = \underset{c \in \mathcal{Y}}{\arg \max} P(c) \prod^d_{i=1} P(x_i \mid c)$$`
+
+为了避免其他属性携带的信息被训练集中未出现的属性值“抹去”（因为连乘式的特性，未出现的属性会导致所有涉及这个属性的属性组合概率值为 0），引入**拉普拉斯修正**：
+
+`$$\hat{P}(c) = \frac{\left| D_c \right| + 1}{\left| D \right| + N}$$`
+
+`$$\hat{P}(x_i \mid c) = \frac{\left| D_{c,x_i} \right| + 1}{\left| D_c \right| + N_i}$$`
+
+其中 $N$ 表示训练集 $D$ 中可能的类别数，$N_i$ 表示第 $i$ 个属性可能的取值数。感性地来看，就好像每一类的样例数都被加了一。
+
+“拉普拉斯修正避免了因训练集样本不充分导致概率估值为零的问题，并且在训练集变大时，修正过程所引入的先验(prior)的影响也会逐渐变的可忽略，使得估值渐趋向于实际概率值。”
+
+#### 半朴素贝叶斯分类器
+
+适当考虑一部分属性间的相互依赖信息。常用“独依赖估计”，假设每个属性在类别之外最多仅依赖于一个其他属性
+
+`$$P(c \mid \boldsymbol{x}) \propto P(c) \prod^d_{i=1}P(x_i \mid c,pa_i)$$`
+
+其中 $pa_i$ 为属性 $x_i$ 所依赖的属性，称为 $x_i$ 的父属性。
