@@ -44,6 +44,8 @@ tag: ml
 
 `$$f(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp \left(-\frac{(x - \mu)^2}{2\sigma^2}\right)$$`
 
+作业 5-3 用到了截断正态分布。
+
 #### 卡方分布
 
 若有 `$\mathrm{i.i.d.}\quad x_1, x_2, \cdots x_n \sim \mathcal{N}(0, 1)$`
@@ -155,7 +157,7 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
  \mathbf{x}_1^\mathrm{T} & 1\\
  \mathbf{x}_2^\mathrm{T} & 1\\
  \vdots & \vdots \\
- \mathbf{x}_1^\mathrm{T} & 1
+ \mathbf{x}_n^\mathrm{T} & 1
 \end{pmatrix}$$`
 
 我们想要的是
@@ -388,6 +390,14 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 
 其中 $pa_i$ 为属性 $x_i$ 所依赖的属性，称为 $x_i$ 的父属性。
 
+### EM算法
+
+- E步，以当前参数 $\Theta^t$ 计算隐变量 $\mathbf{Z}$ 的概率分布 $P(\mathbf{Z} \mid X, \Theta^t)$，并计算对数似然 $LL(\Theta \mid \mathbf{X}, \mathbf{Z})$ 关于 $\mathbf{Z}$ 的期望
+
+`$$Q(\Theta \mid \Theta^t) = \mathbb{E}_{\mathbf{Z}\mid \mathbf{X},\Theta^t}LL(\Theta \mid \mathbf{X}, \mathbf{Z})$$`
+
+- M步，寻找参数最大化期望似然。
+
 ## 聚类
 
 #### k-means 算法
@@ -438,3 +448,6 @@ LL(D) &= \ln \left(\prod^m_{j=1} p_{\mathcal{M}} (\boldsymbol{x}_j)\right) \\
 
 `$$p(\boldsymbol{x}_i \mid \boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i) = \frac{1}{\sqrt{2\pi\boldsymbol{\Sigma}_i}}\exp \left(-\frac{\left\|\boldsymbol{x}_i - \boldsymbol{\mu}_i\right\|^2}{2\boldsymbol{\Sigma}_i}\right)$$`
 
+## 集成学习 Ensemble Learning
+
+Adaboost, Bagging
