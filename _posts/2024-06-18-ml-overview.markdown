@@ -301,7 +301,7 @@ s.t. & \sum^m_{i=1} \alpha_i y_i = 0, \\
 
 #### 核函数
 
-另 $\mathcal{X}$ 为输入空间，$\kappa(\cdot,\cdot)$ 时定义在 $\mathcal{X} \times \mathcal{X}$ 上的对称函数，则 $\kappa$ 是核函数当且仅当对于任意数据 $D = \{\mathbf{x}_1,\mathbf{x}_2,\ldots,\mathbf{x}_m\}$，“核矩阵” $\mathbf{K}$ 总是半正定的：
+令 $\mathcal{X}$ 为输入空间，$\kappa(\cdot,\cdot)$ 时定义在 $\mathcal{X} \times \mathcal{X}$ 上的对称函数，则 $\kappa$ 是核函数当且仅当对于任意数据 $D = \{\mathbf{x}_1,\mathbf{x}_2,\ldots,\mathbf{x}_m\}$，“核矩阵” $\mathbf{K}$ 总是半正定的：
 
 `$$\mathbf{K} = \begin{bmatrix}
 \kappa(\mathbf{x}_1, \mathbf{x}_1) & \cdots & \kappa(\mathbf{x}_1, \mathbf{x}_j) & \cdots & \kappa(\mathbf{x}_1, \mathbf{x}_m)\\
@@ -387,3 +387,54 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 `$$P(c \mid \boldsymbol{x}) \propto P(c) \prod^d_{i=1}P(x_i \mid c,pa_i)$$`
 
 其中 $pa_i$ 为属性 $x_i$ 所依赖的属性，称为 $x_i$ 的父属性。
+
+## 聚类
+
+#### k-means 算法
+
+是一个迭代算法，先随机选取 $k$ 个样本作为初始均值向量，把每个样本分类到最近的均值向量。再计算出这些聚类的均值向量，如果向量改变则更新，继续迭代直到不更新为止。
+
+#### 学习向量量化 Learning Vector Quantization, LVQ
+
+引入样本的类别标记和学习率 $\eta$。一开始仍然随即寻找原型向量，不断随机选取向量 $\boldsymbol{x}$，找到离它最近的原型向量。假若标记相同，则“拉近向量”：`$\boldsymbol{p}^\prime = \boldsymbol{p}_{i*} + \eta \cdot(\boldsymbol{x} - \boldsymbol{p}_{i*})$ ` 反之则“推远”向量 `$\boldsymbol{p}^\prime = \boldsymbol{p}_{i*} - \eta \cdot(\boldsymbol{x} - \boldsymbol{p}_{i*})$ ` 直至原型向量不再更新。
+
+#### 高斯混合聚类
+
+采用概率模型来表达聚类模型。
+
+对 $n$ 维样本空间 $\mathcal{X}$ 中的随机向量 $\boldsymbol{x}$ ，若 $\boldsymbol{x}$ 服从高斯分布，其概率密度函数为
+
+`$$p(\boldsymbol{x}) = \frac{1}{(2\pi)^\frac{n}{2}\left| \boldsymbol{\Sigma} \right|^\frac{1}{2}} \mathrm{e}^{\frac{1}{2}(\boldsymbol{x} - \boldsymbol{\mu})^\mathrm{T}\boldsymbol{\Sigma}^{-1}(\boldsymbol{x} - \boldsymbol{\mu})}$$`
+
+其中 $\boldsymbol{\mu}$ 是 $n$ 维均值向量，$\boldsymbol{\Sigma}$ 是 $n \times n$ 的协方差矩阵。高斯分布完全由这两个参数确定。
+
+定义高斯混合分布
+
+`$$p_{\mathcal{M}}(\boldsymbol{x}) = \sum^k_{i=1}\alpha_i \cdot p(\boldsymbol{x} \mid \boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i)$$`
+
+每个混合成分对应一个高斯分布，其中 `$\boldsymbol{\mu}_i$` 和 `$\boldsymbol{\Sigma}_i$` 是第 $i$ 个高斯混合分布的参数。混合系数 `$\alpha_i > 0$`，注意所有混合系数加和为 $1$。
+
+根据贝叶斯定理，
+
+`$$\begin{aligned}
+p_{\mathcal{M}}(z_j = i \mid \boldsymbol{x}_j) & = \frac{P(z_j = i)\cdot p_{\mathcal{M}}(\boldsymbol{x}_j \mid z_j = i)}{p_{\mathcal{M}}(\boldsymbol{x}_j)} \\
+& = \frac{\alpha_i \cdot p(\boldsymbol{x}_j \mid \boldsymbol{\mu}_i,\boldsymbol{\Sigma}_i)}{\sum^k_{l=1}\alpha_l \cdot p(\boldsymbol{x}_j \mid \boldsymbol{\mu}_l,\boldsymbol{\Sigma}_l)}
+\end{aligned}$$`
+
+简记 `$\gamma_{ij} := p_{\mathcal{M}}(z_j = i \mid \boldsymbol{x}_j)$`
+
+目标：对于每个样本 `$\boldsymbol{x}_j$` 的簇标记 `$\lambda_j$` 如下确定：
+
+`$$\lambda_j = \underset{i \in \{1,2,\ldots,k\}}{\arg \max} \gamma_{ji}$$`
+
+采用极大（对数）似然：
+
+`$$\begin{aligned}
+LL(D) &= \ln \left(\prod^m_{j=1} p_{\mathcal{M}} (\boldsymbol{x}_j)\right) \\
+&= \sum^{m}_{j=1} \ln \left( \sum^k_{i=1} \alpha_1 \cdot p(\boldsymbol{x}_j \mid \boldsymbol{\mu}_j, \boldsymbol{\Sigma}_i)\right)
+\end{aligned}$$`
+
+注意由于是正态分布，所以
+
+`$$p(\boldsymbol{x}_i \mid \boldsymbol{\mu}_i, \boldsymbol{\Sigma}_i) = \frac{1}{\sqrt{2\pi\boldsymbol{\Sigma}_i}}\exp \left(-\frac{\left\|\boldsymbol{x}_i - \boldsymbol{\mu}_i\right\|^2}{2\boldsymbol{\Sigma}_i}\right)$$`
+
