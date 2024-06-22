@@ -217,7 +217,7 @@ Syntax Directed Translation
 
 自顶向下方式：从根开始，对于每个非终结符号 A，其所对应过程的参数为继承属性，返回值为综合属性
 
-#### 抽象语法树
+#### 抽象语法树 Abstract Syntax Tree
 
 每个结点代表一个语法结构，对应于运算符；节点的每个子结点代表其子结构，对应于运算分量
 
@@ -251,3 +251,102 @@ Syntax Directed Translation
 |                                  | R -> \varepsilon { R.s = R.i }                 |
 
 ## 第六章 中间代码生成
+
+表达式的有向无环图：指示公共子表达式
+
+#### 三地址代码
+
+- 运算/赋值：x = y op z	x = op y
+- 复制指令：x = y
+- 无条件转移指令：goto L
+- 条件转移指令：if x goto L	if False x goto L	if x relop y goto L
+- 过程调用/返回：param x	call p, n (调用过程p，n为参数个数)
+- 带下标的复制指令：x = y[i]    x[i] = y
+- 地址/指针赋值：x = &y    x = *y    *x = y
+
+实际实现时，可以选择以下几种形式
+
+#### 四元式 Quadrup;e
+
+格式：op    arg1    arg2    result
+
+单目运算符不使用 arg2，param运算不使用 arg2 和 result，条件/非条件转移将目标标号放在result字段
+
+#### 三元式 Triple
+
+格式：op    arg1    arg2
+
+使用三元式的**位置**来引用三元式的运算结果，在做题时往往是表格中的编号
+
+x[i] = y 和 x = y[i] 需要拆分为两个三元式，需要先求出带下标一项的地址
+
+#### 间接三元式 Indirect Triple
+
+包含了一个指向三元式的指针的列表
+
+#### 静态单赋值 SSA
+
+所有赋值都是针对具有不同名字的变量，使用很多变量
+
+#### SDT
+
+ppt里介绍了多种 SDT，分别由计算 T 的类型和宽度的 SDT、声明序列的SDT（维护符号表）、将表达式翻译成三地址代码的 SDD、数组元素的寻址
+
+**作业里涉及了数组元素的寻址，其他的没有涉及**
+
+类型检查和转换
+
+#### 控制流语句的翻译
+
+继承属性：
+
+- B.true：B为真时的跳转目标
+
+- B.false：B为假时的跳转目标
+
+- S.next：S执行完毕时的跳转目标
+
+注意这些继承属性在传递时不可以颠倒
+
+| 产生式                 | 语义规则                                                     |
+| ---------------------- | ------------------------------------------------------------ |
+| P -> S                 | S.next = newlabel()<br>P.code = S.code \|\| label(S.next)    |
+| S -> assign            | S.code = assign.code                                         |
+| S -> if (B) S1         | B.true = newlabel()<br>B.false = S1.next = S.next<br>S.code = B.code \|\| label(B.true) \|\| S1.code |
+| S -> if (B) S1 else S2 | B.true = newlabel()<br>B.false = newlabel()<br>S.code = B.code \|\| label(B.true) \|\| S1.code \|\| gen('goto', S.next) \|\| label(B.false) \|\| S2.code |
+| S -> while (B) S1      | begin = newlabel()<br>B.true = newlabel()<br>B.false = S.next<br>S.code = label(begin) \|\| B.code \|\| label(B.true) \|\| S1.code \|\| gen('goto', begin) |
+| S -> for(S1; B; S2)S3  | B.true = newlabel()<br>B.false = S.next<br>S1.next = newlabel()<br>S2.next = S1.nect<br>S3.next = newlabel()<br>S.code = S1.code() \|\| label(S1.next) \|\| B.code \|\| label(B.true) \|\| S3.code \|\| label(S3.next) \|\| S2.code \|\| gen('goto', S1.next) |
+| S -> S1 S2             | S1.next = newlabel()<br>S2.next = S.next<br>S.code = S1.code \|\| label(S1.next) \|\| S2.code |
+
+布尔表达式
+
+| 产生式          | 语义规则                                                     |
+| --------------- | ------------------------------------------------------------ |
+| B -> B1 \|\| B2 | B1.true = B.true // 短路<br>B1.false = newlabel()<br>B2.true = B.true<br>B2.true = B.false<br>B.code = B1.code \|\| label(B.false) \|\| B2.code |
+| B -> B1 && B2   | B1.true = newlabel()<br>B1.false = B.false // 短路<br>B2.true = B.true<br>B2.false = B.false<br>B.code = B1.code \|\| label(B.true) \|\| B2.code |
+| B -> !B1        | B1.true = B.false<br>B1.false = B.true<br>B.code = B1.code   |
+| B -> E1 rel E2  | B.code = E1.code \|\| E2.code \|\| gen('if' E1.addr rel.op E2.addr 'goto' B.true) \|\| gen('goto', B.false) |
+| B -> true       | B.code = gen('goto' B.true)                                  |
+| B -> false      | B.code = gen('goto' B.false)                                 |
+
+#### 布尔表达式的回填翻译
+
+作业九有涉及，把抽象语法树画了出来。但是应该不是重点？
+
+| 产生式            | 语义规则                                                     |
+| ----------------- | ------------------------------------------------------------ |
+| B -> B1 \|\| M B2 | backpatch(B1.falselist, M.instr);<br>B.truelist = merge(B1.truelist, B2.truelist);<br>B.falselist = B2.falselist; |
+| B -> B1 && M B2   | backpatch(B1.truelist, M.instr);<br>B.truelist = B2.truelist;<br>B.falselist = merge(B1.falselist, B2.falselist); |
+| B -> !B1          | B.truelist = B1.falselist<br>B.falselist = B1.truelist       |
+| B -> (B1)         | B.truelist = B1.truelist<br>B.falselist = B1.falselist       |
+| B -> E1 rel E2    | B.truelist = B1.makelist(nextinstr)<br>B.falselist = B1.makelist(nextinstr + 1);<br>gen('if' E1.addr rel.op E2.addr 'goto _');<br>gen('goto _') |
+| B -> true         | B.truelist = makelist(nextinstr);<br>gen('goto _');          |
+| B -> false        | B.falselist = makelist(nextinstr);<br>gen('goto _');         |
+| M -> \varepsilon  | M.instr = nextinstr;                                         |
+
+#### break / continue / switch
+
+暂略
+
+## 第七章 运行时刻环境
+
