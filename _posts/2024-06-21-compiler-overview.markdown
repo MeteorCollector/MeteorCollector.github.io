@@ -463,5 +463,112 @@ ST a, R1 LD R1, a 能不能省略？如果在同一个基本块里就可以
 
 寄存器分配表：在第十二次作业中有，但是当时写错了，已在md里更正。第十二次作业也有循环识别的问题，当时也做错了。一定要注意定义！
 
+**注意寄存器不够的时候记得把变量存到内存；如果变量在出口处活跃，一定要在最后ST回内存！**
+
+考试时候可能寄存器少（比如2个）
+
 ## 第九章 机器无关的优化
 
+#### 全局公共子表达式
+
+如果 E 在某次出现之前必然已经被计算过且 E 的运算分量在该次计算之后没有被改变，那么 E 的本次出现就是一个公共子表达式 (common subexpression)
+
+#### 复制传播
+
+PPT里没有严格的定义，在lab的实现中，使用的是后向传播数据流算法
+
+#### 死代码消除
+
+如果一个变量在某个程序点上的值可能会在之后被使用，那么这个变量在这个点上 **活跃 (live)**；否
+则这个变量就是 **死的 (dead)**，此时对该变量的赋值就是没有用的死代码
+
+#### 循环不变表达式
+
+循环的同义词运行的不同迭代中表达式的值不变，往往把它们外提
+
+#### 归纳变量强度削减
+
+若某个变量每次都赋值为归纳变量的线性组合，可以把赋值改为增量操作进行强度削减
+
+#### 归纳变量消除*
+
+直接把归纳变量删除，只留下被赋值的变量。PPT里没有提及，但是第十二次作业中出现了
+
+### 数据流分析
+
+正向数据流分析：`$\mathrm{OUT}[s] = f_s(\mathrm{IN}[s])$`
+
+逆向数据流分析：`$\mathrm{IN}[s] = f_s(\mathrm{OUT}[s])$`
+
+#### 到达定值分析
+
+**到达定值分析的gen和kill**
+
+对于定值 $d: v + w$，它生成了对变量 $u$ 的定值 $d$，杀死其他对 $u$ 的定值。即
+
+`$gen_d = \{d\}$`，`$kill_d = \{\text{程序中其他对$u$的定值}\}$`
+
+对于整个基本块
+
+`$gen_B = gen_n \cup (gen_{n-1} - kill_n) \cup \ldots \cup (gen_1 - kill_2 - kill_3 - \ldots - kill_n)$`
+
+`$kill_B = kill_1 \cup kill_2 \cup \ldots \cup kill_n$`
+
+`$gen_B$` 是被第 $i$ 个语句生成，且没有被其后的句子杀死的定值的集合：**向下可见 (downwards exposed)**
+
+`$kill_B$` 为被 $B$ 各个语句杀死的定值的并集
+
+**到达定值分析的控制流方程**
+
+`$\mathrm{OUT[ENTRY]} = \emptyset$`
+
+`$\mathrm{OUT[B]} = gen_B \cup (\mathrm{IN[B]} - kill_B)$`
+
+`$\mathrm{IN[B]} = \cup_{P \in pred(B)} \mathrm{OUT[P]}$`
+
+输出结果是表达式的 bitmap
+
+#### 活跃变量分析
+
+**活跃变量分析的def和use**
+
+对于语句 $s: x = y + z$，`$use_s = \{y, z\}$`，`$def_s = \{x\} - \{y, z\}$`
+
+假设基本块中包含语句 `$s_1, s_2, \ldots, s_n$` 那么
+
+`$use_B = use_1 \cup (use_2 - def_1) \cup (use_3 - def_1 - def_2) \cup \ldots \cup (use_n - def_1 - def_2 - \ldots - def_{n-1})$`
+
+`$def_B = def_1 \cup (def_2 - use_1) \cup (def_3 - use_1 - use_2) \cup \ldots \cup (def_n - use_1 - use_2 - \ldots - use_{n-1})$`
+
+**活跃变量分析的数据流方程**
+
+`$\mathrm{IN[EXIT]} = \emptyset$`
+
+`$\mathrm{IN[B]} = use_B \cup (\mathrm{OUT[B]} - def_B)$`
+
+`$\mathrm{OUT[B]} = \cup_{S \in succ(B)} \mathrm{IN[S]}$`
+
+#### 可用表达式分析
+
+（用于寻找全局公共子表达式）
+
+- 初始化 $S = \{\}$
+- 从头到尾逐个处理基本块中的指令 $x = y + z$
+  - 把 $y + z$ 添加到 $S$ 中
+  - 从 $S$ 中删除任何涉及变量 $x$ 的表达式
+- 遍历结束时得到基本块生成的表达式集合
+- 杀死的表达式集合：表达式的某个分量在基本块中被定值，并且该表达式没有被再次生成
+
+**可用表达式分析的数据流方程**
+
+`$\mathrm{OUT[ENTRY]} = \emptyset$`
+
+`$\mathrm{OUT[B]} = e\_gen_B \cup (\mathrm{IN[B]} - e\_kill_B)$`
+
+`$\mathrm{IN[B]} = \cap_{P \in pred(B)} \mathrm{OUT[P]}$`
+
+#### 总结
+
+注意做题的时候，到达定值往往使用bitmap，活跃变量和可用表达式分析则直接写出集合。
+
+![dataflow_table](../images/dataflow_table.png)
