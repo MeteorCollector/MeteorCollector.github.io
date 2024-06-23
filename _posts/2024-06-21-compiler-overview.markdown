@@ -333,16 +333,16 @@ ppt里介绍了多种 SDT，分别由计算 T 的类型和宽度的 SDT、声明
 
 作业九有涉及，把抽象语法树画了出来。但是应该不是重点？
 
-| 产生式            | 语义规则                                                     |
-| ----------------- | ------------------------------------------------------------ |
-| B -> B1 \|\| M B2 | backpatch(B1.falselist, M.instr);<br>B.truelist = merge(B1.truelist, B2.truelist);<br>B.falselist = B2.falselist; |
-| B -> B1 && M B2   | backpatch(B1.truelist, M.instr);<br>B.truelist = B2.truelist;<br>B.falselist = merge(B1.falselist, B2.falselist); |
-| B -> !B1          | B.truelist = B1.falselist<br>B.falselist = B1.truelist       |
-| B -> (B1)         | B.truelist = B1.truelist<br>B.falselist = B1.falselist       |
-| B -> E1 rel E2    | B.truelist = B1.makelist(nextinstr)<br>B.falselist = B1.makelist(nextinstr + 1);<br>gen('if' E1.addr rel.op E2.addr 'goto _');<br>gen('goto _') |
-| B -> true         | B.truelist = makelist(nextinstr);<br>gen('goto _');          |
-| B -> false        | B.falselist = makelist(nextinstr);<br>gen('goto _');         |
-| M -> \varepsilon  | M.instr = nextinstr;                                         |
+| 产生式             | 语义规则                                                     |
+| ------------------ | ------------------------------------------------------------ |
+| B -> B1 \|\| M B2  | backpatch(B1.falselist, M.instr);<br>B.truelist = merge(B1.truelist, B2.truelist);<br>B.falselist = B2.falselist; |
+| B -> B1 && M B2    | backpatch(B1.truelist, M.instr);<br>B.truelist = B2.truelist;<br>B.falselist = merge(B1.falselist, B2.falselist); |
+| B -> !B1           | B.truelist = B1.falselist<br>B.falselist = B1.truelist       |
+| B -> (B1)          | B.truelist = B1.truelist<br>B.falselist = B1.falselist       |
+| B -> E1 rel E2     | B.truelist = B1.makelist(nextinstr)<br>B.falselist = B1.makelist(nextinstr + 1);<br>gen('if' E1.addr rel.op E2.addr 'goto _');<br>gen('goto _') |
+| B -> true          | B.truelist = makelist(nextinstr);<br>gen('goto _');          |
+| B -> false         | B.falselist = makelist(nextinstr);<br>gen('goto _');         |
+| M -> $\varepsilon$ | M.instr = nextinstr;                                         |
 
 #### break / continue / switch
 
@@ -397,5 +397,71 @@ ppt里介绍了多种 SDT，分别由计算 T 的类型和宽度的 SDT、声明
 
 开销：标记-清扫式与堆区中存储块的数目成正比；标记并压缩与堆区中存储块的数目和可达对象的总大小成正比；拷贝垃圾回收与可达对象的总大小成正比
 
+## 第八章 代码生成
 
+IR -> 机器代码 PPT P7附近
+
+#### 基本块
+
+基本块确定方法：确定首指令(leader)
+
+- 第一个三地址指令
+- 任意一个转移指令的目标指令
+- 紧跟在一个转移指令之后的指令
+
+每个首指令对应于一个基本块，每个基本块都是从首指令开始到下一个首指令之前。
+
+#### 确定基本块中的活跃性、后续使用
+
+初始状态，基本块B中所有非临时变量都是活跃的
+
+从B的最后一个语句开始反向扫描
+
+对于每个语句 i: x = y + z
+
+- 令语句 i 和 x、y、z 的当前活跃性信息/使用信息关联
+- 设置 x 为“不活跃”和“无后续使用”
+- 设置 y 和 z 为“活跃”，并指明它们的下一次使用设置为语句 i
+
+最后获得各个语句 i 上变量在基本块中的活跃性、后续使用信息
+
+#### 循环
+
+- 循环 $L$ 是一个结点集合
+- 存在一个**循环入口 (loop entry)**结点，是**唯一**的前驱可以在循环 $L$ 之外的结点，到达其余结点的路径必然先经过这个入口结点
+- 其余结点都存在到达入口结点的非空路径，且**路径都在$L$中**
+
+#### DAG图
+
+顺序扫描各三地址指令，进行如下处理
+
+- 指令 x = y op z
+  - 为该指令建立结点 N ，标号为 op ，令 x 和 N 关联
+  - N 的子结点为 y 和 z 当前 关联的结点
+- 指令 x = y
+  - 假设 y 关联到 N ，那么 x 现在也关联到 N
+
+- 从数组取值的运算 x = a[i] 对应于 =[] 的结点
+  - 这个结点的左右子节点是数组初始值 a0 和下标 i
+  - 变量 x 是这个节点的标号之一
+- 对数组赋值的运算 a[j] = y 对应于 []= 的结点
+  - 这个结点的三个子结点分别表示 a0、j 和 y
+  - **杀死所有依赖于 a0 的变量**
+- 指针赋值 *q = y 对任意变量赋值，杀死全部其他结点
+
+PPT P31 P35 P38 有例子
+
+#### getReg，冗余代码消除，控制流优化
+
+没找到什么例题啊，复习课上有这么一道：
+
+ST a, R1 LD R1, a 能不能省略？如果在同一个基本块里就可以
+
+感觉优化的大头在第九章？（不过这道题是机器代码，应该还是第八章）
+
+#### 寄存器分配和指派
+
+寄存器分配表：在第十二次作业中有，但是当时写错了，已在md里更正。第十二次作业也有循环识别的问题，当时也做错了。一定要注意定义！
+
+## 第九章 机器无关的优化
 
