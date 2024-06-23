@@ -552,7 +552,7 @@ PPT里没有严格的定义，在lab的实现中，使用的是后向传播数�
 
 （用于寻找全局公共子表达式）
 
-- 初始化 $S = \{\}$
+- 初始化 $S = \emptyset$
 - 从头到尾逐个处理基本块中的指令 $x = y + z$
   - 把 $y + z$ 添加到 $S$ 中
   - 从 $S$ 中删除任何涉及变量 $x$ 的表达式
@@ -571,4 +571,44 @@ PPT里没有严格的定义，在lab的实现中，使用的是后向传播数�
 
 注意做题的时候，到达定值往往使用bitmap，活跃变量和可用表达式分析则直接写出集合。
 
-![dataflow_table](../images/dataflow_table.png)
+ <p><img src="{{site.url}}/images/dataflow_table.png" width="70%" align="middle" /></p>
+
+#### 部分冗余消除*
+
+即提取全局公共子表达式使其只计算一次，以及循环不变代码外提等技术
+
+#### 懒惰代码移动*
+
+使表达式的计算尽量靠后以利于寄存器的分配
+
+ <p><img src="{{site.url}}/images/dataflow_table2.png" width="60%" align="middle" /></p>
+
+这里作业和重点里都没有涉及，但是ppt里还是有篇幅的...
+
+#### 支配结点树
+
+即支配树。
+
+定义支配 (dominate)：如果每条从入口结点到达 $n$  的路径都经过 $d$ ，那么 $d$ 支配 $n$ ，记为 $d \;\mathrm{dom}\;n$
+
+定义直接支配结点 (immediate dominator)：从入口结点到达 $n$ 的任何路径 (不含$n$) 中，它是路径中最后一个支配 $n$ 的结点
+
+$n$ 的直接支配结点 $m$ 具有如下性质：如果 $d \neq n$ 且 $d\;\mathrm{dom}\;n$ ，那么 $d\;\mathrm{dom}\;m$
+
+支配结点也可以用数据流求解，见下：
+
+ <p><img src="{{site.url}}/images/domtree.png" width="50%" align="middle" /></p>
+
+初始条件：$\mathrm{OUT[ENTRY] = ENTRY}$，$\mathrm{OUT[B] = \text{全集}}$
+
+#### 回边
+
+边 $a \to b$ 存在，但是 $b\;\mathrm{dom}\;a$
+
+#### 自然循环 Natual Loop
+
+性质：有一个唯一的入口结点，即循环头(header)，这个结点支配循环中的所有结点。必然存在进入循环头的回边。
+
+定义：给定回边 $n \to d$ 的自然循环是 $d$，加上不经过 $d$ 就能够到达 $n$ 的结点的集合，$d$ 是这个循环的头
+
+构造算法：初始将 $d$ 标记为 visited，从 $n$ 开始逆向对流图进行dfs，把所有访问到的结点加入 loop 集合，标记为 visited。搜索过程中不越过标记为 visited 的结点。loop集合初始值为 $\{n, d\}$
