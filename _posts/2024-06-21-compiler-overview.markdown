@@ -240,7 +240,7 @@ Syntax Directed Translation
 | ---------------------------- | -------------------------- |
 | E -> E_1 + T { print('+'); } | E -> T R                   |
 | E -> T                       | R -> + T { print('+'); } R |
-|                              | R -> \varepsilon           |
+|                              | R -> $\varepsilon$         |
 
 涉及属性值时
 
@@ -248,7 +248,7 @@ Syntax Directed Translation
 | -------------------------------- | ---------------------------------------------- |
 | A -> A1 Y { A.a = g(A1.a, Y,y) } | A -> X { R.i = f(X.x) } R { A.a = R.s }        |
 | A -> X { A.a = f(X.x) }          | R -> Y { R.i = g(R.i, Y.y) } R1 { R.s = R1.s } |
-|                                  | R -> \varepsilon { R.s = R.i }                 |
+|                                  | R -> $\varepsilon$ { R.s = R.i }               |
 
 ## 第六章 中间代码生成
 
