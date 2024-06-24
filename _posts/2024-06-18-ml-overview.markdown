@@ -232,7 +232,7 @@ iff `$0 \in \partial f(\mathbf{x}^*)$`
 - 获得标准化后的样本矩阵 $\mathbf{X}_{\mathrm{std}}$ （减去均值，除以标准差）
 - 获得协方差矩阵 `$\mathbf{S} = \frac{1}{n - 1} \mathbf{X}_{\mathrm{std}} \mathbf{X}_{\mathrm{std}}^\mathrm{T}$`
 - 计算协方差矩阵的特征值，即计算 `$\left|\mathbf{S} - \lambda\mathbf{I}\right| = 0$` 的解，记为 `$\lambda_1, \lambda_2, \ldots , \lambda_n$`
-- 假若降至 $m$ 维，取最大的 $m$ 个特征值所对应的单位特征向量 $w_1, w_2, \ldots, w_m$ （注意，求出特征向量之后还需要归一化。特征向量即 $\left(\mathbf{S} - \lambda\mathbf{I}\right)\mathbf{x} = 0$ 的解，再等比例缩放为**单位向量**）
+- 假若降至 $m$ 维，取最大的 $m$ 个特征值所对应的单位特征向量 $w_1, w_2, \ldots, w_m$ （注意，求出特征向量之后还需要归一化。特征向量即 $\left(\mathbf{S} - \lambda\mathbf{I}\right)\mathbf{x} = 0$ 的解，注意标准化，也就是**向量元素平方和为1**）
 - 投影矩阵 `$\mathbf{W} = (w_1, w_2, \ldots , w_m)$`
 - `$\mathbf{X}_\mathrm{new} = \mathbf{W}^\mathrm{T}\mathbf{X}_{\mathrm{std}}$`
 
@@ -264,7 +264,11 @@ TODO: PPT上内容
 
 也就是对分类后新分类的信息熵进行加权。注意每次都是只考虑要分开的节点，并不是对全局做运算。
 
+使用信息增益来选择划分属性的决策树被称为 **$ID3$ 决策树**。
+
 #### 增益率
+
+**$C4.5$ 决策树**使用增益率代替信息增益。
 
 信息增益对可取值数目较多的属性有偏好。为了减少这种不利影响，增益率定义为
 
@@ -275,6 +279,8 @@ TODO: PPT上内容
 `$$\mathrm{IV} = - \sum^{V}_{v=1} \frac{\left|D^v\right|}{\left|D\right|}\log_2 \frac{\left|D^v\right|}{\left|D\right|}$$`
 
 #### 基尼系数
+
+**$CART$ 决策树**使用基尼指数作为划分依据。
 
 数据集的纯度可以用基尼值度量：
 
@@ -490,6 +496,18 @@ LL(\boldsymbol{\theta}_c) & = \log P(D_c \mid \boldsymbol{\theta}_c) \\
 
 非负性、同一性、对称性、直递性
 
+属性分为“连续属性”和“无序属性”，对于无序属性的距离，可以使用 **VDM(Value Difference Metric)** 作为度量。将闵可夫斯基距离和 VDM 结合 **(MinkovDM)** 即可处理混合属性。
+
+闵可夫斯基距离：`$\left(\sum^n_{u=1} \left|x_{iu} - x_{ju}\right|^p\right)^{\frac{1}{p}}$`
+
+VDM：`$\mathrm{VDM}_p(a,b) = \sum^k_{i=1}\left|\frac{m_{u,a,i}}{m_{u,a}} - \frac{m_{u,b,i}}{m_{u,b}}\right|^p$`
+
+其中 $m_{u,a}$ 表示属性 $u$ 上取值为 $a$ 的样本数，$m_{u,a,i}$ 表示在第 $i$ 个样本簇中在属性 $u$ 上取值为 $a$ 的样本数，$k$ 为样本簇数。
+
+MinkovVDM 即两者相加值，可以使用加权来调整两者的比重。 
+
+`$$\mathrm{MinkovDM}_p(\boldsymbol{x}_i,\boldsymbol{x}_j) = \left(\sum^{n_c}_{u=1} \left| x_{iu} - x_{ju}\right|^p + \sum^{n}_{u=n_c + 1}\mathrm{VDM}(x_{iu},x_{ju})\right)^\frac{1}{p}$$`
+
 #### k-means 算法
 
 是一个迭代算法，先随机选取 $k$ 个样本作为初始均值向量，把每个样本分类到最近的均值向量。再计算出这些聚类的均值向量，如果向量改变则更新，继续迭代直到不更新为止。
@@ -540,22 +558,45 @@ LL(D) &= \ln \left(\prod^m_{j=1} p_{\mathcal{M}} (\boldsymbol{x}_j)\right) \\
 
 **请关注用EM求解高斯混合聚类，PPT有**
 
+以上都是原型聚类算法。
+
 #### 密度聚类*
 
 假设：聚类结构能通过样本分布的紧密程度确定
 
-代表：DBSCAN
+代表：**DBSCAN**, OPTICS, DENCLUE
 
 #### 层次聚类*
 
 假设：能够产生不同粒度的聚类结果
 
-代表：AGNES（自底向上）、DIANA（自顶向下）
+代表：**AGNES**（自底向上）、DIANA（自顶向下）
 
 ## 集成学习 Ensemble Learning
 
-序列化方法 Adaboost, 并行化方法 Bagging
+序列化方法 **Adaboost**，GradientBoost, LPBoost, 并行化方法 **Bagging**, Random Forest, Random Subspace
 
-Stacking
+#### AdaBoost
 
-多样性问题和多样性度量
+the weights of incorrectly classified examples are increased such that the base learner is forced to focus on the "hard" examples in the training set
+
+#### Bagging
+
+随机采样出 $T$ 个含 $m$ 个训练样本的采样集，然后基于每个采样集训练出一个基学习器，再将基学习器进行结合。
+
+#### 随机森林 Random Forest
+
+对基决策树的每个结点，先从该结点的属性集合中随机选择一个包含 $k$ 个属性的子集，然后再从这个子集中选择一个最优属性用于划分。
+
+#### 结合策略
+
+平均法 & 加权平均法
+
+投票法 & 加权投票法
+
+学习法 典型代表：Stacking
+
+先从初始数据集训练出初级学习器，然后“生成”一个新数据集用于训练次级学习器。
+
+#### 多样性问题和多样性度量
+
