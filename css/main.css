@@ -100,7 +100,7 @@ h4,
 h5,
 h5 {
   margin-top: 1.0em;
-  margin-bottom: .5em;
+  margin-bottom: .6em;
   font-family: 'Times New Roman', 'STZhongsong', 'SimHei', 'Serif', sans-serif;
   font-weight: lighter;
   color: #333333;
@@ -108,14 +108,14 @@ h5 {
 
 h1 {
   margin-top: 0;
-  font-size: 2.2em;
+  font-size: 2.4em;
   line-height: 1.2em;
   letter-spacing: .05em; 
   font-weight: bold;
 }
 
 h2 {
-  font-size: 2.0em; 
+  font-size: 2.2em; 
   font-weight: bold;
   margin-top: 16px;
   /*background:#B9D3EE;*/
@@ -123,7 +123,7 @@ h2 {
 }
 
 h3 {
-  font-size: 1.5em; 
+  font-size: 1.7em; 
   text-indent: 4px; 
   border-radius: 4px; 
   padding: 6px 15px;
@@ -137,13 +137,13 @@ h3 {
 }
 
 h4 {
-  font-size: 1.4em; 
+  font-size: 1.6em; 
   padding: 6px 15px;
   font-weight: bold;
 }
 
 h5 {
-  font-size: 1.2em; 
+  font-size: 1.4em; 
   font-weight: bold;
 }
 
@@ -221,7 +221,7 @@ pre code {
 
 table {
   color: #333333;
-  font-size: .9em;
+  font-size: 18px;
   text-align: center;
   line-height: 40px;
   border: 2px solid #363636;
