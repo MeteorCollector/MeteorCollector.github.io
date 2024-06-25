@@ -315,7 +315,7 @@ ppt里介绍了多种 SDT，分别由计算 T 的类型和宽度的 SDT、声明
 | S -> if (B) S1         | B.true = newlabel()<br>B.false = S1.next = S.next<br>S.code = B.code \|\| label(B.true) \|\| S1.code |
 | S -> if (B) S1 else S2 | B.true = newlabel()<br>B.false = newlabel()<br>S.code = B.code \|\| label(B.true) \|\| S1.code \|\| gen('goto', S.next) \|\| label(B.false) \|\| S2.code |
 | S -> while (B) S1      | begin = newlabel()<br>B.true = newlabel()<br>B.false = S.next<br>S.code = label(begin) \|\| B.code \|\| label(B.true) \|\| S1.code \|\| gen('goto', begin) |
-| S -> for(S1; B; S2)S3  | B.true = newlabel()<br>B.false = S.next<br>S1.next = newlabel()<br>S2.next = S1.nect<br>S3.next = newlabel()<br>S.code = S1.code() \|\| label(S1.next) \|\| B.code \|\| label(B.true) \|\| S3.code \|\| label(S3.next) \|\| S2.code \|\| gen('goto', S1.next) |
+| S -> for(S1; B; S2)S3  | B.true = newlabel()<br>B.false = S.next<br>S1.next = newlabel()<br>S2.next = S1.next<br>S3.next = newlabel()<br>S.code = S1.code \|\| label(S1.next) \|\| B.code \|\| label(B.true) \|\| S3.code \|\| label(S3.next) \|\| S2.code \|\| gen('goto', S1.next) |
 | S -> S1 S2             | S1.next = newlabel()<br>S2.next = S.next<br>S.code = S1.code \|\| label(S1.next) \|\| S2.code |
 
 布尔表达式
