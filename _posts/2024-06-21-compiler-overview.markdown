@@ -244,7 +244,7 @@ Syntax Directed Translation
 
 | 原始的产生式                                                | 转换后得到                                                   |
 | ----------------------------------------------------------- | ------------------------------------------------------------ |
-| A -> A1 Y { A.a = g(A1.a, Y,y) }<br>A -> X { A.a = f(X.x) } | A -> X { R.i = f(X.x) } R { A.a = R.s }<br>R -> Y { R.i = g(R.i, Y.y) } R1 { R.s = R1.s }<br>R -> $\varepsilon$ { R.s = R.i } |
+| A -> A1 Y { A.a = g(A1.a, Y.y) }<br>A -> X { A.a = f(X.x) } | A -> X { R.i = f(X.x) } R { A.a = R.s }<br>R -> Y { R.i = g(R.i, Y.y) } R1 { R.s = R1.s }<br>R -> $\varepsilon$ { R.s = R.i } |
 
 ## 第六章 中间代码生成
 

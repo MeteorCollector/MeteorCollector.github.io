@@ -387,7 +387,96 @@ void Prim() {
 
 ### Tarjan 缩点
 
-[P3387 【模板】缩点 - 洛谷 | 计算机科学教育新生态 (luogu.com.cn)](https://www.luogu.com.cn/problem/solution/P3387)
+[P3387 【模板】缩点 - 洛谷 计算机科学教育新生态 (luogu.com.cn)](https://www.luogu.com.cn/problem/solution/P3387)
+
+### Korosaju
+
+```c++
+// B3609
+void dfs1(int u)
+{
+	if (vis[u]) { return; }
+	vis[u] = true;
+	
+	for (int v : edg[u])
+	{
+		dfs1(v);
+	}
+
+	order[orderid] = u; orderid++;
+}
+
+void dfs2(int u)
+{
+	if (vis[u]) { return; }
+	vis[u] = true;
+	st.push(u);
+	for (int v : rev[u])
+	{
+		dfs2(v);
+	}
+}
+
+void output()
+{
+	for (int i = N - 1; i >= 0; i--)
+	{
+		dfs2(order[i]);
+		// cout << "from " << order[i] << endl;
+		if (!st.empty())
+		{
+			int comsz = 0;
+			while (!st.empty())
+			{
+				int v = st.top();
+				st.pop();
+				to[v] = comid;
+				com[comid].push_back(v);
+				comsz++;
+			}
+			sort(com[comid].begin(), com[comid].end());
+			comid++;
+		}
+	}
+}
+
+int main()
+{
+	cin >> N >> M;
+	for (int i = 0; i < M; i++)
+	{
+		int u, v;
+		cin >> u >> v;
+		edg[u].push_back(v);
+		rev[v].push_back(u);
+	}
+
+	memset(vis, 0, sizeof(vis));
+	
+	for (int i = 1; i <= N; i++)
+	{
+		dfs1(i);
+	}
+
+	memset(vis, 0, sizeof(vis));
+
+	output();
+
+	cout << comid << endl;
+
+	for (int i = 1; i <= N; i++)
+	{
+		if (viscom[to[i]]) { continue; }
+		viscom[to[i]] = true;
+		for (int v : com[to[i]]) { cout << v << " "; }
+		cout << endl;
+	}
+
+	return 0;
+}
+```
+
+
 
 ### LCA 最小公共祖先 倍增算法
 
