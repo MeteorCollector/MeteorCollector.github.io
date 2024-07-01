@@ -389,7 +389,7 @@ void Prim() {
 
 [P3387 【模板】缩点 - 洛谷 计算机科学教育新生态 (luogu.com.cn)](https://www.luogu.com.cn/problem/solution/P3387)
 
-### Korosaju
+### Kosaraju
 
 ```c++
 // B3609
