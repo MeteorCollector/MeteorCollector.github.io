@@ -425,6 +425,10 @@ int main()
 
 [不用找了，学习BM算法，这篇就够了（思路+详注代码）_bm学习-CSDN博客](https://blog.csdn.net/DBC_121/article/details/105569440)
 
+实在不行还可以用find...
+
+[C++ string中的find()函数 总结-CSDN博客](https://blog.csdn.net/youtiankeng/article/details/109066118)
+
 
 
 ## 图论
@@ -1009,3 +1013,62 @@ int main() {
   - 若该运算符优先级大于等于栈顶元素，则将该运算符入栈；
   - 否则栈内元素出栈并加到Temp表达式尾端，直到遇到优先级低于该操作符的栈元素，然后把该操作符压入栈中。
 - 遇到右括号直接压入栈中，如果遇到一个左括号，那么就将栈元素弹出并加到Temp表达式尾端，但左右括号并不输出。最后，若运算符栈中还有元素，则将元素一次弹出并加到Temp表达式尾端，最后一步是将Temp表达式翻转。
+
+
+
+## 优化
+
+### 树状数组
+
+P3374
+
+```c++
+int const maxn = 6e5;
+int N, M;
+ll c[maxn];
+
+ll lowbit(int x)
+{
+	return x & -x;
+}
+
+void add(int u, int v) // 单元素修改
+{
+	for (int i = u; i <= N; i += lowbit(i))
+		c[i] += v;
+}
+
+ll sum(int u) // 直到该下标的元素和
+{
+	int ans = 0;
+	for (int i = u; i > 0; i -= lowbit(i))
+		ans += c[i];
+	return ans;
+}
+
+int main()
+{
+	cin >> N >> M;
+	for (int i = 1; i <= N; i++)
+	{
+		ll w;
+		cin >> w;
+		add(i, w);
+	}
+	for (int i = 1; i <= M; i++)
+	{
+		int op, x, y;
+		scanf("%d%d%d", &op, &x, &y);
+		if (op == 1)
+		{
+			add(x, y);
+		}
+		if (op == 2)
+		{
+			printf("%lld\n", sum(y) - sum(x - 1));
+		}
+	}
+	return 0;
+}
+```
+
