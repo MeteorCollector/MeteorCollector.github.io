@@ -358,6 +358,71 @@ void euler_pre(int n, int B, int p[], int vis[], int cnt) {
 
 
 
+## 字符串
+
+### KMP
+
+```c++
+const int maxn = 2e6;
+string s1;
+string s2;
+int kmp[maxn] = { 0 };
+
+int main()
+{
+	cin >> s1 >> s2;
+	int len1 = (int)s1.length();
+	int len2 = (int)s2.length();
+
+	kmp[0] = kmp[1] = 0;
+	int k = 0;
+	// k 代表当前匹配到了第几位
+
+	// 处理 kmp 数组：自己匹配自己
+	for (int i = 1; i < len2; i++)
+	{
+		while (k && (s2[i] != s2[k]))
+		{
+			k = kmp[k];
+		}
+		if (s2[i] == s2[k])
+		{
+			k++;
+			kmp[i + 1] = k;
+		}
+		else
+		{
+			kmp[i + 1] = 0;
+		}
+	}
+
+	k = 0;
+
+	// 真正的匹配
+	for (int i = 0; i < len1; i++)
+	{
+		while (k && (s1[i] != s2[k]))
+		{
+			k = kmp[k];
+		}
+		if (s1[i] == s2[k])
+		{
+			k++;
+		}
+		if (k == len2) { cout << i - len2 + 2 << endl; }
+	}
+
+	for (int i = 1; i <= len2; i++)
+	{
+		cout << kmp[i] << " ";
+	}
+
+	return 0;
+}
+```
+
+
+
 ## 图论
 
 ### Prim
