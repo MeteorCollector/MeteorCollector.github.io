@@ -854,6 +854,84 @@ int main()
 }
 ```
 
+### 欧拉路径
+
+P7771
+
+```c++
+#include <cstdio>
+#include <iostream>
+#include <climits>
+#include <vector>
+#include <algorithm>
+#include <stack>
+
+typedef long long ll;
+using namespace std;
+
+const int maxn = 2e5;
+vector<int> edge[maxn];
+int in[maxn] = { 0 }, out[maxn] = { 0 }, curr[maxn];
+int N, M;
+
+stack<int> st;
+
+void dfs(int src)
+{
+	int len = (int)edge[src].size();
+	for (int i = curr[src]; i < len; i = curr[src])
+	{
+		curr[src]++;
+		dfs(edge[src][i]);
+	}
+	st.push(src);
+}
+
+int main()
+{
+	cin >> N >> M;
+	for (int i = 1; i <= M; i++)
+	{
+		int u, v;
+		cin >> u >> v;
+		edge[u].push_back(v);
+		out[u]++;
+		in[v]++;
+	}
+	int start = 0;
+	int endpt = 0;
+	for (int i = 1; i <= N; i++)
+	{
+		if (in[i] + 1 == out[i])
+		{
+			if (!start) { start = i; }
+			else { cout << "No"; return 0; }
+		}
+		else if (out[i] + 1 == in[i])
+		{
+			if (!endpt) { endpt = i; }
+			else { cout << "No"; return 0; }
+		}
+		else if (in[i] != out[i]) { cout << "No"; return 0; }
+		
+		sort(edge[i].begin(), edge[i].end());
+	}
+	if ((start > 0)^(endpt > 0)) { cout << "No"; return 0; }
+	if (start == 0) { start = 1; }
+	
+	dfs(start);
+	
+	while(!st.empty()) { cout << st.top() << " "; st.pop();
+	}
+	
+	return 0;
+} 
+```
+
+
+
+
+
 
 
 ## 动态规划
