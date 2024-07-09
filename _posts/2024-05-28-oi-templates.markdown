@@ -462,6 +462,78 @@ void Prim() {
 
 [P3387 【模板】缩点 - 洛谷 计算机科学教育新生态 (luogu.com.cn)](https://www.luogu.com.cn/problem/solution/P3387)
 
+### Tarjan 判割点
+
+```c++
+const int maxn = 3e4;
+
+int N, M;
+vector<int> edge[maxn];
+int dfncnt = 0;
+int dfn[maxn], low[maxn];
+queue<int> cut;
+bool iscut[maxn] = { 0 };
+
+void tarjan(int src, int root_id)
+{
+	dfncnt++;
+	dfn[src] = low[src] = dfncnt;
+	int child_cnt = 0;
+	for (int dst : edge[src])
+	{
+		if (!dfn[dst])
+		{
+			tarjan(dst, root_id);
+			low[src] = min(low[src], low[dst]);
+			if (low[dst] >= dfn[src] && src != root_id)
+			{
+				iscut[src] = true;
+			}
+			if (src == root_id) { child_cnt++; }
+		}
+		else
+		{
+			low[src] = min(low[src], dfn[dst]);
+		}
+	}
+	// if is root, dfn[root] is minimum value, always satisfy low[dst] >= dfn[src].
+	if (child_cnt > 1 && src == root_id)
+	{ 
+		iscut[src] = true;
+	}
+}
+
+int main()
+{
+	cin >> N >> M;
+	for (int i = 1; i <= M; i++)
+	{
+		int u, v;
+		cin >> u >> v;
+		edge[u].push_back(v);
+		edge[v].push_back(u);
+	}
+	
+	for (int i = 1; i <= N; i++)
+	{
+		if (!dfn[i]) { tarjan(i, i); }
+	}
+	
+	int ans = 0;
+	for (int i = 1; i <= N; i++)
+	{
+		if (iscut[i]) ans++;
+	}
+	cout << ans << endl;
+	for (int i = 1; i <= N; i++)
+	{
+		if (iscut[i]) cout << i << " ";
+	}
+	
+	return 0;
+}
+```
+
 ### Kosaraju
 
 ```c++
