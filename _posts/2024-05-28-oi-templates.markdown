@@ -854,6 +854,57 @@ int main()
 }
 ```
 
+### 二分图匹配的匈牙利算法
+
+P3386
+
+```c++
+typedef long long ll;
+using namespace std;
+
+const int INF = INT_MAX;
+const int maxn = 2e3;
+vector<int> edge[maxn];
+int vis[maxn] = { 0 }; int match[maxn] = { 0 };
+
+bool dfs(int src, int mark)
+{
+	if (vis[src] == mark) { return false; }
+	vis[src] = mark;
+	for (int dst : edge[src])
+	{
+		if (match[dst] == 0 || dfs(match[dst], mark))
+		{
+			match[dst] = src;
+			return true;
+		}	
+	}
+	return false;
+}
+
+int N, M, E;
+
+int main()
+{
+	cin >> N >> M >> E;
+	for (int i = 1; i <= E; i++)
+	{
+		int u, v;
+		cin >> u >> v;
+		edge[u].push_back(v); 
+	}
+	int ans = 0;
+	for (int i = 1; i <= N; i++)
+	{
+		if (dfs(i, i)) { ans++; }
+	}
+	cout << ans;
+	return 0;
+}
+```
+
+
+
 ### 欧拉路径
 
 P7771
@@ -927,10 +978,6 @@ int main()
 	return 0;
 } 
 ```
-
-
-
-
 
 
 
