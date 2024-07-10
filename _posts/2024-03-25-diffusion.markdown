@@ -184,7 +184,7 @@ $$\begin{aligned} \nabla \log p\left(\boldsymbol{x}_{t} \mid y\right) & = \nabla
 
 从上式可以看到，Classifier Guidance**条件生成只需额外添加一个classifier的梯度来引导。从成本上看，Classifier Guidance 需要训练噪声数据版本的classifier网络，推理时每一步都需要额外计算classifier的梯度。**
 
-#### 横向拓展：Classifire-Free Guidance Diffusion
+#### 横向拓展：Classifier-Free Guidance Diffusion
 
 **Classifier Guidance 使用显式的分类器引导条件生成有几个问题**：一是需要额外训练一个噪声版本的图像分类器。二是该分类器的质量会影响按类别生成的效果。三是通过梯度更新图像会导致对抗攻击效应，生成图像可能会通过人眼不可察觉的细节欺骗分类器，实际上并没有按条件生成。
 

@@ -113,7 +113,7 @@ LSTM是为了解决RNN的梯度消失问题提出的。在RNN中，由于$w$的�
 
 <p><img src="{{site.url}}/images/LSTM.webp" width="50%" align="middle" /></p>
 
-在t时刻，LSTM的输入有三个：当前时刻网络的输入值$\mathbf{x}_t$、上一时刻LSTM的输出值$\mathbf{h}_{t-1}$、以及上一时刻的单元状态$\mathbf{c}_{t-1}$；LSTM的输出有两个：当前时刻LSTM输出值$\mathbf{h}_t$、和当前时刻的单元状态$\mathbf{c}_t$。注意$\mathbf{x}$、$\mathbf{h}$、$\mathbf{c}$都是向量。
+在t时刻，LSTM的输入有三个：当前时刻网络的输入值`$\mathbf{x}_t$`、上一时刻LSTM的输出值`$\mathbf{h}_{t-1}$`、以及上一时刻的单元状态`$\mathbf{c}_{t-1}$`；LSTM的输出有两个：当前时刻LSTM输出值`$\mathbf{h}_t$`、和当前时刻的单元状态`$\mathbf{c}_t$`。注意$\mathbf{x}$、$\mathbf{h}$、$\mathbf{c}$都是向量。
 
 LSTM的思路是使用三个控制开关。第一个开关，负责控制继续保存长期状态c；第二个开关，负责控制把即时状态输入到长期状态c；第三个开关，负责控制是否把长期状态c作为当前的LSTM的输出。
 
