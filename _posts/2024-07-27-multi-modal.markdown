@@ -12,7 +12,7 @@ tag: multimodal
 
 ## A Multimodal Generative AI Copilot for Human Pathology
 
-这是一篇比较新的工作，[A Multimodal Generative AI Copilot for Human Pathology | Nature](https://www.nature.com/articles/s41586-024-07618-3)；有一篇比较通俗的中文搬运见 [机器之心](https://www.jiqizhixin.com/articles/2024-06-20-27)。
+这是一篇比较新的工作，[A Multimodal Generative AI Copilot for Human Pathology](https://www.nature.com/articles/s41586-024-07618-3)；有一篇比较通俗的中文搬运见 [机器之心](https://www.jiqizhixin.com/articles/2024-06-20-27)。
 
 主要内容是哈佛大学和 MIT 的研究团队提出了一种用于人类病理学的视觉语言通才 AI 助手：PathChat。
 
