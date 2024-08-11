@@ -93,6 +93,18 @@ factorizes the world model into an agent-specific component that reacts to the a
 6. **模拟与现实世界的转移**：尽管训练过程在模拟器中进行，但最终的传感器运动策略不依赖于任何特权信息，也不局限于模拟器。它可以利用从模拟到现实世界的转移方法转移到物理世界。
 7. **实验设置和结果**：作者在CARLA模拟器中进行了广泛的实验，验证了他们的方法在不同的天气条件和交通密度下的性能。实验结果表明，与之前的方法相比，新方法在遵守交通规则和减少事故方面有显著提升。
 
+### NEAT [Neural Attention Fields for End-to-End Autonomous Driving, ICCV 2021]
+
+NEAT compresses the high-dimensional image features into a compact low-dimensional representation relevant to the query location (x, y, t), and provides interpretable attention maps as part of this process, without attention supervision.
+
+1. **NEAT（NEural ATtention fields）提出**：一种新的表示方法，通过端到端模仿学习模型，使自动驾驶车辆能够高效地理解场景的语义、空间和时间结构。
+2. **创新的表示方法**：NEAT是一个连续函数，将鸟瞰视图（BEV）中的位置映射到航点和语义，使用中间的注意力图将高维2D图像特征迭代压缩成紧凑的表示形式。
+3. **选择性注意力**：模型能够选择性地关注输入中与驾驶任务相关的区域，同时忽略不相关的信息，有效地将图像与BEV表示关联起来。
+4. **性能提升**：在包含恶劣环境条件和具有挑战性场景的新评估设置中，NEAT超越了几个强基线，并与生成其训练数据的特权CARLA专家的驾驶得分相当。
+5. **可解释性**：通过可视化带有NEAT中间表示的模型的注意力图，提供了改进的可解释性，有助于理解学习到的驾驶行为。
+
+（没有仔细看）
+
 ### Transfuser [Multimodal fusion transformer for end-to-end autonomous driving, CVPR 2021]
 
 中文资料见此：[【Transformer系列论文】TransFuser：端到端自动驾驶的多模态融合Transformer-CSDN博客](https://blog.csdn.net/qq_43058281/article/details/119523913)
