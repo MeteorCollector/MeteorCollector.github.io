@@ -29,7 +29,7 @@ Deformable Attention 的核心思想是允许模型在不同空间位置上自�
 
 ## Planning-oriented Autonomous Driving
 
-UniAD，四个 Transformer
+UniAD，四个 Transformer。CVPR2023最佳论文，最重量级所以放在一开始。
 
 <p><img src="{{site.url}}/images/UniAD.png" width="80%" align="middle" /></p>
 
