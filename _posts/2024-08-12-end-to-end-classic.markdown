@@ -127,11 +127,24 @@ NEAT compresses the high-dimensional image features into a compact low-dimension
 
 但是问题是：对于其他车辆来说 是不像本身一样有所有传感器数据的，对于我们来说是一种 partial observation 所以需要一种 **中间的表达态** 来表示周围信息以代替传感器数据，然后所有可观测的车输出这样的数据 到网络中
 
-### TCP [Trajectory-guided control prediction for end-to-end autonomous driving]
+### TCP [Trajectory-guided control prediction for end-to-end autonomous driving, NeurIPS 2022]
 
 ailab又一力作。对于端到端的驾驶任务，一般是从预测出轨迹，然后用控制器跟随；另一种则是直接预测controller输出；由两种方法启发，作者认为可以吸取各自优点，然后提出本文方法
 
-中文笔记：[【论文阅读】Trajectory-guided Control Prediction for End-to-end Autonomous Driving: A Simple yet Strong Ba-CSDN博客](https://blog.csdn.net/qq_39537898/article/details/125538038)
+TD;LR （太长不看版）:
+1.不同于以往的端到端模型，TCP有何特别？
+模型设计着重点？NOT encoder！以往的端到端模型往往专注于输入信息的融合异己输入encoder部分的设计，而TCP专注于提取到feature之后的预测部分。
+
+E2E AD 输出形式，轨迹or控制？平常的端到端模型采用轨迹+PID/控制信号中的一种，而TCP研究了这两种输出形式的各自特点和优劣，并将二者结合在一个统一框架中，达到取长补短优势互补的效果。
+
+2.我们做了哪些具体工作？
+我们通过大量实验分析了两种输出模型（轨迹预测+PID模型和直接输出控制模型）各自的特点。
+
+针对模仿学习中，对于state-action pair独立同分布假设带来的问题，我们提出了推演预测未来多步控制信号的方案，赋予模型较短时序上的推理能力。
+
+我们将轨迹预测分支和多步控制分支整合在一个框架中，并加入二者的交互，并根据先验方案灵活结合两分支输出，获得最佳的最终控制信号。
+
+中文笔记：[【论文阅读】Trajectory-guided Control Prediction for End-to-end Autonomous Driving: A Simple yet Strong Ba-CSDN博客](https://blog.csdn.net/qq_39537898/article/details/125538038) [TCP：结合轨迹规划和控制预测的端到端自动驾驶框架_wayve 端到端-CSDN博客](https://blog.csdn.net/PerceptionX/article/details/125520061)
 
 1. **集成方法**：提出了一种集成方法，包含两个分支——轨迹规划分支和直接控制分支。轨迹分支预测未来轨迹，而控制分支采用新颖的多步预测方案，以推理当前动作和未来状态之间的关系。
 2. **相互指导**：两个分支相互连接，控制分支在每个时间步骤接收来自轨迹分支的相应指导。
