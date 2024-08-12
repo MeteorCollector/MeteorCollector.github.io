@@ -319,6 +319,14 @@ transfuser的改进，暂时没有细看。因为是transfuser，自然而然地
 6. **结论与未来工作**：DriveAdapter通过利用通过强化学习训练的教师模型中的驾驶知识，实现了端到端自动驾驶流程中的直接应用。为了克服不完美的感知和教师模型问题，提出了掩码特征对齐和行动引导目标函数的适配器。论文希望这能为端到端自动驾驶的研究开辟新的方向，并指出提高基于学习的教师模型的性能将有助于DriveAdapter的性能。
 7. **限制与致谢**：论文指出教师模型的性能是DriveAdapter性能的上限，因此提高教师模型的性能将有助于DriveAdapter。
 
+## Scene as Occupancy
+
+OccNet，使用体素代替传统空间表示（BEV + Bounding Box），重要工作
+
+## VAD: Vectorized Scene Representation for Efficient Autonomous Driving
+
+目前的SOTA，重要工作
+
 # CVPR 2023
 
 ## Planning-oriented Autonomous Driving
