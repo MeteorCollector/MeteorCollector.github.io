@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "frp内网穿透备忘"
+date:   2024-08-27 22:36:00 +0800
+categories: posts
+tag: util
+---
+
+## FRP教程
+
+备忘一下，链接 [使用frp配置内网(穿透保姆级教程)_frp内网穿透-CSDN博客](https://blog.csdn.net/weixin_43213815/article/details/121336968)
+
+Unity Mirror 用的 KCP 是基于 UDP 的，所以需要代理 UDP 端口并开放相应规则。
