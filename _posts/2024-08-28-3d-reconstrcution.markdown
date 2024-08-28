@@ -6,8 +6,6 @@ categories: posts
 tag: autonomous driving
 ---
 
-## FRP教程
-
 ## 前情提要
 
 这篇笔记是由 2024CVPR DrivingGaussian: Composite Gaussian Splatting for Surrounding
@@ -187,3 +185,92 @@ Mega-NeRF的核心是优化NeRF模型以提高效率和渲染速度。它采用�
    - 模型的训练使用渲染损失（rendering loss）作为主要的监督信号，通过比较网络渲染的图像和真实图像之间的差异来优化网络参数。
 6. **辅助损失（Auxiliary Loss）**：
    - 为了解决门控网络可能偏向于某些子网络的问题，Switch-NeRF引入了辅助损失，以平衡不同子网络的训练和利用。
+
+## 3D Gaussian Splatting
+
+在 3DGS 中，3D高斯函数被用来表示场景中的体积元素，这些高斯函数在空间中定义了位置、协方差矩阵和不透明度。也有一些体素的意思了，感觉这种建模是一个一个球体（covariance的调整应该可以把它们变成椭球体) 拼合而成的，球越小，越细节。
+
+### [ACM Transactions on Graphics] 3D Gaussian Splatting for Real-Time Radiance Field Rendering
+
+开山之作。
+
+First, starting from sparse points produced during camera calibration, we represent the scene with 3D Gaussians that preserve desirable properties of continuous volumetric radiance fields for scene optimization while avoiding unnecessary computation in empty space; Second, we perform
+interleaved optimization/density control of the 3D Gaussians, notably optimizing anisotropic covariance to achieve an accurate representation of the scene; Third, we develop a fast visibility-aware rendering algorithm that supports anisotropic splatting and both accelerates training and allows realtime rendering.
+
+<p><img src="{{site.url}}/images/3DGS.png" width="80%" align="middle" /></p>
+
+1. **3D Gaussian表示**：
+   - 场景通过一组3D高斯函数来表示，每个高斯函数定义了一个位置（均值），协方差矩阵（描述形状和方向的各向异性），以及不透明度。
+   - 这些高斯函数能够灵活地捕捉场景中的几何细节，并且可以通过优化过程调整其参数以匹配输入图像。
+2. **优化与训练**：
+   - 通过从结构从运动（SfM）过程中获得的稀疏点云初始化3D高斯函数，然后通过迭代优化过程调整这些高斯的参数，以最小化渲染图像与真实图像之间的差异。
+   - 优化过程中，不仅包括位置和不透明度的调整，还包括协方差矩阵的各向异性调整，以确保高斯函数能够准确地表示场景中的几何结构。
+3. **实时可微分光栅化**：
+   - 为了实现实时渲染，论文提出了一种基于瓦片的光栅化算法，该算法利用现代GPU的并行处理能力，通过分块排序和混合来高效地渲染3D高斯。
+   - 光栅化过程中，每个3D高斯被投影到2D平面上，并根据其不透明度和颜色值进行混合，以生成最终的像素颜色。
+4. **混合与排序**：
+   - 在光栅化过程中，为了正确地混合重叠的高斯函数，需要对它们进行排序。论文使用基于深度的排序，确保了在混合过程中保持正确的可见性顺序。
+   - 通过使用快速的GPU排序算法（如Radix排序），可以高效地处理大量的高斯函数，从而实现实时渲染。
+5. **正则化与损失函数**：
+   - 为了确保优化过程的稳定性和高斯函数的质量，论文引入了多种正则化项，包括梯度正则化、各向异性协方差正则化和不透明度正则化。
+   - 使用L1损失函数和结构相似性（SSIM）损失函数来衡量渲染图像与真实图像之间的差异，并将其作为优化的目标函数。
+6. **自适应密度控制**：
+   - 在优化过程中，论文提出了一种自适应控制高斯密度的方法，通过添加和移除高斯函数来改善场景的表示。
+   - 在某些情况下，例如当高斯函数覆盖了过大的区域或在场景中存在未被充分重建的区域时，会触发高斯函数的分裂或克隆，以提高场景重建的精度。
+
+### [CVPR 2024] 4D Gaussian Splatting for Real-Time Dynamic Scene Rendering
+
+3D上增加的这一D想必就是时间吧。
+
+用于实时渲染动态场景，特别是针对自动驾驶场景的动态背景和多个动态对象。该方法的核心是将场景分解为静态背景和动态对象，分别使用增量式静态3D高斯和复合动态高斯图来重建，并通过高斯光栅化进行全局渲染，以捕捉现实世界中的遮挡关系。
+
+"4D Gaussian Splatting" 方法是一种用于实时渲染动态场景的技术，它通过将场景分解为静态背景和动态对象，并分别对它们进行建模和渲染。以下是该方法的详细原理：
+
+1. **增量式静态3D高斯（Incremental Static 3D Gaussians）**：
+   - 该方法首先将场景的静态背景通过增量式的方式用3D高斯函数进行建模。这些高斯函数由位置、协方差矩阵和不透明度参数化，能够灵活地捕捉场景的几何细节。
+   - 通过利用车辆运动引入的透视变化和时间关系，逐步构建静态背景。使用来自激光雷达（LiDAR）的先验信息初始化高斯模型，提供精确的几何结构和全景一致性。
+2. **复合动态高斯图（Composite Dynamic Gaussian Graph）**：
+   - 对于场景中的动态对象，如行驶中的车辆或移动的行人，该方法使用一个复合动态高斯图来单独重建每个对象，并动态地将它们集成到整个场景中。
+   - 动态对象通过数据集提供的边界框或3D对象检测器和跟踪器预测的结果来识别。然后，为每个动态对象实例化一组动态高斯，并共同优化所有与这些对象相关的参数。
+3. **高斯变形场网络（Gaussian Deformation Field Network）**：
+   - 该网络包含一个空间-时间结构编码器和一个多头高斯变形解码器。编码器负责编码3D高斯的空间和时间特征，而解码器则预测每个3D高斯的变形。
+   - 通过这个网络，可以在新的时间戳上预测高斯变形，从而实现对动态对象的准确建模。
+4. **全局渲染（Global Rendering）**：
+   - 使用可微分的3D高斯光栅化技术，将全局复合3D高斯投影到2D图像平面上。这个过程涉及到对每个像素进行颜色和不透明度的累积计算，以生成最终的渲染图像。
+5. **优化过程**：
+   - 通过最小化渲染图像与真实图像之间的差异来优化网络参数。使用L1损失函数和结构相似性（SSIM）损失函数来衡量渲染图像的质量。
+   - 在训练过程中，还引入了辅助损失函数来平衡不同高斯的利用，确保网络能够均匀地学习场景的各个部分。
+
+### [CVPR 2024] Deformable 3D Gaussians for High-Fidelity Monocular Dynamic Scene Reconstruction
+
+这一篇在机器之心有中文讲解：[CVPR 2024满分论文：浙大提出基于可变形三维高斯的高质量单目动态重建新方法 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/685174498)
+
+以下为从这篇文章的转载
+
+单目动态场景（Monocular Dynamic Scene）是指使用单眼摄像头观察并分析的动态环境，其中场景中的物体可以自由移动。单目动态场景重建对于理解环境中的动态变化、预测物体运动轨迹以及动态数字资产生成等任务至关重要。
+
+随着以神经辐射场（Neural Radiance Field, NeRF）为代表的神经渲染的兴起，越来越多的工作开始使用隐式表征（implicit representation）进行动态场景的[三维重建](https://zhida.zhihu.com/search?q=三维重建&zhida_source=entity&is_preview=1)。尽管基于 NeRF 的一些代表工作，如 D-NeRF，Nerfies，K-planes 等已经取得了令人满意的渲染质量，他们仍然距离真正的照片级真实渲染（photo-realistic rendering）存在一定的距离。
+
+来自浙江大学、[字节跳动](https://zhida.zhihu.com/search?q=字节跳动&zhida_source=entity&is_preview=1)的研究团队认为，上述问题的根本原因在于基于光线投射（ray casting）的 NeRF pipeline 通过逆向映射（backward-flow）将观测空间（observation space）映射到规范空间（canonical space）无法实现准确且干净的映射。逆向映射并不利于可学习结构的收敛，使得目前的方法在 D-NeRF 数据集上只能取得 30 + 级别的 PSNR 渲染指标。
+
+为了解决这一问题，该研究团队提出了一种基于[光栅化](https://zhida.zhihu.com/search?q=光栅化&zhida_source=entity&is_preview=1)（rasterization）的单目动态场景建模 pipeline，首次将[变形场](https://zhida.zhihu.com/search?q=变形场&zhida_source=entity&is_preview=1)（Deformation Field）与 3D 高斯（3D Gaussian Splatting）结合，实现了高质量的重建与新视角渲染。研究论文《Deformable 3D Gaussians for High-Fidelity Monocular Dynamic Scene Reconstruction》已被计算机视觉顶级国际学术会议 CVPR 2024 接收。值得一提的是，这是首个使用变形场将 3D 高斯拓展到单目动态场景的工作。
+
+<p><img src="{{site.url}}/images/Deformable-GS.png" width="80%" align="middle" /></p>
+
+**相关工作**
+
+动态场景重建一直以来是三维重建的热点问题。随着以 NeRF 为代表的神经渲染实现了高质量的渲染，动态重建领域涌现出了一系列以隐式表征作为基础的工作。D-NeRF 和 Nerfies 在 NeRF 光线投射 pipeline 的基础上引入了变形场，实现了稳健的动态场景重建。TiNeuVox，K-Planes 和 Hexplanes 在此基础上引入了网格结构，大大加速了模型的训练过程，渲染速度有一定的提高。然而这些方法都基于逆向映射，无法真正实现高质量的规范空间和变形场的解耦。
+
+3D 高斯泼溅是一种基于光栅化的点云渲染 pipeline。其 CUDA 定制的可微高斯光栅化 pipeline 和创新的致密化使得 3D 高斯不仅实现了 SOTA 的渲染质量，还实现了实时渲染。Dynamic 3D 高斯首先将静态的 3D 高斯拓展到了动态领域。然而，其只能处理多目场景非常严重地制约了其应用于更通用的情况，如手机拍摄等单目场景。
+
+**研究思想**
+
+Deformable-GS 的核心在于将静态的 3D 高斯拓展到单目动态场景。每一个 3D 高斯携带位置，旋转，缩放，不透明度和 SH 系数用于图像层级的渲染。根据 3D 高斯 alpha-blend 的公式，不难发现，随时间变化的位置，以及控制高斯形状的旋转和缩放是决定动态 3D 高斯的决定性参数。然而，不同于传统的基于点云的渲染方法，3D 高斯在初始化之后，位置，透明度等参数会随着优化不断更新。这给动态高斯的学习增加了难度。
+
+该研究创新性地提出了变形场与 3D 高斯[联合优化](https://zhida.zhihu.com/search?q=联合优化&zhida_source=entity&is_preview=1)的动态场景渲染框架。具体来说，该研究将 COLMAP 或随机点云初始化的 3D 高斯视作规范空间，随后通过变形场，以规范空间中 3D 高斯的坐标信息作为输入，预测每一个 3D 高斯随时间变化的位置和形状参数。利用变形场，该研究可以将规范空间的 3D 高斯变换到观测空间用于光栅化渲染。这一策略并不会影响 3D 高斯的可微光栅化 pipeline，经过其计算得到的梯度可以用于更新规范空间 3D 高斯的参数。
+
+此外，引入变形场有利于动作幅度较大部分的高斯致密化。这是因为动作幅度较大的区域变形场的梯度也会相对较高，从而指导相应区域在致密化的过程中得到更精细的调控。即使规范空间 3D 高斯的数量和位置参数在初期也在不断更新，但实验结果表明，这种联合优化的策略可以最终得到稳健的收敛结果。大约经过 20000 轮迭代，规范空间的 3D 高斯的位置参数几乎不再变化。
+
+研究团队发现真实场景的相机位姿往往不够准确，而动态场景更加剧了这一问题。这对于基于神经辐射场的结构来说并不会产生较大的影响，因为神经辐射场基于多层感知机（Multilayer Perceptron，MLP），是一个非常平滑的结构。但是 3D 高斯是基于点云的显式结构，略微不准确的相机位姿很难通过高斯泼溅得到较为稳健地矫正。
+
+为了缓解这个问题，该研究创新地引入了退火平滑训练（Annealing Smooth Training，AST）。该训练机制旨在初期平滑 3D 高斯的学习，在后期增加渲染的细节。这一机制的引入不仅提高了渲染的质量，而且大幅度提高了时间插值任务的稳定性与平滑性。
