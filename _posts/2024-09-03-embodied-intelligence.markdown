@@ -22,6 +22,20 @@ LAMDA的模仿学习教程：[Imitation_Learning.pdf (nju.edu.cn)](https://www.l
 
 为了知道大家都在干啥，还是第一时间读一些论文。
 
+## Definition from CMU
+
+***Robots that perceive, act and collaborate.***
+
+Embodied AI is the integration of machine learning, computer vision, robot learning and language technologies, culminating in the “embodiment” of artificial intelligence: robots that can perceive, act and collaborate.
+
+Robotics, Embodied AI and Learning (REAL) hosts a team of researchers and scientists who are elevating the role of robots from tools to partners, working side by side with humans to solve complex real-world challenges.
+
+## Description from ACM
+
+These foundational studies highlight **three principles** for developing EAI (Embodied Artificial Intelligence) systems. First, EAI systems must not rely on predefined, complex logic to manage specific scenarios. Second, it is essential that EAI systems incorporate evolutionary learning mechanisms, enabling them to adapt continuously to their operational environments. Lastly, the environment plays a pivotal role in shaping not just physical behaviors, but also cognitive structures.
+
+https://cacm.acm.org/blogcacm/a-brief-history-of-embodied-artificial-intelligence-and-its-future-outlook/
+
 ## LLM + Robotics
 
 肯定会存在的一个方向，被吹成“最接近通用人工智能的”LLM，肯定是一个可行的技术路线，但是上限我觉得不好说。
