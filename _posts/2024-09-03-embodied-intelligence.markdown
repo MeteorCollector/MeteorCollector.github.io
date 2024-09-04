@@ -20,7 +20,7 @@ LAMDA的模仿学习教程：[Imitation_Learning.pdf (nju.edu.cn)](https://www.l
 
 上交“强化学习”课程课本《动手学强化学习》：[前言 (boyuai.com)](https://hrl.boyuai.com/chapter/intro)
 
-为了知道大家都在干啥，还是第一时间读一些论文。
+为了知道大家都在干啥，还是第一时间读一些论文。这些论文如果没有特别标注，都晚于2023年。（早于2024年中）
 
 ## Definition from CMU
 
@@ -198,6 +198,10 @@ PaLM-E is a generative model producing text based on multi-model sentences as in
 
 但是问题是没有什么比较统一的指标（目前还没见到哪个论文里有），每项工作都玩自己的，有点难以捉摸。
 
+## SAPIEN: A SimulAted Part-based Interactive ENvironment
+
+2020年的关于模拟环境的文章，voxposer用的simulation就是这个。这个环境建构得非常细致，interaction需要比较详细的。对于 voxposer 这种输出详细规划路线的模型是比较合适的，但是对于输出 low-level natual language 的模型，是不是还是不太行呢？
+
 ## March in Chat: Interactive Prompting for Remote Embodied Referring Expression
 
 自所的工作，这项工作主打一个 remote，即机器人做的工作是在一个比较大的环境里进行的，所以定位目标点并进行寻路是它的主要任务。这个模型的输出也是较为抽象的，主要还是只提供了一个寻路。
@@ -221,4 +225,41 @@ REVERIE也是它们的工作，论文名称是 REVERIE: Remote Embodied Visual R
 
 - 使用 REVERIE 数据集进行评估，该数据集包含多个建筑物内的全景图像和目标对象。
 - 评估指标包括导航成功率（SR）、Oracle 成功率（OSR）、按路径长度加权的成功率（SPL）以及远程定位成功率（RGS）和按路径长度加权的远程定位成功率（RGSPL）。
+
+## Discuss Before Moving: Visual Language Navigation via Multi-expert Discussions
+
+北大董豪组的工作，好一个大语言模型的集成学习。不同的大语言模型各司其职，负责具身工作中的不同模块。“将具有不同能力的大模型作为领域专家，让代理在每一步移动之前与这些专家积极讨论，收集关键信息。”它解决的的 Visual-Language Navigation (VLN)，这个领域先前类似的工作有 NavGPT。输出是 trajectory。
+
+他这个工作的思路很好理解，就不多赘述了。至于R2R，
+
+*R2R* is a dataset for visually-grounded natural language *navigation* in real buildings.
+
+https://paperswithcode.com/dataset/room-to-room
+
+## Skill Transformer: A Monolithic Policy for Mobile Manipulation
+
+“用于解决长期机器人任务，特别是移动操作任务。Skill Transformer 结合了条件序列建模和技能模块化，通过一个端到端训练的变换器（Transformer）架构来预测高级技能（如导航、抓取、放置）和全身低级动作（如基座和手臂运动），从而实现复杂任务的执行。”
+
+这个比较接近 robotics 的具体问题了。
+
+### 方法概述：
+
+- **输入**：Skill Transformer 接收机器人的自我中心和本体感受观察作为输入，包括机器人的深度视觉观察和机器人关节位置、是否持有物体的状态以及基座的自我运动。
+- **技能推断**：首先，技能推断模块使用因果变换器网络预测当前应执行的skill。
+- **动作推断**：接着，动作推断模块根据预测的技能、当前观察和前一时间步的动作来预测机器人的低级动作。
+- **训练**：Skill Transformer 通过自回归方式使用解决完整任务的轨迹进行训练。
+
+### 实验和评估：
+
+- **实验设置**：在 Habitat 2.0 模拟环境中进行实验，使用模拟的 Fetch 机器人执行物体重新排列任务。
+- **基线比较**：与多种基线方法（包括单体 RL、决策变换器、模块化方法等）进行比较，Skill Transformer 在多个指标上表现更优。
+- **鲁棒性测试**：通过在测试期间对环境进行干扰（如关闭已打开的抽屉），评估 Skill Transformer 的重新规划能力。
+- **消融研究**：通过改变政策架构、上下文长度和训练数据集大小，研究这些因素对 Skill Transformer 性能的影响。
+
+值得一提终于见到用Habitat的工作了。
+
+Habitat：https://aihabitat.org/
+
+navigation 和比较细的需要机器人的动作也可以用 habitat。看这个：https://aihabitat.org/
+https://ai.meta.com/blog/habitat-20-training-home-assistant-robots-with-faster-simulation-and-new-benchmarks/
 
