@@ -204,6 +204,10 @@ PaLM-E is a generative model producing text based on multi-model sentences as in
 
 REVERIE也是它们的工作，论文名称是 REVERIE: Remote Embodied Visual Referring Expression in Real Indoor Environments，专长于远程寻路拿取物体的 task。march in chat 可以视作这篇工作的延伸。
 
+有一说一 navigation 的数据集还是有不少的（来自 REVERIE 论文）：
+
+<p><img src="{{site.url}}/images/navdata.png" width="90%" align="middle" /></p>
+
 ### 主要贡献和方法：
 
 1. **交互式提示（Interactive Prompting）**：MiC 模型通过与大型语言模型（LLM）进行实时对话来动态规划导航步骤。这种方法允许智能体根据当前的视觉观察和环境反馈调整其导航策略。
@@ -217,3 +221,4 @@ REVERIE也是它们的工作，论文名称是 REVERIE: Remote Embodied Visual R
 
 - 使用 REVERIE 数据集进行评估，该数据集包含多个建筑物内的全景图像和目标对象。
 - 评估指标包括导航成功率（SR）、Oracle 成功率（OSR）、按路径长度加权的成功率（SPL）以及远程定位成功率（RGS）和按路径长度加权的远程定位成功率（RGSPL）。
+
