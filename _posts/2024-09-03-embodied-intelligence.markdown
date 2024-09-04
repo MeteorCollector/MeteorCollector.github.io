@@ -263,3 +263,36 @@ Habitat：https://aihabitat.org/
 navigation 和比较细的需要机器人的动作也可以用 habitat。看这个：https://aihabitat.org/
 https://ai.meta.com/blog/habitat-20-training-home-assistant-robots-with-faster-simulation-and-new-benchmarks/
 
+## See to Touch: Learning Tactile Dexterity through Visual Incentives
+
+这项研究用上触觉了，太细了先不看。
+
+## Context-Aware Planning and Environment-Aware Memory for Instruction Following Embodied Agents
+
+主要是考虑了执行动作前后环境的变化，剩下的没啥了
+
+1. **上下文感知规划（Context-Aware Planning, CAP）**：通过将任务相关的语义上下文（例如，与任务交互的适当对象）纳入行动序列中，提高了代理规划一系列动作的能力。
+2. **环境感知记忆（Environment-Aware Memory, EAM）**：通过存储对象状态和它们在交互后的视觉变化（例如，对象被移动到的位置），帮助代理在推断后续行动时考虑到这些变化
+
+## ALFRED: A Benchmark for Interpreting Grounded Instructions for Everyday Tasks
+
+上一篇论文的 benchmark 用的是 ALFRED (2020)。是 grounding 的评价体系
+
+“We introduce ALFRED, a new benchmark for connecting human language to actions, behaviors, and objects in interactive visual environments.”
+
+输入：需要被操作的物体，scene
+
+输出：expert deomstration，high-level 的自然语言，low-level 的自然语言（如何衡量模型执行结果与自然语言instruction的相似程度？）
+
+Expert demonstrations are composed of an agent’s egocentric visual observations of the environment and what action is taken at each timestep as well as ground-truth interaction masks.
+
+## Synthesizing Event-Centric Knowledge Graphs of Daily Activities Using Virtual Space
+这个是做知识图谱的。
+
+“简述：论文提出了一种新框架VirtualHome2KG，用于在虚拟空间中生成日常生活活动的合成知识图谱。该框架基于提出的事件为中心的模式和虚拟空间模拟结果，扩展了日常生活活动的合成视频数据和与视频内容相对应的上下文语义数据。因此，可以分析上下文感知的数据，并开发各种传统上由于相关数据的不足和语义信息不足而难以开发的应用。”
+
+## Conditionally Combining Robot Skills using Large Language Models
+
+
+
+“论文提出了两个贡献。首先，介绍了一个名为“Language-World”的Meta-World基准扩展，允许大型语言模型在模拟机器人环境中使用[自然语言查询](https://zhida.zhihu.com/search?q=自然语言查询&zhida_source=entity&is_preview=1)和脚本化技能进行操作。其次，引入了一种称为计划条件行为克隆（PCBC）的方法，可以使用端到端演示微调高级计划的行为。使用Language-World，表明PCBC能够在各种少数情况中实现强大的性能，通常只需要单个演示即可实现任务泛化。”
