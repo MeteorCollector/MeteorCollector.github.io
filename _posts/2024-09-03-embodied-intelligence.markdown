@@ -197,3 +197,23 @@ PaLM-E is a generative model producing text based on multi-model sentences as in
    - 任务设计为包含可随机化属性的模板指令，以测试模型对已见过（seen）和未见过（unseen）属性的泛化能力。
 
 但是问题是没有什么比较统一的指标（目前还没见到哪个论文里有），每项工作都玩自己的，有点难以捉摸。
+
+## March in Chat: Interactive Prompting for Remote Embodied Referring Expression
+
+自所的工作，这项工作主打一个 remote，即机器人做的工作是在一个比较大的环境里进行的，所以定位目标点并进行寻路是它的主要任务。这个模型的输出也是较为抽象的，主要还是只提供了一个寻路。
+
+REVERIE也是它们的工作，论文名称是 REVERIE: Remote Embodied Visual Referring Expression in Real Indoor Environments，专长于远程寻路拿取物体的 task。march in chat 可以视作这篇工作的延伸。
+
+### 主要贡献和方法：
+
+1. **交互式提示（Interactive Prompting）**：MiC 模型通过与大型语言模型（LLM）进行实时对话来动态规划导航步骤。这种方法允许智能体根据当前的视觉观察和环境反馈调整其导航策略。
+2. **Room-and-Object Aware Scene Perceiver (ROASP)**：为了使 LLM 能够更好地理解环境并做出适应性规划，作者提出了 ROASP 模块。该模块利用 CLIP 模型来预测智能体当前所在房间的类型以及可见的对象，从而为 LLM 提供环境上下文信息。
+3. **两个规划模块**：
+   - **Goal-Oriented Static Planning (GOSP)**：在任务开始时，使用 GOSP 模块让 LLM 识别指令中的目标对象并推断可能的位置。
+   - **Scene-Oriented Dynamic Planning (SODP)**：在导航过程中，根据 ROASP 提供的环境反馈，使用 SODP 模块生成详细的步骤指导。
+4. **实验结果**：在 REVERIE 基准测试中，MiC 模型在所有指标上均取得了新的最佳性能，特别是在 SPL 和 RGSPL 这两个主要指标上，相较于之前的最好方法有了显著提升。
+
+### 评估方法：
+
+- 使用 REVERIE 数据集进行评估，该数据集包含多个建筑物内的全景图像和目标对象。
+- 评估指标包括导航成功率（SR）、Oracle 成功率（OSR）、按路径长度加权的成功率（SPL）以及远程定位成功率（RGS）和按路径长度加权的远程定位成功率（RGSPL）。
