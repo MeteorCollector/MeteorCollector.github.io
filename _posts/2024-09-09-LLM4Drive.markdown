@@ -24,4 +24,174 @@ Anyway，在解决多模态问题，尤其是自动驾驶这样一个 multi-task
 
 比较自然产生的是 **Perception** 和 **Planning & Control** 。紧接着有包括世界模型（比如[之前看过的这篇](https://meteorcollector.github.io/2024/08/end-to-end-recent/#driving-into-the-future-multiview-visual-forecasting-and-planning-with-world-model-for-autonomous-driving)）等应用方式的生成式 **Generation (Diffusion)**  LLM。然后是基于问答的 **Question Answering (QA)** 用 LLM，最后为了评估，还有 **Evaluation & Benchmark**。
 
-<p><img src="{{site.url}}/images/LLMTree.png" width="90%" align="middle" /></p>
+<p><img src="{{site.url}}/images/DriveCite.png" width="100%" align="middle" /></p>
+
+## Goole Scolar Citations (up to 2024/9/9)
+
+### Perception: Tracking
+
+48  Language prompt for autonomous driving
+
+### Perception: Detection
+
+39  Hilm-d: Towards high-resolution understanding in multimodal large language models for autonomous driving
+
+### Perception: Prediction
+
+17  Can you text what is happening? integrating pre-trained language encoders into trajectory prediction models for autonomous driving
+
+17  Mtd-gpt: A multi-task decision-making gpt model for autonomous driving at unsignalized intersections
+
+5   LC-LLM: Explainable Lane-Change Intention and Trajectory Predictions with Large Language Models
+
+0   LeGo-Drive: Language-enhanced Goal-oriented Closed-Loop End-to-End Autonomous Driving
+
+2   Large Language Models Powered Context-aware Motion Prediction
+
+### Planning & Control: Prompt Engineering
+
+13  Empowering Autonomous Driving with Large Language Models: A Safety Perspective
+
+10  Personalized Autonomous Driving with Large Language Models: Field Experiments (name modified)
+
+35  ChatGPT as your vehicle co-pilot: An initial attempt
+
+40  Receive, reason, and react: Drive as you say, with large language models in autonomous vehicles
+
+86  Languagempc: Large language models as decision makers for autonomous driving
+
+32  Talk2BEV: Language-enhanced Bird's-eye View Maps for Autonomous Driving
+
+34  Surrealdriver: Designing generative driver agent simulation framework in urban contexts based on large language model
+
+67  Drive as you speak: Enabling human-like interaction with large language models in autonomous vehicles
+
+77  Dilu: A knowledge-driven approach to autonomous driving with large language models
+
+5    LLM-assisted light: Leveraging large language model capabilities for human-mimetic traffic signal control in complex urban environments
+
+11  AccidentGPT: Accident analysis and prevention from V2X environmental perception with multi-modal large model
+
+20  Llm-assist: Enhancing closed-loop planning with language-based reasoning
+
+7    Driving Everywhere with Large Language Model Policy Adaptation
+
+### Planning & Control: Fine-tuning Pre-trained Model
+
+40  Drivemlm: Aligning multi-modal large language models with behavioral planning states for autonomous driving
+
+48  Lmdrive: Closed-loop end-to-end driving with large language models
+
+38  A language agent for autonomous driving
+
+119 Gpt-driver: Learning to drive with gpt
+
+69  Drivelm: Driving with graph visual question answering
+
+114 Drivegpt4: Interpretable end-to-end autonomous driving via large language model
+
+79  Driving with llms: Fusing object-level vector modality for explainable autonomous driving
+
+17  Mtd-gpt: A multi-task decision-making gpt model for autonomous driving at unsignalized intersections
+
+0    KoMA: Knowledge-driven Multi-agent Framework for Autonomous Driving with Large Language Models
+
+1    Asynchronous Large Language Model Enhanced Planner for Autonomous Driving
+
+34  Drivevlm: The convergence of autonomous driving and large vision-language models
+
+16  Rag-driver: Generalisable driving explanations with retrieval-augmented in-context learning in multi-modal large language model
+
+9    VLP: Vision Language Planning for Autonomous Driving
+
+11  Dme-driver: Integrating human decision logic and 3d scene perception in autonomous driving
+
+### Generation (Diffusion)
+
+17  Adriver-i: A general world model for autonomous driving
+
+16  DrivingDiffusion: Layout-Guided multi-view driving scene video generation with latent diffusion model
+
+59  Drivedreamer: Towards real-world-driven world models for autonomous driving
+
+30  Language-guided traffic simulation via scene-level diffusion
+
+90  Gaia-1: A generative world model for autonomous driving
+
+39  Magicdrive: Street view generation with diverse 3d geometry control
+
+24  Driving into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving
+
+0   ChatScene: Knowledge-Enabled Safety-Critical Scenario Generation for Autonomous Vehicles
+
+1   REvolve: Reward Evolution with Large Language Models for Autonomous Driving
+
+11 Genad: Generative end-to-end autonomous driving
+
+7   Drivedreamer-2: Llm-enhanced world models for diverse driving video generation
+
+12  Editable scene simulation for autonomous driving via collaborative llm-agents
+
+5    LLM-assisted light: Leveraging large language model capabilities for human-mimetic traffic signal control in complex urban environments
+
+3    LangProp: A code optimization framework using Large Language Models applied to driving
+
+### Question Answering (QA): Visual QA
+
+40  Drivemlm: Aligning multi-modal large language models with behavioral planning states for autonomous driving
+
+69  Drivelm: Driving with graph visual question answering
+
+12  Reason2drive: Towards interpretable and chain-based reasoning for autonomous driving
+
+12  Lingoqa: Video question answering for autonomous driving
+
+26  Dolphins: Multimodal language model for driving
+
+0    A Superalignment Framework in Autonomous Driving with Large Language Models
+
+3    Multi-Frame, Lightweight & Efficient Vision-Language Models for Question Answering in Autonomous Driving
+
+9     Transgpt: Multi-modal generative pre-trained transformer for transportation
+
+### Traditional QA
+
+8    Domain knowledge distillation from large language model: An empirical study in the autonomous driving domain
+
+14  Human-centric autonomous systems with llms for user command reasoning
+
+4    Engineering safety requirements for autonomous driving with large language models
+
+3    Hybrid Reasoning Based on Large Language Models for Autonomous Car Driving
+
+### Evaluation & Benchmark
+
+46  On the road with gpt-4v (ision): Early explorations of visual-language model on autonomous driving
+
+1   GPT-4V Takes the Wheel: Promises and Challenges for Pedestrian Behavior Prediction
+
+15 Lampilot: An open benchmark dataset for autonomous driving with language model programs
+
+6   Evaluation of large language models for decision making in autonomous driving
+
+0   Testing Large Language Models on Driving Theory Knowledge and Skills for Connected Autonomous Vehicles
+
+1   Probing Multimodal LLMs as World Models for Driving
+
+9   Embodied understanding of driving scenarios
+
+8   LimSim++: A Closed-Loop Platform for Deploying Multimodal LLMs in Autonomous Driving
+
+7   OmniDrive: A Holistic LLM-Agent Framework for Autonomous Driving with 3D Perception, Reasoning and Planning
+
+2   AIDE: An Automatic Data Engine for Object Detection in Autonomous Driving
+
+## Peception
+
+## Planning & Control
+
+## Generation
+
+## Question Answering (QA)
+
+## Evaluation & Benchmark
