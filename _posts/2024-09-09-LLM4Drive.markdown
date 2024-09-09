@@ -8,4 +8,20 @@ tag: autonomous driving
 
 ## 前情提要
 
-这是一篇从 [LLM4Drive: A Survey of Large Language Models for Autonomous Driving](https://arxiv.org/abs/2311.01043) 伸展出去的笔记，主要看看自动驾驶用大语言模型。
+这是一篇从 [LLM4Drive: A Survey of Large Language Models for Autonomous Driving](https://arxiv.org/abs/2311.01043) 伸展出去的笔记，主要看看自动驾驶用大语言模型。唉，大语言模型，[LMDrive](https://meteorcollector.github.io/2024/08/end-to-end-recent/#lmdrive-closed-loop-end-to-end-driving-with-large-language-models) 那篇文章对 LLM 的赞誉之词还历历在目。
+
+> ... large language models (LLM) have shown impressive reasoning capabilities that approach "Artificial General Intelligence"...
+>
+> ...大语言模型在目前已经拥有了接近“通用人工智能”的惊艳表现...
+
+看到如此正面的描述总是要从反面思考一下。在我看来，除了 LLM 模型结构本身适宜多模态数据处理（用不同的embedding当自然语言一样处理就可以了）之外，在比较抽象的认识层面上，LLM 给各种信息提供了一个自然语言的中间表示，来汇总处理各种信息（或者这两点其实是一点？）。这是一种类似人类思维方式的处理，但是也带来一个问题，就是 LLM 能力的上限决定了基于 LLM 的自动驾驶模型的上限，人类自然语言体系表达能力的上限又决定了 LLM 能力的上限（尤其体现于那些基于 Q-A 的模型上，非常依赖自然语言表示）。LLM 固然是通用的，也确实是现在看来最通用的模型，给很多多模态问题提供了可以接受的解决方案，理论上可以达到按照自然语言进行思考的人类驾驶员的水平；但是要捅破这层上限，是否还需要其他的方式？
+
+Anyway，在解决多模态问题，尤其是自动驾驶这样一个 multi-task 的问题方面，LLM 确实是当下最可靠的解决方案之一。话不再多说了，下面是笔记正文。
+
+## 分类
+
+因为自动驾驶要做的任务本身就比较多，所以LLM应用的场景也不一样。
+
+比较自然产生的是 **Perception** 和 **Planning & Control** 。紧接着有包括世界模型（比如[之前看过的这篇](https://meteorcollector.github.io/2024/08/end-to-end-recent/#driving-into-the-future-multiview-visual-forecasting-and-planning-with-world-model-for-autonomous-driving)）等应用方式的生成式 **Generation (Diffusion)**  LLM。然后是基于问答的 **Question Answering (QA)** 用 LLM，最后为了评估，还有 **Evaluation & Benchmark**。
+
+<p><img src="{{site.url}}/images/LLMTree.png" width="90%" align="middle" /></p>
