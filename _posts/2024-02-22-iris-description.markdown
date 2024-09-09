@@ -11,6 +11,14 @@ tag: iris
 # 介绍页：iris
 
 ## NEWS
+### iris 两周年了！(2024.8.24)
+
+iris 是哪里的......南大、武大、哈工大，傻傻分不清？iris 占领全国了没有？
+
+推送： [iris 两周年！ (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/iris-2nd-anniversary/)
+
+
+
 ### iris获得南京大学民间年度人物提名 (2023.12.31)
 
 在2023年度“小破手”杯南京大学年度评选中，iris获得**“年度人物”**提名并在30个候选提名中得票第15位。
