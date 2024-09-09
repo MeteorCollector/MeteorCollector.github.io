@@ -1,0 +1,11 @@
+---
+layout: post
+title:  "LLM4Drive 笔记"
+date:   2024-09-09 11:58:00 +0800
+categories: posts
+tag: autonomous driving
+---
+
+## 前情提要
+
+这是一篇从 [LLM4Drive: A Survey of Large Language Models for Autonomous Driving](https://arxiv.org/abs/2311.01043) 伸展出去的笔记，主要看看自动驾驶用大语言模型。
