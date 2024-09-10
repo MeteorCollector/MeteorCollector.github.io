@@ -296,11 +296,53 @@ OpenDriveLab的工作。链接：[https://github.com/OpenDriveLab/DriveLM](https
 
 #### Reason2Drive (2023) (Perception + Prediction + VQA)
 
+竟然还是复旦。不得不说复旦做的自动驾驶数据集还是挺多的。
+
+链接：[https://github.com/fudan-zvg/Reason2Drive](https://github.com/fudan-zvg/Reason2Drive)
+
+超级缝合加大版，用了 nuScenes，Waymo，ONCEA 这些数据集进行增广标注。之后 “parse their comprehensive object metadatas into JSON-structured entries. Each object entry contains various details pertaining to its driving actions.” 有了这些 metaData，就可以在多种任务的情况下，基于大语言模型进行增广，获得 QA-pair。
+
+<p><img src="{{site.url}}/images/Reason2Drive.png" width="80%" align="middle" /></p>
+
+感觉基于大语言模型的 QA-pair 生成基本都是这种套路，对于这种数据的增广，LLM 还是比较高效的。想到自己之前做 iris 的数据集的时候也是这么干的（
+
 #### LingoQA (2023) (VQA)
+
+链接：https://github.com/wayveai/LingoQA
+
+一个大规模的VQA工作，标注上把GPT、人工以及各种方式全用上了。手笔最大的一集。
+
+比较有意思的是它还包括了 Lingo-Judge，可以给LLM在自动驾驶任务中问题生成的结果打分（correctness，0-1取值）。
 
 #### NuInstruct (2024) (Perception + Prediction + VQA)
 
+链接：[https://github.com/xmed-lab/NuInstruct](https://github.com/xmed-lab/NuInstruct)
+
+这篇论文强调的是 Holistic，也就是整体、综合的。NuInstruct 比较关注整体的信息，分了17个子任务，涉及时间和空间上的组合、多视角等等信息。并且分了不同的类别：
+
+> In our research, we propose an SQL-based approach for the automated generation of four types of instruction-follow data, namely: Perception, Prediction, Risk, and Planning with Reasoning.
+
+数据格式示例：
+
+```
+Train
+{
+  'task': ...,  # the task type, e.g., risk-overtaking
+  'qa_id':...,   # QA pairs ID
+  'img_path':..., # image path list for a video clip
+  'Question':...., # 
+  'Answer':...,
+  'sample_list':.... # sample token list of corresponding images in NuScense
+}
+```
+
 #### OpenDV-2K (2024) (Perception + Prediction + VQA)
+
+链接：[https://github.com/OpenDriveLab/DriveAGI](https://github.com/OpenDriveLab/DriveAGI)
+
+究极巨大数据集。including 1747 hours from YouTube and 312 hours from public datasets, with automatically generated language annotations to support generalized video prediction model training. 事实上因为太大了，在 readme 上提出了建议：`It's recommended to set up your experiments on a small subset, say 1/20 of the whole dataset`
+
+GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带标注的视频确实是这样的生成工作所需要的。
 
 ## Perception
 
