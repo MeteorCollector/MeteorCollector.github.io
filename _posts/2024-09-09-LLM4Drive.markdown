@@ -190,15 +190,15 @@ Anyway，在解决多模态问题，尤其是自动驾驶这样一个 multi-task
 
 工欲善其事，必先利其器。所以在这里稍微调整一下原综述论文的顺序，先来看数据集。
 
-<p><img src="{{site.url}}/images/datatable.png" width="100%" align="middle" /></p>
+<p><img src="{{site.url}}/images/datatable.png" width="80%" align="middle" /></p>
 
 可以看到绝大多数还是人力标注的。
 
-#### BDD-X (2018)
+#### BDD-X (2018) (Planning + VQA)
 
 Berkeley Deep Drive-X (eXplanation) Dataset
 
-链接：https://github.com/JinkyuKimUCB/BDD-X-dataset
+链接：[https://github.com/JinkyuKimUCB/BDD-X-dataset](https://github.com/JinkyuKimUCB/BDD-X-dataset)
 
 这是一个解释驾驶员行为的数据集。对于视频信息，标注的格式是一个description（驾驶员在做什么）和一个explanation（驾驶员为什么这样做）
 
@@ -207,11 +207,11 @@ We focus on generating textual descriptions and explanations, such as the pair:
 
 explanation的设置还是很有必要的，可以用于避免一些倒果为因的问题。（想起了 [CILRS](https://meteorcollector.github.io/2024/08/end-to-end-classic/#cilrs-exploring-the-limitations-of-behavior-cloning-for-autonomous-driving-iccv-2019)）
 
-#### HAD (2019)
+#### HAD (2019) (Planning + Perception)
 
 Honda Research Institute-Advice
 
-链接：https://usa.honda-ri.com/had
+链接：[https://usa.honda-ri.com/had](https://usa.honda-ri.com/had)
 
 同样地，输入是运行信息，但是除了视频信息之外还提供了 [CAN-BUS](https://www.emqx.com/zh/blog/can-bus-how-it-works-pros-and-cons) 控制信息。嘶，这个控制信息是所有型号的车辆都是统一的吗？还是说翻译成 Honda 的车的 Behaviour 再使用？有一些神奇。
 
@@ -222,9 +222,9 @@ Honda Research Institute-Advice
 > Advices consist of (1) goal-orientedadvice (top-down signal) - to influencethe vehicle in a avigation task and (2) stimulus-driven advice (bottom-upsignal) - conveys some visual stimulithat the user expects their attention tobe actively looked by the vehicle
 > controller
 
-#### Talk2Car (2019)
+#### Talk2Car (2019) (Planning + Perception)
 
-链接：https://talk2car.github.io/
+链接：[https://talk2car.github.io/](https://talk2car.github.io/)
 
 Talk2Car 是基于 nuScenes 的，按官网的说法是加上了更多模态的传感器输入（其实我记得现在 nuScenes 的模态已经不少了，在那时候只有图像和 bounding boxes 吗？）。最主要的是 “Talk”：标注信息中有对车辆下的指令，“we consider an autonomous driving setting, where a passenger can control the actions of an Autonomous Vehicle by giving commands in natural language.”
 
@@ -234,9 +234,9 @@ Talk2Car 是基于 nuScenes 的，按官网的说法是加上了更多模态的�
 
 同时在图像输入中，silver car 被标注。
 
-#### DriveLM (2023)
+#### DriveLM (2023) (Perception + Prediction + Planning + VQA)
 
-OpenDriveLab的工作。链接：https://github.com/OpenDriveLab/DriveLM
+OpenDriveLab的工作。链接：[https://github.com/OpenDriveLab/DriveLM](https://github.com/OpenDriveLab/DriveLM)
 
 这个数据集是基于 Carla 和 nuScenes 的。
 
@@ -244,35 +244,63 @@ OpenDriveLab的工作。链接：https://github.com/OpenDriveLab/DriveLM
 
 准确来讲，这个“全栈”指的是 Perception Prediction Planning 三项工作，而且组织方式是图结构（想起来了 nuScenes 数据集令人痛苦的图结构）
 
-关于这个图结构，原仓库里有一个视频：
+关于这个图结构，原仓库里有一个视频：[在github观看](https://github.com/OpenDriveLab/DriveLM/blob/main/docs/gvqa.md)    [直接下载](https://github.com/OpenDriveLab/DriveLM/assets/54334254/988472a8-d7b9-4685-b4b8-7a0e77f68265)
 
 >  The most exciting aspect of the dataset is that the questions and answers (`QA pairs`) are connected in a graph-style structure, with QA pairs as every node and potential logical progression as the edges. The reason for doing this in the AD domain is that AD tasks are well-defined per stage, from raw sensor input to final control action through perception, prediction and planning.
 
 >  Its key difference to prior VQA tasks for AD is the availability of logical dependencies between QAs, which can be used to guide the answering process. Below is a demo video illustrating the idea.
 
-https://github.com/OpenDriveLab/DriveLM/assets/54334254/988472a8-d7b9-4685-b4b8-7a0e77f68265
-
 <p><img src="{{site.url}}/images/drivelm.png" width="100%" align="middle" /></p>
 
 在 perception 的 Q-A 对中，对所有关心的物体的运动状态进行发问，获取运动状态；在 prediction 中依据 perception 问出来的 condition 预测它们的行为；接着再利用 perception 这里问出来的结论进行 plan。
 
-#### DRAMA (2023)
+#### DRAMA (2023) (VQA)
 
+和 HAD 一样又是 honda 的工作。链接：[https://usa.honda-ri.com/drama](https://usa.honda-ri.com/drama)
 
+这个数据集是由很多两秒钟的视频片段组成的，在东京收集。
 
-#### Rank2Tell (2023)
+输入是视频、CAN控制信息、IMU信息；
 
-#### NuPrompt (2023)
+标注是 Video-levelQ/A, Object-level Q/A, Risk object boundingbox, Free-form caption, and separate labelsfor ego-car intention, scene classifier and suggestions to the driver.
 
-#### NuScenes-QA (2023)
+<p><img src="{{site.url}}/images/DRAMA.png" width="80%" align="middle" /></p>
 
-#### Reason2Drive (2023)
+#### Rank2Tell (2023) (Perception + VQA)
 
-#### LingoQA (2023)
+又是 honda 的工作，链接：[https://usa.honda-ri.com/rank2tell](https://usa.honda-ri.com/rank2tell)
 
-#### NuInstruct (2024)
+20秒的116个片段，10fps（有点小啊），
 
-#### OpenDV-2K (2024)
+输入：图像，LiDAR，GPS；
+
+标注：Video-level Q/A, Object-level Q/A, LiDAR and 3D bounding boxes (with tracking), Field of view from 3 cameras (stitched), important object bounding boxes (multiple important objects per frame with multiple levels of importance-High, Medium, Low), free-form captions (multiple captions per object for multiple objects), ego-car intention.
+
+<p><img src="{{site.url}}/images/Rank2Tell.jpg" width="80%" align="middle" /></p>
+
+#### NuPrompt (2023) (Perception)
+
+链接：[https://github.com/wudongming97/Prompt4Driving](https://github.com/wudongming97/Prompt4Driving)
+
+从名字就能看出来基于 nuScenes，当然下面那个也是（事实上从论文的引用情况来看，NuScenes-QA 早于 NuPrompt）。值得一提的是这个数据集的生成用上了 ChatGPT-3.5，有一个根据描述不断取交集的过程（根据不同的prompt组合出query），在论文里有所体现。相较于其他数据集，这个数据集有利于模型从跨场景的信息中学习（论文里是这么说的？），提高复杂情形下的理解能力。
+
+> We assign a language prompt to a collection of objects sharing the same characteristics for grounding them. Essentially, this benchmark provides lots of 3D instance-text pairings with three primary attributes: ❶ Real-driving descriptions. Different from existing benchmarks that only represent 2D objects from modular images, the prompts of our dataset describe a variety of driving-related objects from 3D, looking around, and long-temporal space ... ❷ Instance-level prompt annotations. Every prompt indicates a fine-grained and discriminative object-centric description, as well as enabling it to cover an arbitrary number of driving objects. ❸ Large-scale language prompts. NuPrompt is comparable to the largest current dataset in terms of the number of prompts, i.e., including 35,367 language prompts.
+
+#### NuScenes-QA (2023) (VQA)
+
+竟然是复旦，链接：[https://github.com/qiantianwen/NuScenes-QA](https://github.com/qiantianwen/NuScenes-QA)
+
+这个就很直观了，从标题就可以看出是基于 nuScenes 数据集的 VQA。
+
+<p><img src="{{site.url}}/images/NuScenes-QA.png" width="80%" align="middle" /></p>
+
+#### Reason2Drive (2023) (Perception + Prediction + VQA)
+
+#### LingoQA (2023) (VQA)
+
+#### NuInstruct (2024) (Perception + Prediction + VQA)
+
+#### OpenDV-2K (2024) (Perception + Prediction + VQA)
 
 ## Perception
 
