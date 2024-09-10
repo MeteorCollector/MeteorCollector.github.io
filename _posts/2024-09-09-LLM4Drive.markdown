@@ -308,7 +308,7 @@ OpenDriveLab的工作。链接：[https://github.com/OpenDriveLab/DriveLM](https
 
 #### LingoQA (2023) (VQA)
 
-链接：https://github.com/wayveai/LingoQA
+链接：[https://github.com/wayveai/LingoQA](https://github.com/wayveai/LingoQA)
 
 一个大规模的VQA工作，标注上把GPT、人工以及各种方式全用上了。手笔最大的一集。
 
@@ -317,6 +317,8 @@ OpenDriveLab的工作。链接：[https://github.com/OpenDriveLab/DriveLM](https
 #### NuInstruct (2024) (Perception + Prediction + VQA)
 
 链接：[https://github.com/xmed-lab/NuInstruct](https://github.com/xmed-lab/NuInstruct)
+
+这篇review过了，在这里：[端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#holistic-autonomous-driving-understanding-by-birds-eye-view-injected-multi-modal-large-models)
 
 这篇论文强调的是 Holistic，也就是整体、综合的。NuInstruct 比较关注整体的信息，分了17个子任务，涉及时间和空间上的组合、多视角等等信息。并且分了不同的类别：
 
@@ -348,7 +350,19 @@ GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带�
 
 ## Planning & Control
 
+### LMDrive: Closed-Loop End-to-End Driving with Large Language Models
+
+这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#lmdrive-closed-loop-end-to-end-driving-with-large-language-models)
+
+### VLP: Vision Language Planning for Autonomous Driving
+
+这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#vlp-vision-language-planning-for-autonomous-driving)
+
 ## Generation
+
+### Driving into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving
+
+这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#driving-into-the-future-multiview-visual-forecasting-and-planning-with-world-model-for-autonomous-driving)
 
 ## Question Answering (QA)
 
@@ -356,5 +370,5 @@ GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带�
 
 ## 其他参考资料
 
-https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954
+一个丐版的原论文笔记：[https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954](https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954)
 
