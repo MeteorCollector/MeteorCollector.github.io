@@ -348,11 +348,59 @@ GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带�
 
 ## Perception
 
+### Language Prompt for Autonomous Driving
+
+todo
+
+### Hilm-d: Towards High-Resolution Understanding in Multimodal Language Models for Autonomous Driving
+
+todo
+
+### Mtd-gpt: A multi-task decision-making gpt model for autonomous driving at unsignalized intersections
+
+todo
+
 ## Planning & Control
+
+### Receive, reason, and react: Drive as you say, with large language models in autonomous vehicles
+
+todo
+
+### Languagempc: Large language models as decision makers for autonomous driving
+
+todo
+
+### Drive as you speak: Enabling human-like interaction with large language models in autonomous vehicles
+
+todo
+
+### Dilu: A knowledge-driven approach to autonomous driving with large language models
+
+todo
 
 ### LMDrive: Closed-Loop End-to-End Driving with Large Language Models
 
 这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#lmdrive-closed-loop-end-to-end-driving-with-large-language-models)
+
+### A language agent for autonomous driving
+
+todo
+
+### Gpt-driver: Learning to drive with gpt
+
+todo
+
+### Drivelm: Driving with graph visual question answering
+
+todo
+
+### Drivegpt4: Interpretable end-to-end autonomous driving via large language model
+
+todo
+
+### Driving with llms: Fusing object-level vector modality for explainable autonomous driving
+
+todo
 
 ### VLP: Vision Language Planning for Autonomous Driving
 
@@ -360,15 +408,42 @@ GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带�
 
 ## Generation
 
+### Drivedreamer: Towards real-world-driven world models for autonomous driving
+
+todo
+
+###  Gaia-1: A generative world model for autonomous driving
+
+todo
+
+### Magicdrive: Street view generation with diverse 3d geometry control
+
+todo
+
 ### Driving into the Future: Multiview Visual Forecasting and Planning with World Model for Autonomous Driving
 
 这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#driving-into-the-future-multiview-visual-forecasting-and-planning-with-world-model-for-autonomous-driving)
 
 ## Question Answering (QA)
 
+### Drivemlm: Aligning multi-modal large language models with behavioral planning states for autonomous driving'
+
+todo
+
+### Drivelm: Driving with graph visual question answering
+
+见上
+
+### Human-centric autonomous systems with llms for user command reasoning
+
+todo
+
 ## Evaluation & Benchmark
+
+### On the road with gpt-4v (ision): Early explorations of visual-language model on autonomous driving
+
+todo
 
 ## 其他参考资料
 
 一个丐版的原论文笔记：[https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954](https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954)
-
