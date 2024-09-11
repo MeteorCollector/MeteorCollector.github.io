@@ -368,9 +368,19 @@ todo
 
 todo
 
-### Languagempc: Large language models as decision makers for autonomous driving
+### LanguageMPC: Large Language Models as Decision Makers for Autonomous Driving (13 Oct 2023)
 
-todo
+链接：[https://arxiv.org/abs/2310.03026](https://arxiv.org/abs/2310.03026)
+
+<p><img src="{{site.url}}/images/LanguageMPC.png" width="80%" align="middle" /></p>
+
+> From left to right, the LLM proceeds sequentially: 1) identifies the vehicles requiring attention, 2) evaluates the situation, and 3) offers action guidance. Then the system transforms these three **high-level textual decisions** into **mathematical representations**, namely the **observation matrix**, **weight matrix**, and **action bias**. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken.
+
+和 GPT-Driver 类似，也是分步走的工作。这里比较有意思的是，对于每一步（perception、prediction、planning）工作，模型要把它们转化为数学表示（observation matrix, weight matrix, action bias）。[MPC](https://levelup.gitconnected.com/model-predictive-control-for-autonomous-vehicle-an-in-depth-guide-de984308ba10) 是 Model Predictive Control 即模型预测控制。
+
+> The MPC solves a finite-time open-loop optimization problem online at each moment, based on the current measurement information obtained, and applies the first element of the resulting control sequence with the lowest cost to the controlled vehicle.
+
+MPC基于当前获取的测量信息，在每个时刻在线求解有限时间的开环优化问题，并将生成的控制序列中代价最低的第一个控制量应用于被控车辆。
 
 ### Drive as you speak: Enabling human-like interaction with large language models in autonomous vehicles
 
@@ -413,7 +423,7 @@ GPT-Driver 得到路径的步骤是这样的（“novel prompting-reasoning-fine
 
 <p><img src="{{site.url}}/images/GPT-DriverPrompt.png" width="70%" align="middle" /></p>
 
-- 将 prompt 为给 GPT3.5，记为 `$F_{GPT}$`，让语言模型根据 prompt 中的自然语言描述出 trajectory。这一步是 Reasoning：一步一步思考，给出预测的路径。现在用分模块端到端模型的视角看，第一步包含了 perception 比较后期和prediction的部分，后两步都属于 planning。实际上就是让大语言模型一步步干活——通过少量对话，可能大语言模型并不能立刻给出准确的答案，但是分成一个个子任务循序渐进，就可以让大语言模型以我们指定的逻辑链条进行推理，给出一个比较 reasonable 的答案。
+- 将 prompt 喂给 GPT3.5，记为 `$F_{GPT}$`，让语言模型根据 prompt 中的自然语言描述出 trajectory。这一步是 Reasoning：一步一步思考，给出预测的路径。现在用分模块端到端模型的视角看，第一步包含了 perception 比较后期和prediction的部分，后两步都属于 planning。实际上就是让大语言模型一步步干活——通过少量对话，可能大语言模型并不能立刻给出准确的答案，但是分成一个个子任务循序渐进，就可以让大语言模型以我们指定的逻辑链条进行推理，给出一个比较 reasonable 的答案。
 
 > In particular, we summarize the chain-of-thought reasoning process in autonomous driving into $3$ steps: First, from the perception results, the motion planner needs to **identify those critical objects** that may affect its driving dynamics. Second, by analyzing the future motions of these critical objects from the prediction results, the **planner** should infer when, where, and how this critical object may influence the ego vehicle. Third, on top of the insights gained from the previous analyses, the planner needs to draw **a high-level driving decision **and then convert it into a planned trajectory.
 
