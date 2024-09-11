@@ -348,6 +348,8 @@ GenAD 本身是做世界模型 (World Model) 的工作，所以大规模的带�
 
 ## Perception
 
+以下论文我个人的阅读顺序是引用数从高到低，由细到粗。
+
 ### Language Prompt for Autonomous Driving
 
 todo
@@ -396,7 +398,73 @@ todo
 
 ### Drivegpt4: Interpretable end-to-end autonomous driving via large language model
 
-todo
+链接：[https://arxiv.org/abs/2310.01412](https://arxiv.org/abs/2310.01412)
+
+<p><img src="{{site.url}}/images/DriveGPT4.png" width="90%" align="middle" /></p>
+
+#### 数据准备
+
+这篇文章的数据集是以 BDD-X 为基础的，作者觉得 BDD-X 太机械了而且包含的信息少，因此使用 GPT-4 增广了 Q-A 对（we create our own dataset based on BDD-X assisted by ChatGPT）。这一步处理在原文中是这样写的：
+
+To address the aforementioned issue, ChatGPT is leveraged as a teacher to generate more conversations about the ego vehicle. The prompt generally follows the prompt design used in LLaVA. （提示符通常遵循LLaVA中使用的提示符设计）To enable ChatGPT to "see" the video, YOLOv8 (Reis et al., 2023) is implemented to detect commonly seen objects in each frame of the video (e.g., vehicles, pedestrians) （为了使ChatGPT能够“看到”视频，使用了YOLOv8 (Reis et al.， 2023)来检测视频每帧中常见的物体(例如车辆、行人)）。Obtained bounding box coordinates are normalized following LLaVA and sent to ChatGPT as privileged information. （得到的边界框坐标**按照LLaVA进行归一化**（见下），并作为特权信息发送给ChatGPT）In addition to object detection results, the video clip's ground truth control signal sequences and captions are also accessible to ChatGPT. 除了目标检测结果外，ChatGPT还可以访问视频片段的ground truth和标注信息。Based on this privileged information, ChatGPT is prompted to generate multiple rounds and types of conversations about the ego vehicle, traffic lights, turning directions, lane changes, surrounding objects, spatial relations between objects, etc. 基于这些特权信息，ChatGPT可以生成关于ego vehicle、交通信号灯、转弯方向、车道变化、周围物体、物体之间的空间关系等多轮和类型的对话。
+
+**所谓按照LLaVA进行归一化**应该按照LLaVA论文中生成数据的方式整理格式。在 LLaVA的训练过程中，先通过 vision model 得到 context，原论文的示例：Context type 1: Captions A group of people standing outside of a black vehicle with various luggage. Luggage surrounds a vehicle in an underground parking area People try to fit all of their luggage in an SUV. The sport utility vehicle is parked in the public garage, being packed for a trip Some people with luggage near a van that is transporting it. Context type 2: Boxes person: [0.681, 0.242, 0.774, 0.694], backpack: [0.384, 0.696, 0.485, 0.914], suitcase: ... 然后再输入 GPT-4 来增广 Q-A 对，让 GPT4 扮演教师的角色。
+
+总而言之，训练数据格式是这样的：
+
+<p><img src="{{site.url}}/images/DriveGPT4Data.png" width="90%" align="middle" /></p>
+
+#### 模型结构
+
+经典的把一切输入tokenize，concatenate，然后塞入大语言模型。
+
+**Video**
+
+DriveGPT4 要输入视频，使用的视频 tokenizer 是 Valley。
+
+论文原文：
+
+Let the input video frames be denoted as `$V = [I_1, I_2, \ldots, I_N]$`. For each video frame `$I_i$`, the pretrained **CLIP visual encoder** (Radford et al., 2021) is used to extract its feature `$F_i \in R^{257\times d}$`. The first channel of `$F_i$` represents the **global feature** of `$I_i$`, while the other 256 channels correspond to **patch features** of `$I_i$`. For succinct representation, the **global feature** of `$I_i$` is denoted as `$F^G_i$` , while the local patch features of `$I_i$` are represented as `$F^P_i$` . The temporal visual feature of the entire video can then be expressed as:
+
+`$$T = F^G_0 \oplus F^G_1 \oplus \ldots \oplus F^G_N$$`
+
+where $\oplus$ denotes The spatial visual feature of the whole video is given by:
+
+`$$S = \mathrm{Pooling}\left(F^P_0, F^P_1, \ldots, F^P_N\right)$$`
+
+where $\mathrm{Pooling}(\cdot)$ represents a pooling layer that convert $N$ features into a single feature tensor for memory efficiency. Ultimately, both the temporal feature $T$ and spatial feature $S$ are projected into the text domain using a **projector**.
+
+**Text and control signals**
+
+为了进行自然语言问询和控制信号的预测，控制信号也要被输入，文中说是“与文本类似”的处理方法。
+
+#### 训练过程
+
+这么大的模型没办法整体完全训练。于是很常见地分为了两步：
+
+**Pretraining**
+
+这一步 CLIP 和 LLM 被冻结，只有 **projector** 被训练。
+
+使用的数据是 593K image-text pairs from the [CC3M dataset](https://ai.google.com/research/ConceptualCaptions/download) and 703K video-text pairs from the [WebVid-2M dataset](https://huggingface.co/datasets/luoruipu1/Valley-webvid2M-Pretrain-703K) (Bain et al., 2021). 我看了一下，前者是各种图片的描述，后者是一些 vision q-a 对，是针对视频的。在我看来预训练阶段是对 perception 部分的先行训练。
+
+**Mix-finetune**
+
+在这一阶段，projector、LLM 都被训练，目的是 “enable DriveGPT4 to understand and process domain knowledge”。这一步就用到了**数据准备**部分生成的数据了，一共 56K；同时还使用了 223K general instruction-following data generated by LLaVA and Valley。The former ensures that DriveGPT4 can be applied for interpretable end-to-end autonomous driving, while the latter enhances the data diversity and visual understanding ability of DriveGPT4.
+
+#### 验证方式
+
+**Interpretable AD**
+
+Ground Truth 用的主要是 BDD-X，因为“基本没有别的可用”。在这篇文章之前，SOTA方法是 [ADAPT](https://arxiv.org/abs/2302.00673) ，因此文章里主要将 DriveGPT4 和 ADAPT 做对比。采用的指标是 NLP 那边比较常用的，包括 CIDEr，BLEU4，ROUGE-L。这三者的描述和实现可以参考 [https://github.com/Aldenhovel/bleu-rouge-meteor-cider-spice-eval4imagecaption](https://github.com/Aldenhovel/bleu-rouge-meteor-cider-spice-eval4imagecaption) ，都是衡量和 Ground Truth 相似度用的，用来打分。
+
+**End-to-end Control**
+
+Ground Truth 仍使用 BDD-X 。衡量了控制信号（速度和转向角）的预测能力，使用的是均方误差（$MSE$）和 threshold accuracy （`$A_\gamma$`）（the proportion of test samples with prediction errors lower than $\gamma$）
+
+**定性分析**
+
+剩下的就是一些定性的展示，比如和 GPT-4V 比一比理解能力之类，不在这里费笔墨了。
 
 ### Driving with llms: Fusing object-level vector modality for explainable autonomous driving
 
