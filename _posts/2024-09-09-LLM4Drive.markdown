@@ -374,13 +374,31 @@ todo
 
 <p><img src="{{site.url}}/images/LanguageMPC.png" width="80%" align="middle" /></p>
 
+#### 模型结构
+
 > From left to right, the LLM proceeds sequentially: 1) identifies the vehicles requiring attention, 2) evaluates the situation, and 3) offers action guidance. Then the system transforms these three **high-level textual decisions** into **mathematical representations**, namely the **observation matrix**, **weight matrix**, and **action bias**. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken.
 
-和 GPT-Driver 类似，也是分步走的工作。这里比较有意思的是，对于每一步（perception、prediction、planning）工作，模型要把它们转化为数学表示（observation matrix, weight matrix, action bias）。[MPC](https://levelup.gitconnected.com/model-predictive-control-for-autonomous-vehicle-an-in-depth-guide-de984308ba10) 是 Model Predictive Control 即模型预测控制。
+和 GPT-Driver 类似，也是分步走的工作。这里比较有意思的是，对于每一步（perception、prediction、planning）工作，模型要把它们转化为数学表示（observation matrix 用于指示当前需要观测的目标, weight matrix 用于指示当前采取的动作的weight（调整策略优先级）, action bias（控制车辆动作即转向角和加速度））。[MPC](https://levelup.gitconnected.com/model-predictive-control-for-autonomous-vehicle-an-in-depth-guide-de984308ba10) 是 Model Predictive Control 即模型预测控制，LLM 是通过调整 MPC 模型的参数来发挥作用的，换句话说，底层模型是 MPC，LLM 在这里只是它的一个模块。
+
+#### MPC
 
 > The MPC solves a finite-time open-loop optimization problem online at each moment, based on the current measurement information obtained, and applies the first element of the resulting control sequence with the lowest cost to the controlled vehicle.
 
-MPC基于当前获取的测量信息，在每个时刻在线求解有限时间的开环优化问题，并将生成的控制序列中代价最低的第一个控制量应用于被控车辆。
+“MPC基于当前获取的测量信息，在每个时刻在线求解有限时间的开环优化问题，并将生成的控制序列中代价最低的第一个控制量应用于被控车辆。”
+
+<p><img src="{{site.url}}/images/LanguageMPCMPC.png" width="60%" align="middle" /></p>
+
+MPC模型的损失函数基于马尔可夫决策过程的累计误差，使用 L2 度量来计算期望值与GT之间的差距。虽然没有细研究这个模型，但是从公式上可以看出来，通过调整 $w$ 来改变 cost function，是可以改变不同策略的优先级的。这就是 LLM 发挥作用的地方。
+
+#### LLM
+
+LLM 则使用了 promt engineering 的方法进行使用。相较于 GPT-Driver，LanguageMPC 的步数更多一些。三个P都分别使用了不同的 thought chain 来引导回答。LLM 的框架用的是 LangChain。
+
+<p><img src="{{site.url}}/images/LanguageMPCPrompt.png" width="80%" align="middle" /></p>
+
+#### 验证方式
+
+在论文里与 LanguageMPC 同台比较的是基于强化学习的方法和裸MPC。数据使用的是 [IdSim](https://arxiv.org/abs/2109.10557) ，指标是“Collision（每200秒发生撞击的概率）, Fail（每200秒无法达到目标点的概率）, Inefficiency（度量了当前车速和能达到的最大车速之间的差距）, Time（到达目标点的时间）, Acc Penalty, Dist Penalty（这些是看ego-vehicle离其他车辆有多近，越近越不安全）, Overall Cost（综合指标）”
 
 ### Drive as you speak: Enabling human-like interaction with large language models in autonomous vehicles
 
@@ -527,9 +545,71 @@ todo
 
 todo
 
-###  Gaia-1: A generative world model for autonomous driving
+###  GAIA-1: A Generative World Model for Autonomous Driving (29 Sep 2023)
 
-todo
+链接：[https://arxiv.org/abs/2309.17080](https://arxiv.org/abs/2309.17080)
+
+wayve的工作，Generative AI for Autonomy
+
+由于既要理解又要生成，而且模态很多，这篇论文非常长。工作量也很大，做这种工作的研究机构的体量也就可想而知了。
+
+#### 模型结构
+
+> In this work we introduce GAIA-1, a method designed with the goal of maintaining the benefits of both world models and generative video generation. It combines the scalability and realism of generative video models with the ability of world models to learn meaningful representations of the evolution into the future. GAIA-1 works as follows. First, we partition the model into two components: the world model and the video diffusion decoder. The world model reasons about the scene’s high-level components and dynamics, while the diffusion model takes on the responsibility of translating latent representations back into high-quality videos with realistic detail.
+
+也就是说，GAIA-1 先理解过去，再生成未来。话说现在生成式方向，diffusion 真的是压倒性的主流啊。
+
+<p><img src="{{site.url}}/images/GAIA-1.png" width="70%" align="middle" /></p>
+
+在输入方面，GAIA 有 Image、Text、Action 三个输入，分别 tokenize。
+
+image 使用了一个预训练的 image tokenizer 进行编码，text 整合了自然语言和 action 的信息，action 的记录了当前的运动状态（速度和曲率）（说实话我觉得相较于其他某些论文采用偏角，还是曲率更好一些，毕竟偏角有些离散了）
+
+对于每个时间点，三种不同模态的输入轮流进入输入序列，顺序是 文本 -> 图像 -> 动作，记作 `$(\mathbf{c}_1, \mathbf{z}_1, \mathbf{a}_1, \ldots, \mathbf{c}_T, \mathbf{z}_T, \mathbf{a}_T)$`
+
+模型的主要成分有：
+
+**Image Tokenizer**
+
+为了减少计算量，需要进行图像的下采样。但是又不能把关键信息给压没，所以要 Guide the compression towards meaningful representations, such as semantics——向有意义的方向引导压缩，例如语义。在这里使用了将语义压缩进图片的 DINO 模型。
+
+作者训练了一个专用的 Image Tokenizer，结构是 2D U-net。在单独对它进行训练时，需要有解码器，然后利用解码出来的结果计算损失函数，包括了 Image reconstruction loss、Quantization loss、Inductive bias loss 三种损失。
+
+**World Model**
+
+已知世界模型的输入是 `$(\mathbf{c}_1, \mathbf{z}_1, \mathbf{a}_1, \ldots, \mathbf{c}_T, \mathbf{z}_T, \mathbf{a}_T)$` ，模型本身是 autoregressive transformer network that models the sequence input （对序列输入进行建模的自回归 transformer 网络），进行后续序列的预测。全文没有提到 LLM，但是这里其实就是 LLM：预测下一个 token。可能这就是为什么这篇文章能放到 LLM4Drive 的范围里吧。Loss Function 如下：
+
+`$$L_{\text{world model}} = -\sum^T_{t=1}\sum^n_{i=1} \log p(z_{t,i}\mid \mathbf{z}_{<t},z_{t,j<i},\mathbf{c}_{\leq t},\mathbf{a}_{<t})$$`
+
+（亲切的最大似然）
+
+这里还提到了一个 trick，We randomly dropout conditioning tokens during training so that the world model can do (i) unconditional generation, (ii) action-conditioned generation, and (iii) text-conditioned generation. 唉，手笔真大啊，一下子顾及到这么多功能，还都做出来了。
+
+**Video Decoder**
+
+因为视频信息是前后关联的，所以离散地提取每一帧图片的token并不合理，所以 decoder 必须能访问到时间上的信息。
+
+> A naive approach of independently decoding each frame-tokens to pixel space results in a temporally inconsistent video output. Modeling the problem as denoising a sequence of frames during the diffusion process, where the model can access information across time, greatly improves temporal consistency of the output video.
+
+Video Decoder 使用了具有时间和空间注意力层的 3D U-Net。在训练过程中，使用的输入是之前 image tokenizer 的输出；推理时使用的是世界模型预测出来的未来 image 的 token。作者把它训练成了一个 image 和 video 都生成的模型：image 生成的训练提高单个帧的图像质量，video 生成的训练提高帧与帧之间的 consistency。
+
+训练的时候还用到了 mask 掉不同位置的 image token 来训练多种生成任务的 trick。总之是一个 diffusion 的思路，以 image token 为输入，推理出一个去噪的过程。
+
+视频解码器的 Loss Function 比较复杂：
+
+<p><img src="{{site.url}}/images/GAIAVideoLoss.png" width="60%" align="middle" /></p>
+
+#### 数据准备
+
+使用的是正宗老伦敦的 4700 小时驾驶数据。针对不同训练任务如何组织数据说得事无巨细。
+
+#### 训练过程
+
+论文里详细讲了用什么练了多少步、练了多久。Loss Function 在上文已经齐备，所以这里不再细讲
+
+#### Scaling
+
+在 LLM 中有 Scaling Law，就是模型的规模越大、参数越多，效果越好。作者在 GAIA 上也发现了这一定律（GAIA 和 LLM 原理都差不多，有一样的规律也是自然），提出力气更大能飞出去的砖也更重。确实，但是现在这个模型已经很大了吧......
 
 ### Magicdrive: Street view generation with diverse 3d geometry control
 
@@ -561,4 +641,4 @@ todo
 
 ## 其他参考资料
 
-一个丐版的原论文笔记：[https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954](https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954)
+一个简略的原论文笔记：[https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954](https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954)
