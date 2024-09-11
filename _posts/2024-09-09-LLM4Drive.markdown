@@ -388,15 +388,52 @@ todo
 
 todo
 
-### Gpt-driver: Learning to drive with gpt
+### GPT-Driver: Learning to Drive with GPT (5 Dec 2023)
 
-todo
+链接：[https://arxiv.org/abs/2310.01415](https://arxiv.org/abs/2310.01415)
+
+赵行的一篇，通篇没什么图片，看得我文字恐怖谷效应犯了。还有一大堆用公式形式化说明的内容，maths speak louder than words 吧大概。这篇着重关心的是 Planning 方面。
+
+<p><img src="{{site.url}}/images/GPT-Driver.png" width="90%" align="middle" /></p>
+
+The crucial insight of this paper is to transform motion planning into a language modeling problem. Given a driving trajectory $\mathcal{T}$, we can represent it as a sequence of words that describe this trajectory:
+
+`$$\mathcal{T} = K(\{(x_1, y_1), \cdots, (x_{t}, y_{t})\}) = \{w_1, \cdots, w_n\},$$`
+
+where `$w_i$` is the $i$-th word in this sequence. Please note that each coordinate value $x$ or $y$ in Equation  can be freely transformed into a set of words $\{w\}$ using a language tokenizer $K$.
+
+这块算是从理论上阐释了用自然语言模型做路径规划的可行性吧。
+
+#### 模型结构
+
+GPT-Driver 得到路径的步骤是这样的（“novel prompting-reasoning-finetuning strategy”）：
+
+- 用 GPT 的 tokenizer $K$ 把观测输入 $\mathcal{O}$ 和 ego-state $\mathcal{S}$ 转换成为 language prompt （不是，prompt 不还是自然语言吗？这块 tokenize 成啥了啊，我看到 tokenize 还以为和一些多模态模型一样将其他模态的信息编码。而且论文3.3部分的 prompting 子部分也确实说明了他们确实是直接把感知输入转化成自然语言描述进行处理的，非常直接。原文：we resort to the parameterized
+  representations of observations and ego-states and convert them into language descriptions，感觉还是很 prompt engineering）。
+
+<p><img src="{{site.url}}/images/GPT-DriverPrompt.png" width="70%" align="middle" /></p>
+
+- 将 prompt 为给 GPT3.5，记为 `$F_{GPT}$`，让语言模型根据 prompt 中的自然语言描述出 trajectory。这一步是 Reasoning：一步一步思考，给出预测的路径。现在用分模块端到端模型的视角看，第一步包含了 perception 比较后期和prediction的部分，后两步都属于 planning。实际上就是让大语言模型一步步干活——通过少量对话，可能大语言模型并不能立刻给出准确的答案，但是分成一个个子任务循序渐进，就可以让大语言模型以我们指定的逻辑链条进行推理，给出一个比较 reasonable 的答案。
+
+> In particular, we summarize the chain-of-thought reasoning process in autonomous driving into $3$ steps: First, from the perception results, the motion planner needs to **identify those critical objects** that may affect its driving dynamics. Second, by analyzing the future motions of these critical objects from the prediction results, the **planner** should infer when, where, and how this critical object may influence the ego vehicle. Third, on top of the insights gained from the previous analyses, the planner needs to draw **a high-level driving decision **and then convert it into a planned trajectory.
+
+<p><img src="{{site.url}}/images/GPT-DriverReasoning.png" width="70%" align="middle" /></p>
+
+- We employ a simple finetuning strategy using the OpenAI fine-tuning API. 微调这个自然语言描述出的结果，使它与人类司机的驾驶轨迹接近。轨迹是直接从人类驾驶数据获得的，对于 reason-chain，用了一个 rule-based 的方法来获得 Ground Truth：直接计算车辆应该有的速度，关键物体的识别就是计算出与预测路径重合的物体。
+
+总地来看，引用论文里的公式，就是：
+
+`$$\{ \mathcal{T}, \mathcal{R} \} = F_{GPT}(K(\mathcal{O}, \mathcal{S}))$$`
+
+#### 验证方式
+
+由于是 planning 工作，使用的是开环 nuScenes，L2 + Collision，无需多言。从表上看，GPT-Driver 的表现比 Uni-AD 还好，有些惊艳。不过由于 OpenAI 的 API 是纯黑盒，所以也并不知道这个模型的推理时间是多少，有待以后再验证吧。
 
 ### Drivelm: Driving with graph visual question answering
 
 todo
 
-### Drivegpt4: Interpretable end-to-end autonomous driving via large language model
+### DriveGPT4: Interpretable End-to-end Autonomous Driving via Large Language Model (14 Mar 2024)
 
 链接：[https://arxiv.org/abs/2310.01412](https://arxiv.org/abs/2310.01412)
 
@@ -412,7 +449,7 @@ To address the aforementioned issue, ChatGPT is leveraged as a teacher to genera
 
 总而言之，训练数据格式是这样的：
 
-<p><img src="{{site.url}}/images/DriveGPT4Data.png" width="90%" align="middle" /></p>
+<p><img src="{{site.url}}/images/DriveGPT4Data.png" width="80%" align="middle" /></p>
 
 #### 模型结构
 
