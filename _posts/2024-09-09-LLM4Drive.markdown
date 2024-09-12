@@ -374,11 +374,13 @@ todo
 
 <p><img src="{{site.url}}/images/LanguageMPC.png" width="80%" align="middle" /></p>
 
+这篇文章里，大语言模型并不涉及 perception 方面的内容，只做 prediction 和 planning。所以说并不是一个“端到端”的工作。perception 的结果需要直接输入，看论文的话需要每个 vehicle 的运动信息。
+
 #### 模型结构
 
 > From left to right, the LLM proceeds sequentially: 1) identifies the vehicles requiring attention, 2) evaluates the situation, and 3) offers action guidance. Then the system transforms these three **high-level textual decisions** into **mathematical representations**, namely the **observation matrix**, **weight matrix**, and **action bias**. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken. These elements serve as directives for the bottom-level controller, the MPC, instructing it on specific driving actions to be taken.
 
-和 GPT-Driver 类似，也是分步走的工作。这里比较有意思的是，对于每一步（perception、prediction、planning）工作，模型要把它们转化为数学表示（observation matrix 用于指示当前需要观测的目标, weight matrix 用于指示当前采取的动作的weight（调整策略优先级）, action bias（控制车辆动作即转向角和加速度））。[MPC](https://levelup.gitconnected.com/model-predictive-control-for-autonomous-vehicle-an-in-depth-guide-de984308ba10) 是 Model Predictive Control 即模型预测控制，LLM 是通过调整 MPC 模型的参数来发挥作用的，换句话说，底层模型是 MPC，LLM 在这里只是它的一个模块。
+和 GPT-Driver 类似，也是分步走的工作。这里比较有意思的是，对于每一步（perception后的注意力分配、prediction、planning）工作，模型要把它们转化为数学表示（observation matrix 用于指示当前需要观测的目标, weight matrix 用于指示当前采取的动作的weight（调整策略优先级）, action bias（控制车辆动作即转向角和加速度））。[MPC](https://levelup.gitconnected.com/model-predictive-control-for-autonomous-vehicle-an-in-depth-guide-de984308ba10) 是 Model Predictive Control 即模型预测控制，LLM 是通过调整 MPC 模型的参数来发挥作用的，换句话说，底层模型是 MPC，LLM 在这里只是它的一个模块。
 
 #### MPC
 
@@ -399,6 +401,8 @@ LLM 则使用了 promt engineering 的方法进行使用。相较于 GPT-Driver�
 #### 验证方式
 
 在论文里与 LanguageMPC 同台比较的是基于强化学习的方法和裸MPC。数据使用的是 [IdSim](https://arxiv.org/abs/2109.10557) ，指标是“Collision（每200秒发生撞击的概率）, Fail（每200秒无法达到目标点的概率）, Inefficiency（度量了当前车速和能达到的最大车速之间的差距）, Time（到达目标点的时间）, Acc Penalty, Dist Penalty（这些是看ego-vehicle离其他车辆有多近，越近越不安全）, Overall Cost（综合指标）”
+
+
 
 ### Drive as you speak: Enabling human-like interaction with large language models in autonomous vehicles
 
@@ -531,9 +535,23 @@ Ground Truth 仍使用 BDD-X 。衡量了控制信号（速度和转向角）的
 
 剩下的就是一些定性的展示，比如和 GPT-4V 比一比理解能力之类，不在这里费笔墨了。
 
-### Driving with llms: Fusing object-level vector modality for explainable autonomous driving
+### Driving with LLMs: Fusing Object-Level Vector Modality for Explainable Autonomous Driving (13 Oct 2023)
 
-todo
+链接：[https://arxiv.org/abs/2310.01957](https://arxiv.org/abs/2310.01957)
+
+<p><img src="{{site.url}}/images/DWL.png" width="80%" align="middle" /></p>
+
+Wayve 的工作。
+
+这项工作和其他不同的方面是先把感知结果输入喂给了 Vector Encoder，然后经过 Vector-Former 送入 LLM。LLM 本身不负责感知，只做下游的决策。因此不是端到端的工作。
+
+而且这项工作只用到了二维俯视信息，而不是三维的。这样看来前面接一个 BEVFormer 就是完全体了？（
+
+#### 数据准备
+
+用的是一个基于 RL 的 2D 模拟器来生成驾驶情形。强化学习方法用的是 PPO （Proximal Policy Optimization（还不懂，以后要看））。收集之后把 100K 的数据用来与训练，10K 去做 QA 标注和微调，1K 用来 evaluate。
+
+收集到的数据包含了车辆、行人、ego-vehicle、路线的向量表示，以及 RL agent 在 reasoning 步骤产生的注意力和行动标注（其实就是 RL agent 的决策，在这里用 RL agent 来教会 LLM 怎么做决定）。之后用一个 rule-base 的方法 lanGen 来生成自然语言描述。
 
 ### VLP: Vision Language Planning for Autonomous Driving
 
@@ -642,3 +660,4 @@ todo
 ## 其他参考资料
 
 一个简略的原论文笔记：[https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954](https://medium.com/@jasonyen1009/ml-llm4drive-a-survey-of-large-language-models-for-autonomous-driving-faf6a6d3a954)
+
