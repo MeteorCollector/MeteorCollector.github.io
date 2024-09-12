@@ -553,6 +553,34 @@ Wayve 的工作。
 
 收集到的数据包含了车辆、行人、ego-vehicle、路线的向量表示，以及 RL agent 在 reasoning 步骤产生的注意力和行动标注（其实就是 RL agent 的决策，在这里用 RL agent 来教会 LLM 怎么做决定）。之后用一个 rule-base 的方法 lanGen 来生成自然语言描述。
 
+自动驾驶的 Q-A 数据集是使用 ChatGPT 来生成的。
+
+#### 训练过程
+
+为了使训练一个 object-level vector modality （对象级别向量模态，可能就是用向量表示 perception 得到的二维要素，然后作为模态输入）的 LLM，作者用了两步来训练。第一步冻结 LLM，只训练 vector encoder 和 vector former 里面的那一大堆 transformer 。第二步训练 LLM 来做自动驾驶情形的 QA Task (DQA Task)。LLM 不是从头训练的，而是用 **LoRA 微调**。
+
+<p><img src="{{site.url}}/images/DWLarch.png" width="80%" align="middle" /></p>
+
+但是不管是第一步预训练还是第二步的整体训练，都是 end-to-end 训练的，并没有把模块分开训练（这里和 Wayve 的另外一个工作 GAIA-1 不一样，在那篇工作里，Encoder 是单独训练的。当然 GAIA 的规模大、流程长，端到端全训练不是很现实）。
+
+第一步预训练使用的是 lanGen 产生的自然语言 caption，内容只包括 prediction 和 agent attention prediction——原因是要重点训练 vector transformer，让它们更好地表示感知信息。
+
+第二步训练用 LoRA 微调时，使用的是 GPT 生成的 QA 对。
+
+LLM 训练的损失函数一般就是交叉熵损失了。
+
+#### 验证方式
+
+为了对比，使用了一个不用 LLM 的模型以及不进行预训练的模型和完全体模型进行对比。用的数据就是之前留出来的 evaluation set。
+
+**Perception and Action Prediction**
+
+评估了车辆和行人的 agent count 、交通灯的 accuracy 和 distance、加速度和方向盘方向这几项预测值的 MAE （Mean Absolute Error，平均绝对误差），以及评估 LLM 用的对 token 预测的交叉熵损失。
+
+**Driving QA**
+
+这里是用给答案打分的方式来评估的，有些玄学。一部分用GPT进行打分，另一部分由于“我们注意到GPT有些时候倾向于语法接近但是语义不接近的答案”，人工给230对随机QA对进行了打分。感觉这个评价标准有一些主观。
+
 ### VLP: Vision Language Planning for Autonomous Driving
 
 这篇看过了，详见 [端到端自动驾驶笔记（最新进展篇） (meteorcollector.github.io)](https://meteorcollector.github.io/2024/08/end-to-end-recent/#vlp-vision-language-planning-for-autonomous-driving)
@@ -599,7 +627,7 @@ image 使用了一个预训练的 image tokenizer 进行编码，text 整合了�
 
 `$$L_{\text{world model}} = -\sum^T_{t=1}\sum^n_{i=1} \log p(z_{t,i}\mid \mathbf{z}_{<t},z_{t,j<i},\mathbf{c}_{\leq t},\mathbf{a}_{<t})$$`
 
-（亲切的最大似然）
+（有点像最大似然）
 
 这里还提到了一个 trick，We randomly dropout conditioning tokens during training so that the world model can do (i) unconditional generation, (ii) action-conditioned generation, and (iii) text-conditioned generation. 唉，手笔真大啊，一下子顾及到这么多功能，还都做出来了。
 
