@@ -408,9 +408,40 @@ LLM 则使用了 promt engineering 的方法进行使用。相较于 GPT-Driver�
 
 todo
 
-### Dilu: A knowledge-driven approach to autonomous driving with large language models
+### DiLu: A Knowledge-Driven Approach to Autonomous Driving with Large Language Models (22 Feb 2024)
 
-todo
+链接：[https://arxiv.org/abs/2309.16292](https://arxiv.org/abs/2309.16292)
+
+> Drawing inspiration from the profound question posed by LeCun (2022): *“Why can an adolescent learn to drive a car in about 20 hours of practice and know how to act in many situations he/she has never encountered before?”*, we explore the core principles that underlie human driving skills and raise a pivotal distinction: human driving is fundamentally knowledge-driven, as opposed to data-driven.
+
+<p><img src="{{site.url}}/images/DiLu.png" width="70%" align="middle" /></p>
+
+在观察环境信息后，当前环境信息和 Memory Module 共同向 Prompt Generator 输入信息来驱动 LLM 产生决策，Decision Decoder（图里打错了，捉虫）解析 LLM 给出的结果来进行 Action，这次的 Action 再输入给 Reflection 模块，评估这次做得安全不安全，再更新 Memory Module。
+
+#### Memory Module
+
+Memory Module 存储的是自然语言。
+
+> The memory stored in the memory module consists of two parts: scene descriptions and corresponding reasoning processes. The scene description provides a detailed account of the situation, serving as the key to the memory module for retrieving similar memories. The reasoning process, on the other hand, records the appropriate method for handling the situation.
+
+同时，对 scene 的描述会被编码成向量称为 memory 的 key。这样，后续访问 memory 进行 recall 的时候，可以用这个向量的距离度量找到之前遇到过的最相似的情景，将这些情景代入大语言模型作为 **few-shot** 的前置。（第一次看还是挺奇妙的，我一打眼没看出来memory信息要怎么用到大语言模型里面，看过之后觉得 few-shot 也算是一个理所当然的处理方式。不过这样会不会导致推理时间增加......？）
+
+#### Reasoning Module
+
+首先，得到感知信息后进行 encode；然后从 memory module 里面找到最相近的情景进行 recall；然后利用 memory 的信息先做个 few-shot，做出 prompt 喂进 LLM；LLM 做出自然语言的回答，然后把它 Decode。
+
+#### Reflection Module
+
+reflection module 也是用上了 LLM 来评估模型是不是做了正确的决定，如果不对就进行修正。这些内容被整合之后塞进 memory module。
+
+#### 验证方式
+
+为了验证 memory module 的有效性，分别对 0-shot （没有用 memory），1-shot，3-shots，5-shots 的情况进行了检验（应该每次使用多少个相近情形辅助LLM），而且将memory module的容量设置成 5，20，40 分别进行了检验。关于往 memory module 里放什么样的 experience 也是有研究的。实验结果说明 只放入成功经验的效果 < 只放入 revise 过的失败经验的效果 < 两种都放——最兼听则明的一集。
+
+数据分两部分，一部分 [GRAD](https://ml4ad.github.io/files/papers2022/A%20Graph%20Representation%20for%20Autonomous%20Driving.pdf) 生成的内容（模拟测试）， 一部分是 Highway-env 和 CitySim 两个数据集的现实数据。
+
+测试指标是 SR (Success Rate): We defined the success rate (SR) as driving without any collision
+for 30 decision frames.
 
 ### LMDrive: Closed-Loop End-to-End Driving with Large Language Models
 
