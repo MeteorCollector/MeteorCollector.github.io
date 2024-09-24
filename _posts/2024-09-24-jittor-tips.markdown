@@ -109,6 +109,14 @@ libgcc_s = ctypes.CDLL('libgcc_s.so.1')
 
 更改程序本身不是一个优雅的解决方案，所以如果我找到更好的解决方法，会在这里更新。
 
+#### GDB 没有 py-bt
+
+```
+#8  0x00007f876c07d5e1 in _GLOBAL__sub_I_CPUAllocator.cpp () from /home/cowa/miniconda3/envs/jitb2d/lib/python3.8/site-packages/torch/lib/libc10.so
+#9  0x00007f89da9158d3 in call_init (env=0x56227b3f7940, argv=0x7fffd4831788, argc=14, l=<optimized out>) at dl-init.c:72
+Undefined command: "py-bt".  Try "help".
+```
+
 ## jittor 实现
 
 #### ReLU & GeLU
