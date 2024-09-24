@@ -77,6 +77,23 @@ python -m jittor_utils.install_cuda
 Aborted (core dumped)
 ```
 
+这个没什么辙，怀疑是  `gcc` 或者 `g++` 的问题，换了好几个版本，重装虚拟环境并在初始指定 `gcc=9.4.0 gxx=9.4.0`，变成了 cuda 报错：
+
+```
+[i 0924 23:59:19.072964 92 jit_compiler.cc:28] Load cc_path: /home/cowa/miniconda3/envs/jitb2d/bin/g++
+[i 0924 23:59:19.072992 92 jit_compiler.cc:31] Load nvcc_path: /usr/local/cuda/bin/nvcc
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  [f 0924 23:59:19.293251 92 helper_cuda.h:128] CUDA error at /home/cowa/miniconda3/envs/jitb2d/lib/python3.8/site-packages/jittor/src/ops/array_op.cc:33  code=222( cudaErrorUnsupportedPtxVersion ) cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking)
+```
+
+这个(应该是 cuda 版本问题)[https://github.com/Jittor/jittor/issues/194]，最后还是让 jittor 重新安装了一个 cuda。jittor 会把 cuda 安装在它的 cache 文件夹里，所以不用担心自己原来装的 cuda 被覆盖。
+
+别忘了指定 `nvcc_path`：
+
+```
+export nvcc_path=/path/to/your/jittor/jtcuda/cuda11.2_cudnn8_linux/bin/nvcc
+```
+
 ## jittor 实现
 
 #### ReLU & GeLU
