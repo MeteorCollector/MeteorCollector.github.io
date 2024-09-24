@@ -94,6 +94,21 @@ terminate called after throwing an instance of 'std::runtime_error'
 export nvcc_path=/path/to/your/jittor/jtcuda/cuda11.2_cudnn8_linux/bin/nvcc
 ```
 
+#### libgcc_s.so.1 must be installed for pthread_cancel to work
+
+这个报错是我跑 jittor 官方示例代码跑出来的。应该情况比较多，网上一搜能搜出来一大堆。我看我虚拟环境的 `lib` 里面是有 `libgcc_s.so.1` 的，所以比较奇怪。
+
+最后是更改 python 程序本身来解决的，要在最开头（所有 `import` 之前）进行引用：
+
+```python
+import ctypes
+libgcc_s = ctypes.CDLL('libgcc_s.so.1')
+```
+
+参考：[StackOverflow](https://stackoverflow.com/questions/64797838/libgcc-s-so-1-must-be-installed-for-pthread-cancel-to-work)
+
+更改程序本身不是一个优雅的解决方案，所以如果我找到更好的解决方法，会在这里更新。
+
 ## jittor 实现
 
 #### ReLU & GeLU
