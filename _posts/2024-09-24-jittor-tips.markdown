@@ -94,6 +94,21 @@ terminate called after throwing an instance of 'std::runtime_error'
 export nvcc_path=/path/to/your/jittor/jtcuda/cuda11.2_cudnn8_linux/bin/nvcc
 ```
 
+### crypt.h: No such file or directory
+
+```shell
+/home/cowa/miniconda3/envs/jitb2d_new/include/python3.8/Python.h:44:10: fatal error: crypt.h: No such file or directory
+   44 | #include <crypt.h>
+      |          ^~~~~~~~~
+compilation terminated.
+```
+
+往虚拟环境里复制一下吧：
+
+```shell
+cp /usr/include/crypt.h /path/to/conda/envs/jitb2d_new/include/python3.8/crypt.h
+```
+
 ### libgcc_s.so.1 must be installed for pthread_cancel to work
 
 这个报错是我跑 jittor 官方示例代码跑出来的。应该情况比较多，网上一搜能搜出来一大堆。我看我虚拟环境的 `lib` 里面是有 `libgcc_s.so.1` 的，所以比较奇怪。
