@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "快回来，组里发显卡了"
+title:  "快回来，组里发显卡了（一）"
 date:   2024-03-19 23:15:00 +0800
 categories: posts
 tag: util
@@ -58,13 +58,33 @@ export ROUTES=${WORK_DIR}/leaderboard/data/training/routes/Scenario10/Town05_Sce
 
 由于可以使用 `ssh`，于是使用 `scp` 进行传输。
 
-传输文件夹：
+传输文件夹（不建议）：
 
 ```Shell
 scp -r /path/to/local/folder username@ipaddress:/path/to/remote/folder
 ```
 
 其中 `-r` 表示 `recursive` ，即上传文件夹和文件夹里所有文件。注意，`scp` 会把这个文件夹传送到目标文件夹**下**，我忘了这一点所以叠了两个同名文件夹，有点搞笑。
+
+更快的方法是在传输之前 **压缩文件夹**，直接传文件太慢了，尤其是在虚拟环境中有众多小文件的前提下。
+
+压缩：
+
+```shell
+tar -czvf env_name.tar.gz -C ~/anaconda3/envs env_name
+```
+
+传输：
+
+```shell
+scp env_name.tar.gz username@remote_ip:/path/to/destination/
+```
+
+解压：
+
+```shell
+tar -xzvf /path/to/destination/env_name.tar.gz -C /path/to/desired/location/
+```
 
 首先本地下载了`anaconda`的安装包等等文件，传输到了远程机器进行安装；
 
