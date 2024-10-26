@@ -19,3 +19,15 @@ tag: util
 运算速度：
 
 模型效果：
+
+
+
+## Thoughts
+
+模型扩容：corner case
+
+验证方式：close-loop？但是 AD 的 VLM 要怎么 close-loop ... 对每个状态依赖有 previledged 信息的 teacher model 进行 rule-base 的标定？
+
+其实上面两个也是 b2d 比较重要的点
+
+novel的方式：vision -> thought chain？但是不一定每个模型都是这样想的，根据thought chain的每一步问question标定q-a对又不是很novel。
