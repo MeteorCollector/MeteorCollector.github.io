@@ -14,11 +14,62 @@ tag: util
 
 是否开源：否
 
-需要资源：调用api，需要钱
+需要资源：调用api，需要钱。据说很贵：Developer access to o1 is *really* expensive: In the API, o1-preview is \$15 per 1 million input tokens, or chunks of text parsed by the model, and \$60 per 1 million output tokens. For comparison, GPT-4o costs ​\$5 per 1 million input tokens and ​\$15 per 1 million output tokens.
 
-运算速度：
+运算速度：几秒一个 query？
 
-模型效果：
+### 模型效果
+
+官方的 review: [Learning to Reason with LLMs | OpenAI](https://openai.com/index/learning-to-reason-with-llms/)
+
+oi被认为是 “the first reasoning model that shines in really hard tasks”，它的最大进步就是 reasoning 方面的进步。
+
+The training behind o1 is fundamentally different from its predecessors, OpenAI’s research lead, Jerry Tworek, tells me, though the company is being vague about the exact details. He says o1 “has been trained using a completely new optimization algorithm and a new training dataset specifically tailored for it.”    ([reference: OpenAI releases new o1 reasoning model - The Verge](https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt))
+
+OpenAI taught previous GPT models to mimic patterns from its training data. With o1, it trained the model to solve problems on its own using a technique known as reinforcement learning, which teaches the system through rewards and penalties. It then uses a “chain of thought” to process queries, similarly to how humans process problems by going through them step-by-step. ([reference: OpenAI releases new o1 reasoning model - The Verge](https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt))
+
+为了提高模型的逻辑推理能力，而不是简单地最大似然模仿 pattern，ChatGPT 也开始搞 chain of thought 这一套了。**甚至在交互的时候，模型也会显示它一步一步推理的过程，试图更还原人的思考方式**。由于是多步推理，o1 的开销骤然变大也是情有可原的了。同时也搞了 RL 的 reward system，这就更复杂了。
+
+在官方文档里提到 chain of thought 的验证使用的是 [Let's Verify Step by Step](https://arxiv.org/abs/2305.20050) 。这篇文章里涉及到了很多 train 和 verify 多步推理模型的方法，主要分成两个流派，Outcome-supervised reward models (ORMs) are trained using only the final result of the model’s chain-of-thought, while process-supervised reward models (PRMs) receive feedback for each step in the chain-of-thought. 也就是结果监督（outcome supervision）过程监督（process supervision）两种方法，结果监督仅提供最终结果的反馈，而过程监督则为每一步推理提供反馈。文章作者的验证表明，process supervision can train much more reliable reward models than outcome supervision，而过程监督可以通过 RL 的奖励框架进行。鉴于这篇文章也是 openAI 的人写的，有理由怀疑 o1 的技术路线和这篇文章里讲的也大差不差。后面会详细记一下这篇文章
+
+“The model is definitely better at solving the AP math test than I am, and I was a math minor in college,” OpenAI’s chief research officer, Bob McGrew, tells me. He says OpenAI also tested o1 against a qualifying exam for the International Mathematics Olympiad, and while GPT-4o only correctly solved only 13 percent of problems, o1 scored 83 percent.
+
+In online programming contests known as Codeforces competitions, this new model reached the 89th percentile of participants, and OpenAI claims the next update of this model will perform “similarly to PhD students on challenging benchmark tasks in physics, chemistry and biology.”
+
+At the same time, o1 is not as capable as GPT-4o in a lot of areas. It doesn’t do as well on factual knowledge about the world. It also doesn’t have the ability to browse the web or process files and images. Still, the company believes it represents a brand-new class of capabilities. It was named o1 to indicate “resetting the counter back to 1.” ([reference: OpenAI releases new o1 reasoning model - The Verge](https://www.theverge.com/2024/9/12/24242439/openai-o1-model-reasoning-strawberry-chatgpt))
+
+可以说 o1 在逻辑推理方面特化了，其他方面的推理能力和它的前驱模型相比并没有明显的进步。毕竟这些用不上 chain of thought。但是 doesn't have the ability to browse web or process files and images 是什么意思？它并不能做多模态任务？
+
+### Let's Verify Step by Step
+
+中文资料：[OpenAI最新研究Let's verify step-by-step，过程胜于结果！](https://mp.weixin.qq.com/s/bvrJKy8dufRF0KfC90PDMA)    [OpenAI ｜ Let’s Verify Step by Step详细解读 - 知乎](https://zhuanlan.zhihu.com/p/635335926)
+
+这里别人写得很好就不自己写了，有些浪费时间，搬运一下吧。
+
+#### Methods
+
+1. 实验步骤和方法：
+
+2. 1. **训练最可靠的reward model**：对GPT-4模型进行微调，拿到最可靠的ORM和PRM（基于给出的答案和正确的答案的相似度进行打分）。
+   2. **生成器**：通过GPT-4生成所有候选解决方法，此步GPT-4没经过RL来alignment优化。
+   3. **评价**：对生成的结果进行N选1，最终根据答案来评分。
+   4. **两种不同规模的模型**：所有大模型是通过GPT-4微调，没有经过RL训练，小规模模型和GPT4类似，但是计算量少200倍，模型在15亿数学相关的数据集MathMix上进行了微调。
+   
+3. 过程反馈数据收集方法：
+
+	- **数据收集方案【基础方案】**：对于每一步收集人类反馈结果
+	- **优化策略【高价值负样本挖掘】**：标注数据的时候，尽可能对更有可能欺骗reward模型的数据来进行标注，如果展示明显错误的解决方案，获得的反馈价值没那么大
+	- **迭代训练奖励模型【高价值负样本挖掘】**：在每次迭代中，对每个问题生成N个解决方案，并仅向数据标注者展示得分最高的K个具有说服力的错误答案解决方案。作者尝试将此top-K过滤应用于问题级别（每个问题K个解决方案）或全局级别（总共K个解决方案，在问题之间不均匀分布）
+
+1. ORM以及PRM建模方法
+
+	1. Outcome-supervised Reward Models (ORMs)：直接判断一个solution最终结果是正确还是错误的【有可能中间推理错误，最终结果正确的现象】。
+	2. Process-supervised Reward Models (PRMs)：加入了每一步step的标记，这样可以直接在自回归模型进行训练，同时在遇到结束位置标记时，训练PRMs去预测每一step是否正确。
+	3. 如何解决ORM和PRM监督信号不对等的问题：在提供过程监督时，他们有意选择只监督到第一个错误的步骤。这样做使得结果监督和过程监督之间的比较更加简单明了。对于正确的解决方案，两种方法提供相同的信息，即每个步骤都是正确的。对于不正确的解决方案，两种方法都揭示了至少存在一个错误，而过程监督还揭示了该错误的具体位置。如果他们在第一个错误之后提供额外的过程监督，那么过程监督将具有更大的信息优势。这个决策还保持了对人类的标注成本相似：在不依赖于易于检查的最终答案的情况下，确定解决方案的正确性等价于确定其第一个错误。
+	
+#### 模仿者和先驱们
+
+在 o1 公布后，大家自然是争相复现，比如 g1 模型 [https://github.com/bklieger-groq/g1](https://github.com/bklieger-groq/g1)，但是 thought-chain 实在不是一个新概念。DriveLM 就有比较 fixed 的 thought-chain。
 
 ## BLIP-3-Video
 
