@@ -16,7 +16,7 @@ tag: util
 
 需要资源：调用api，需要钱。据说很贵：Developer access to o1 is *really* expensive: In the API, o1-preview is \$15 per 1 million input tokens, or chunks of text parsed by the model, and \$60 per 1 million output tokens. For comparison, GPT-4o costs ​\$5 per 1 million input tokens and ​\$15 per 1 million output tokens.
 
-运算速度：几秒一个 query？
+运算速度：几秒一个 query？或者更长：The model "thinks" for around 10 seconds before starting to write its answers. In our tests, some tasks have taken the model more than a minute of "thought time" before answering. Then, add another bit of time for the model to write a huge and long chain of thought process before giving you the simplest answer in the world. Not good, if patience isn’t your strongest suit. (reference: [OpenAI's o1: The Good, the Bad, and the Ugly of AI's Latest Brainchild - Decrypt](https://decrypt.co/249735/openais-o1-review-good-bad-ugly-ai-latest-brainchild))
 
 ### 模型效果
 
@@ -87,14 +87,37 @@ At the same time, o1 is not as capable as GPT-4o in a lot of areas. It doesn’t
 
 We measure the runtime of our models in the training setting for the fair comparison. Here, we report ‘samples per second per GPU’. Without the temporal encoder (i.e., directly using 1024 visual tokens), the model processed 3.3 samples per second. With 16/32/128 tokens using the temporal encoder, the model was able to process 8.5 / 8.2 / 7.5 samples per second.
 
+## 传统 Q-A 对的工作和标注流程
+
+#### DriveLM
+
+对于每个场景中的object，都进行 perception - prediction - planning 的 thought-chain 模式标注。Q 是有模板的。其实他这个也不是 chain，是 graph，多个一级结论决定多个二级结论，然后二级结论生成三级结论......
+
+#### Rank2Tell
+
+what - which - where - how - why，但是实际上标注的是 caption，不涉及到自然语言
+
+#### NuScenes-QA
+
+通过模板生成 perception 相关的语句，对于每个 object，描述它们之间的状态以及相互之间的关系
+
+#### NuPrompt
+
+这个生成的是"prompt"，实现的效果是用 prompt 输入，返回描述的 object，实际上也是一个 perception 方向的标注。我看了 dataset ，是一堆json，每一个都含有了符合某个 prompt（例如 persons-who-are-walking）的所有 object，可以通过取交集的方式获取多个prompt描述的object。
+
+#### 总结
+
+除了 DriveLM 有 chain-of-thought，别的dataset还就真的只停留在vqa甚至perception上，搞 full-stack 的还是少
+
 ## Thoughts
 
-模型扩容：corner case
+其实如果从 b2d 延展开来，b2d 本身的创新点一个是闭环，一个是 corner case 的开环。
 
-验证方式：close-loop？但是 AD 的 VLM 要怎么 close-loop ... 对每个状态依赖有 previledged 信息的 teacher model 进行 rule-base 的标定？
+模型扩容：corner case，但是意义不大...... 如果做 corner case，也最好要做 chain-of-thought
 
-其实上面两个也是 b2d 比较重要的点
+验证方式创新：close-loop？但是 AD 的 VLM 要怎么 close-loop ... 对每个状态依赖有 privileged 信息的 teacher model 进行 rule-base 的标定？（后来又想了一下，不可能枚举出各种情况。DriveLM 是提到要做close-loop的，而且他的标注过程也是 rule-based 来生成的 q-a 对，如果有 privileged info 且有可靠的 rule，是不是真的可以即时生成 q-a 对实现闭环评估？感觉即时生成可能是一个更可靠的 approach？但是这样 video-language model 有点没必要用了）
 
 novel的方式：vision -> thought chain？但是不一定每个模型都是这样想的，根据thought chain的每一步问question标定q-a对又不是很novel。
 
 DriveLM 做过了 thought chain，是 perception -> prediction -> planning 的结构，被描述为 "full stack"
+
