@@ -14,13 +14,27 @@ tag: util
 
 是否开源：否
 
-需要资源：
+需要资源：调用api，需要钱
 
 运算速度：
 
 模型效果：
 
+## BLIP-3-Video
 
+是否开源：是
+
+需要资源：没看到最低配置
+
+运算速度：H100 (80GB显存)  1024 token: 3.3 "samples / s" , 推荐的 32 token (毕竟论文题目是 you only need 32 tokens)：8.2 "samples / s"
+
+模型效果：
+
+[论文链接]([xGen-MM-Vid (BLIP-3-Video): You Only Need 32 Tokens to Represent a Video Even in VLMs](https://arxiv.org/html/2410.16267v1))
+
+关于速度的细节在 Speed 那一节。
+
+We measure the runtime of our models in the training setting for the fair comparison. Here, we report ‘samples per second per GPU’. Without the temporal encoder (i.e., directly using 1024 visual tokens), the model processed 3.3 samples per second. With 16/32/128 tokens using the temporal encoder, the model was able to process 8.5 / 8.2 / 7.5 samples per second.
 
 ## Thoughts
 
@@ -31,3 +45,5 @@ tag: util
 其实上面两个也是 b2d 比较重要的点
 
 novel的方式：vision -> thought chain？但是不一定每个模型都是这样想的，根据thought chain的每一步问question标定q-a对又不是很novel。
+
+DriveLM 做过了 thought chain，是 perception -> prediction -> planning 的结构，被描述为 "full stack"
