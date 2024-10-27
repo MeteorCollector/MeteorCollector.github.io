@@ -20,7 +20,7 @@ tag: util
 
 ### 模型效果
 
-官方的 review: [Learning to Reason with LLMs | OpenAI](https://openai.com/index/learning-to-reason-with-llms/)
+官方的 review: [Learning to Reason with LLMs](https://openai.com/index/learning-to-reason-with-llms/)
 
 oi被认为是 “the first reasoning model that shines in really hard tasks”，它的最大进步就是 reasoning 方面的进步。
 
@@ -42,7 +42,7 @@ At the same time, o1 is not as capable as GPT-4o in a lot of areas. It doesn’t
 
 ### Let's Verify Step by Step
 
-中文资料：[OpenAI最新研究Let's verify step-by-step，过程胜于结果！](https://mp.weixin.qq.com/s/bvrJKy8dufRF0KfC90PDMA)    [OpenAI ｜ Let’s Verify Step by Step详细解读 - 知乎](https://zhuanlan.zhihu.com/p/635335926)
+中文资料：[OpenAI最新研究Let's verify step-by-step，过程胜于结果！](https://mp.weixin.qq.com/s/bvrJKy8dufRF0KfC90PDMA)    [OpenAI Let’s Verify Step by Step详细解读 - 知乎](https://zhuanlan.zhihu.com/p/635335926)
 
 这里别人写得很好就不自己写了，有些浪费时间，搬运一下吧。
 
@@ -93,6 +93,10 @@ We measure the runtime of our models in the training setting for the fair compar
 
 对于每个场景中的object，都进行 perception - prediction - planning 的 thought-chain 模式标注。Q 是有模板的。其实他这个也不是 chain，是 graph，多个一级结论决定多个二级结论，然后二级结论生成三级结论......
 
+#### DRAMA
+
+有 perception 和 planning 的 chain-of-thought，不过不是很严谨？
+
 #### Rank2Tell
 
 what - which - where - how - why，但是实际上标注的是 caption，不涉及到自然语言
@@ -111,13 +115,18 @@ what - which - where - how - why，但是实际上标注的是 caption，不涉�
 
 ## Thoughts
 
-其实如果从 b2d 延展开来，b2d 本身的创新点一个是闭环，一个是 corner case 的开环。
+其实如果从 b2d 延展开来，b2d 本身的创新点一个是闭环，一个是 corner case 的开环。那和 LLM 这些东西一起考虑......
 
-模型扩容：corner case，但是意义不大...... 如果做 corner case，也最好要做 chain-of-thought
+模型扩容：corner case，但是意义不大...... 如果做 corner case 的 dataset，也最好要做 chain-of-thought
 
-验证方式创新：close-loop？但是 AD 的 VLM 要怎么 close-loop ... 对每个状态依赖有 privileged 信息的 teacher model 进行 rule-base 的标定？（后来又想了一下，不可能枚举出各种情况。DriveLM 是提到要做close-loop的，而且他的标注过程也是 rule-based 来生成的 q-a 对，如果有 privileged info 且有可靠的 rule，是不是真的可以即时生成 q-a 对实现闭环评估？感觉即时生成可能是一个更可靠的 approach？但是这样 video-language model 有点没必要用了）
+验证方式创新：close-loop？但是 AD 的 VLM 要怎么 close-loop ... 对每个状态依赖有 privileged 信息的 teacher model 进行 rule-base 的标定？（后来又想了一下，不可能枚举出各种情况。DriveLM 是提到要做close-loop的，而且他CARLA数据的标注过程是 rule-based 来生成的 q-a 对，之后再人为检查，如果有 privileged info 且有可靠的 rule，是不是真的可以即时生成 q-a 对实现闭环评估？感觉即时生成可能是一个更可靠的 approach？但是这样 video-language model 有点没必要用了）
 
-novel的方式：vision -> thought chain？但是不一定每个模型都是这样想的，根据thought chain的每一步问question标定q-a对又不是很novel。
+注：先自己想的再看的 DriveLM，结果发现我想的他都想到了，自闭
+
+novel的方式：vision -> thought chain？但是不一定每个模型都是这样想的，根据thought chain的每一步问question标定q-a对又不是很novel。不过我觉得确实有一些benchmark的方向可以考虑：
+
+1. 分步，vision -> perception的score，perception -> prediction 这一步的score，prediction -> planning 这一步的 score，甚至还可以再排列组合：perception -> planning，vision -> prediction，vision -> planning （哦不这不就是 e2e 了吗）
+2. 真的像 o1 一样，对 LLMAD 的逻辑推理过程进行打分。类似 RL 的奖赏规则？但是感觉 AD 的思考过程比较比较 fixed ，不需要太复杂的框架？再细想想，可能 LLMAD 的思考步骤确实不会出问题，大家都是 p -> p -> p，还是更有可能在每一步的推理结果出现问题。这就又回到了上面，分步的这个考量。又变成了上面这个问题。
 
 DriveLM 做过了 thought chain，是 perception -> prediction -> planning 的结构，被描述为 "full stack"
 
