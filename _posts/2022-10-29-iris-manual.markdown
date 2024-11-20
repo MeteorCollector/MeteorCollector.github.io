@@ -424,6 +424,12 @@ iris的欢迎消息系统用于在萌新进群时发送某条消息，当群内�
 <p><img src="{{site.url}}/images/SendImg1.jpg" width="60%" align="middle" /></p>
 <p><img src="{{site.url}}/images/SendImg2.jpg" width="60%" align="middle" /></p>
 
+## 虚拟延迟
+
+iris 迁移到 nt 架构之后已经基本没有延迟，但是这样 iris 回复得太快，就有了一种很明显的非人感。于是引入了“虚拟延迟”，稍微演一下。查询功能和天竞猜天体等等不设延迟。
+
+在群聊中，该功能默认开启，管理员可以使用 `iris 开 虚拟延迟` 和 `iris 关 虚拟延迟` 来更改开关状态；在私聊中，此功能默认开启，暂时不能调整。仍然可以用 `iris -ls` 查看各功能开关状态。
+
 ## 运行维护
 
 #### **iris 开机**
@@ -478,7 +484,7 @@ iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊�
 
 ...持续更新中...
 
-最近更新：2023/10/6
+最近更新：2024/11/20
 
 <p><img src="{{site.url}}/images/iris_100.png" width="80%" align="middle" /></p>
 
