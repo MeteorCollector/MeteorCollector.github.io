@@ -407,11 +407,13 @@ iris的欢迎消息系统用于在萌新进群时发送某条消息，当群内�
 
 ## iris的问句应答
 
-群聊中，在功能”应答“开启时（默认开启），iris可以对一般疑问句进行随机应答。
+群聊中，在功能”全应答“开启时（默认开启），iris将基于语料库对所有未识别的语句进行应答。
 
-群聊中，在功能”全应答“开启时（默认关闭），iris将基于语料库对所有未识别的语句进行应答。注意，该nlp没有任何机器学习成分，完全基于字符串的相似度从语料库中找到最”相似“的问句，然后返回对应的回答。再注意，iris的语料库是天文特化的，并不能用于闲聊。欢迎同好补充天文知识。语料库的详细信息详见[这个仓库](https://github.com/MeteorCollector/iris_AstroQnA_ZH)。
+在2025年1月10日之前，该nlp没有任何机器学习成分，完全基于字符串的相似度从语料库中找到最”相似“的问句，然后返回对应的回答。再注意，iris的语料库是天文特化的，并不能用于闲聊。欢迎同好补充天文知识。语料库的详细信息详见[这个仓库](https://github.com/MeteorCollector/iris_AstroQnA_ZH)。
 
-如若对iris的nlp感兴趣，强烈建议阅读该文章：[iris的nlp之路：章鱼触手与斩龙大剑](https://meteorcollector.github.io/2023/05/iris-fake-nlp/)
+在2025年1月10日之后，iris接入了deepseek，但是仍使用之前的语料库做 prompt engineering，也就是说投喂语料库还是有用的。
+
+如若对iris的早期nlp感兴趣，强烈建议阅读该文章：[iris的nlp之路：章鱼触手与斩龙大剑](https://meteorcollector.github.io/2023/05/iris-fake-nlp/)https://meteorcollector.github.io/2023/05/iris-fake-nlp/)
 
 ## 存图片（为了应对QQ表情包无法保存实现的功能）
 
@@ -482,7 +484,7 @@ iris的功能集中在群聊，自然不会对私聊作出反应。目前私聊�
 
 ...持续更新中...
 
-最近更新：2024/11/20
+最近更新：2025/1/11
 
 <p><img src="{{site.url}}/images/iris_100.png" width="80%" align="middle" /></p>
 
