@@ -94,14 +94,14 @@ dataset, containing accurately verified reasoning paths for both text and image 
 
 其中 $\Theta$ 是参数空间，$f(\theta)$ 是我们要最小化的目标函数。镜像下降更新规则可以写为：
 
-
+`$$\theta_{t+1} = \arg \min_{\theta \in \Theta} \left( \langle \nabla f(\theta_t), \theta - \theta_t \rangle + \frac{1}{\eta_t} D_{\Phi}(\theta, \theta_t) \right)$$`
 
 `$\langle \nabla f(\theta_t), \theta - \theta_t \rangle$`
 
 
 其中，`$\nabla f(\theta_t)$` 是当前参数的梯度，`$D_{\Phi}(\theta, \theta_t)$` 是根据某种距离度量（如Kullback-Leibler散度）计算的距离，`$\eta_t$` 是学习率，决定每一步的更新步长。
 
-Kimi 论文里使用的是原版变体。At the i-th iteration, we use the current model `$\pi_{{\theta}_i}$` as a reference
+Kimi 论文里使用的是原版变体。At the i-th iteration, we use the current model `$\pi_{\theta_i}$` as a reference
 model and optimize the following relative entropy regularized policy optimization problem. 可以发现这里的公式写的是对偶形式：
 
 `$$\max_\theta \mathbb{E}_{(x, y^*) \sim D} \left[ \mathbb{E}_{(y, z) \sim \pi_\theta} [r(x, y, y^*)] - \tau \text{KL}(\pi_\theta(x) || \pi_{\theta_i}(x)) \right]$$`
