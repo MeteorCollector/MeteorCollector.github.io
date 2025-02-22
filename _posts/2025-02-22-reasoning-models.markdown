@@ -73,9 +73,9 @@ dataset, containing accurately verified reasoning paths for both text and image 
 
 论文里面给出的RL优化目标是这样的：
 
-$$\max_\theta \mathbb{E}_{(x, y^*) \sim D, (y, z) \sim \pi_\theta} [r(x, y, y^*)]$$
+`$$\max_\theta \mathbb{E}_{(x, y^*) \sim D, (y, z) \sim \pi_\theta} [r(x, y, y^*)]$$`
 
-其中 $\theta$ 是模型的参数，即需要找到让这个目标最大的 $\theta$。$(x, y^*) \sim D, (y, z)$ 中，$x$ 是问题，$y^*$ 是对应的正确答案。$D$ 是训练数据集，表示 $x$ 和 $y^∗$ 是从数据集 $D$ 中采样的。$(y, z) \sim \pi_\theta$ 中，$y$ 是模型生成的最终答案，$z$ 是模型生成的思考路径（COT, Chain of Thought）。这些是根据当前策略模型 $\pi_\theta$​ 生成的。具体来说，模型根据当前参数 $\theta$ 生成 $y$ 和 $z$。$r(x, y, y^*)$ 是奖励函数（Reward Function），表示模型生成的答案 $y$ 对于问题 $x$ 的正确性，其中 $y^*$ 代表 gt。实际上这么看的话，这个奖励只和最后的结果有关，涉及到的这么多参数只是在告诉你，这是一个有 COT 的模型。
+其中 $\theta$ 是模型的参数，即需要找到让这个目标最大的 $\theta$。$(x, y^*) \sim D, (y, z)$ 中，$x$ 是问题，$y^*$ 是对应的正确答案。$D$ 是训练数据集，表示 $x$ 和 $y^∗$ 是从数据集 $D$ 中采样的。`$(y, z) \sim \pi_\theta$` 中，$y$ 是模型生成的最终答案，$z$ 是模型生成的思考路径（COT, Chain of Thought）。这些是根据当前策略模型 `$\pi_\theta$`​ 生成的。具体来说，模型根据当前参数 $\theta$ 生成 $y$ 和 $z$。$r(x, y, y^*)$ 是奖励函数（Reward Function），表示模型生成的答案 $y$ 对于问题 $x$ 的正确性，其中 $y^*$ 代表 gt。实际上这么看的话，这个奖励只和最后的结果有关，涉及到的这么多参数只是在告诉你，这是一个有 COT 的模型。
 
 #### 在线镜像下降 Online Mirror Descent
 
@@ -90,21 +90,21 @@ $$\max_\theta \mathbb{E}_{(x, y^*) \sim D, (y, z) \sim \pi_\theta} [r(x, y, y^*)
 
 在标准的镜像下降中，假设我们有一个优化目标：
 
-$$\min_{\theta \in \Theta} f(\theta)$$
+`$$\min_{\theta \in \Theta} f(\theta)$$`
 
 其中 $\Theta$ 是参数空间，$f(\theta)$ 是我们要最小化的目标函数。镜像下降更新规则可以写为：
 
-$$\theta_{t+1} = \arg \min_{\theta \in \Theta} \left( \langle \nabla f(\theta_t), \theta - \theta_t \rangle + \frac{1}{\eta_t} D_{\Phi}(\theta, \theta_t) \right)$$
+`$$\theta_{t+1} = \arg \min_{\theta \in \Theta} \left( \langle \nabla f(\theta_t), \theta - \theta_t \rangle + \frac{1}{\eta_t} D_{\Phi}(\theta, \theta_t) \right)$$`
 
-$\langle \nabla f(\theta_t), \theta - \theta_t \rangle$
+`$\langle \nabla f(\theta_t), \theta - \theta_t \rangle$`
 
 
-其中，$\nabla f(\theta_t)$ 是当前参数的梯度，$D_{\Phi}(\theta, \theta_t)$ 是根据某种距离度量（如Kullback-Leibler散度）计算的距离，$\eta_t$ 是学习率，决定每一步的更新步长。
+其中，`$\nabla f(\theta_t)$` 是当前参数的梯度，`$D_{\Phi}(\theta, \theta_t)$` 是根据某种距离度量（如Kullback-Leibler散度）计算的距离，`$\eta_t$` 是学习率，决定每一步的更新步长。
 
-Kimi 论文里使用的是原版变体。At the i-th iteration, we use the current model $\pi_{{\theta}_i}$ as a reference
+Kimi 论文里使用的是原版变体。At the i-th iteration, we use the current model `$\pi_{{\theta}_i}$` as a reference
 model and optimize the following relative entropy regularized policy optimization problem. 可以发现这里的公式写的是对偶形式：
 
-$$\max_\theta \mathbb{E}_{(x, y^*) \sim D} \left[ \mathbb{E}_{(y, z) \sim \pi_\theta} [r(x, y, y^*)] - \tau \text{KL}(\pi_\theta(x) || \pi_{\theta_i}(x)) \right]$$
+`$$\max_\theta \mathbb{E}_{(x, y^*) \sim D} \left[ \mathbb{E}_{(y, z) \sim \pi_\theta} [r(x, y, y^*)] - \tau \text{KL}(\pi_\theta(x) || \pi_{\theta_i}(x)) \right]$$`
 
 (这个 KL 散度 reference 当前状态的模型，构成一个惩罚项，避免过度优化？)
 
@@ -112,12 +112,9 @@ $$\max_\theta \mathbb{E}_{(x, y^*) \sim D} \left[ \mathbb{E}_{(y, z) \sim \pi_\t
 
 对于一个问题生成很多回答，其中最长回答的长度是 max\_len，最短回答的长度是 min\_len。如果最长回答和最短回答的长度相同，那么 reward 为 0
 
-$$\text{len\_reward}(i) = \begin{cases} 
-\lambda & \text{if } r(x, y_i, y^*) = 1 \\
-\min(0, \lambda) & \text{if } r(x, y_i, y^*) = 0 
-\end{cases}$$
+`$$\text{len\_reward}(i) = \begin{cases} \lambda & \text{if } r(x, y_i, y^*) = 1 \\ \min(0, \lambda) & \text{if } r(x, y_i, y^*) = 0 \end{cases}$$`
 
-其中 $\lambda = 0.5 - \frac{\text{len}(i) - \text{min\_len}}{\text{max\_len} - \text{min\_len}}$
+其中 `$\lambda = 0.5 - \frac{\text{len}(i) - \text{min\_len}}{\text{max\_len} - \text{min\_len}}$`
 
 #### 算法tricks
 
