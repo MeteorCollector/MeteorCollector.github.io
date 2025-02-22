@@ -94,7 +94,7 @@ dataset, containing accurately verified reasoning paths for both text and image 
 
 其中 $\Theta$ 是参数空间，$f(\theta)$ 是我们要最小化的目标函数。镜像下降更新规则可以写为：
 
-`$$\theta_{t+1} = \arg \min_{\theta \in \Theta} \left( \langle \nabla f(\theta_t), \theta - \theta_t \rangle + \frac{1}{\eta_t} D_{\Phi}(\theta, \theta_t) \right)$$`
+
 
 `$\langle \nabla f(\theta_t), \theta - \theta_t \rangle$`
 
