@@ -6,7 +6,9 @@ categories: posts
 tag: autonomous driving
 ---
 
-## DriveAlpha
+其实最近的论文都想扔在这里，不管是不是 cvpr25 的
+
+## DriveAlpha (并非 CVPR'25)
 
 第一个自动驾驶的类r1，被别人做了。但是还是一个比较简单的状态。
 
