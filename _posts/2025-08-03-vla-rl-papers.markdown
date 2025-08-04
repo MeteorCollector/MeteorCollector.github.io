@@ -8,7 +8,9 @@ tag: autonomous driving
 
 # B2DVL完事了，看看最近的论文来搞新东西
 
-## Reinforcement Learning for Flow-Matching Policies  
+## Diffusion
+
+### Reinforcement Learning for Flow-Matching Policies  
 Samuel Pfrommer, Yixiao Huang, Somayeh Sojoudi（UC Berkeley）  
 arXiv:2507.15073v1 [cs.LG] 20 Jul 2025  [Reinforcement Learning for Flow-Matching Policies](https://arxiv.org/abs/2507.15073)
 
@@ -46,12 +48,16 @@ arXiv:2507.15073v1 [cs.LG] 20 Jul 2025  [Reinforcement Learning for Flow-Matchin
     – 每轮采样 G=10 条动作块，用 Rφ 计算组内优势，加权更新流匹配网络。  
     – 仅在验证性能停滞时才进行真实环境的少量 rollout，以校正奖励代理。
 
-## 拓展：关于 flow matching
+### Transition Matching: Scalable and Flexible Generative Modeling
 
-有一篇讲 transition matching 的知乎文章： [Transition Matching: Scalable and Flexible Generative Modeling （公式看晕了，喂！） - 知乎](https://zhuanlan.zhihu.com/p/1928847692173390104)
+Meta
+
+Flow Matching 的改进，[airxiv](https://arxiv.org/abs/2506.23589)
+
+这篇文章的话，已经有珠玉在前。有一篇讲 transition matching 的知乎文章，顺带讲了一些 flow matching 的原理： [Transition Matching: Scalable and Flexible Generative Modeling （公式看晕了，喂！） - 知乎](https://zhuanlan.zhihu.com/p/1928847692173390104)
 
 
-## Steering Your Diffusion Policy with Latent Space Reinforcement Learning
+### Steering Your Diffusion Policy with Latent Space Reinforcement Learning
 
 Wagenmaker 等，UC Berkeley & UW
 
@@ -101,3 +107,81 @@ DSRL 把 RL 的作用域从“改权重”变成了“改噪声”：在保持�
 
 一句话带走
 DSRL 把“微调大模型”变成“微调小噪声”，让真实机器人用几十次交互就能把 20 % 成功率飙到 90 %，并首次把 RL 成功塞进 3.3 B 参数的通用策略 π0，为现场自适应打开了实用大门。
+
+## VLA
+
+### Pre-training Auto-regressive Robotic Models with 4D Representations
+
+**ARM4R** ——用“人视频里学 4D 轨迹（3D 点+时间）”来预训练机器人策略，结果只用 1/10 的机器人数据就超过了 OpenVLA、π0-FAST 等 SOTA 方法说是。而且他这个用的资源也不多："Finally, we use 4 NVIDIA A6000 GPUs for training and a single NVIDIA A6000 GPU for evaluation."
+
+先插一嘴，它的网站做得不错，分两栏，左边图片右边文字。虽然也是套模板，但是做了点小改动：[website](https://arm4r.github.io/) 但是看多了也就那样，对手机用户不太友好。
+
+ARM4R 的完整模型 =「四路编码器 + 一个自回归 Transformer + 解码器」。下面给出可直接落地的**架构细节**与**训练脚本骨架**（PyTorch 伪码），按三阶段顺序展开。  
+
+──────────────────  
+
+#### 模型架构
+
+```text
+输入 (t 时刻)
+├─ 语言指令 l               → 冻结 CLIP-T 文本编码器 → z_l
+├─ 图像 i_t                 → 冻结 ViT-B/16           → z_i
+├─ 3D 点/机器人状态 p_t     → 2 层 MLP                → z_p
+└─ 历史信息                → 拼接后喂给 Causal Transformer
+
+Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注意力，窗口 C=16（或32）。  
+
+输出
+├─ 未来 3D 点 p_{t+1}（Stage1/2）或未来机器人状态 s_{t+1}（Stage3）
+└─ 解码：2 层 MLP 直接回归，L1 loss
+```
+
+
+####  数据与预处理  
+
+| 阶段   | 数据                                     | 伪标签生成                                | 采样率 |
+| ------ | ---------------------------------------- | ----------------------------------------- | ------ |
+| Stage1 | Epic-Kitchens100 76k 视频                | SpatialTracker 产生 3D 点轨迹（g×g 网格） | 10 fps |
+| Stage2 | 1–2 k 机器人演示视频                     | 同上                                      | 10 fps |
+| Stage3 | 190 × 任务变体 成功轨迹（末端位姿+夹爪） | 无伪标签，直接用机器人真值                | 10 fps |
+
+把整个流程封装成 **「人视频→3D 轨迹预训练」→「机器人视频→3D 轨迹微调」→「机器人动作→控制微调」**，只需替换最后一步的 MLP 头即可。
+
+#### 训练过程
+
+──────────────────  
+阶段 1：人视频 4D 轨迹预训练  
+• 数据  
+  – 76 k 条 Epic-Kitchens100 egocentric 人视频（75 041 条有效）。  
+  – 无人工动作标签，只用 **伪 3D 点轨迹**：  
+    - 在首帧布 g×g 网格 → SpatialTracker 产生每帧 3D 坐标（相机坐标系）。  
+• 训练任务  
+    – 「给定语言指令 + 当前图像 + 当前 3D 点 p_t → 预测 t+1 的 3D 点 p_t+1」。  
+    – 采用 **自回归 next-token 范式**，损失为 L1(p̂_t+1, p_t+1)。  
+
+──────────────────  
+阶段 2：机器人场景 4D 轨迹微调（一次即可，跨任务共享）  
+• 数据  
+  – 每条任务仅 **5–10 % 阶段 1 数据量**，即 1–2 k 段机器人演示视频。  
+  – 仍用 SpatialTracker 产生 3D 点轨迹，但相机固定，场景为机器人。  
+• 训练任务  
+  – 与阶段 1 相同：预测 3D 点 → 解决人→机器人相机/场景分布差异。  
+
+──────────────────  
+阶段 3：机器人控制微调（任务专用）  
+• 数据  
+  – **190 段成功演示/任务**（比基线少 10×）。  
+  – 观测：语言指令 + 图像 + **机器人当前状态 s_t（末端位姿+夹爪）**。  
+  – 标签：下一时刻状态 s_t+1。  
+• 训练任务  
+  – 把阶段 1/2 的 **3D 点输入/输出通道** 换成 **机器人状态通道**；  
+  – 仍用自回归 Transformer，损失 L1(ŝ_t+1, s_t+1)。  
+  – 预测 16 步，执行第 1 步（滚动时域）。  
+
+──────────────────  
+把「人视频里学 3D 点轨迹」→「机器人视频里继续学 3D 点轨迹」→「把预测目标换成机器人状态」，总共使用的数据有：
+
+1. 大量无标人视频（+ SpatialTracker 伪轨迹）；  
+2. 少量机器人演示视频（同伪轨迹）；  
+3. 目标任务少量成功轨迹（用于阶段 3）。
+
