@@ -188,7 +188,7 @@ Bernhard Jaeger et al. University of Tübingen）
 
 [arxiv](https://arxiv.org/pdf/2504.17838) [github](https://github.com/autonomousvision/CaRL)
 
-有一说一，这个工作非常 straightforward。RL是非常 consume rollout 次数的，我觉得 CARLA 直接练还是很难加速，资源消耗太大了，必须尽量避免如此直接的方法，除非有什么魔法能不用练几下就能达到很好的效果，比如有一个很好的 backbone VLA 只需要少许微调，不用在 CARLA 上从零开始。
+有一说一，这个工作非常 straightforward。RL是非常 consume rollout 次数的，我觉得 CARLA 直接练还是很难加速，资源消耗太大了，必须尽量避免如此直接的方法，除非有什么魔法能不用练几下就能达到很好的效果，比如有一个很好的 backbone VLA 只需要少许微调，不用在 CARLA 上从零开始。但是他这个说是 Due to these optimizations, we were able to reproduce Roach with 10 million environment samples in 32 hours on a single A100 GPU. 如果这样的话，倒还好。
 
 > **CaRL 提出了一种极简的强化学习奖励设计，仅用“路线完成度”+惩罚项，就能在大规模数据下训练出高效、鲁棒的自动驾驶规划策略，在 CARLA 和 nuPlan 上都取得了 SOTA 性能。**
 
@@ -306,3 +306,69 @@ Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注
 2. 少量机器人演示视频（同伪轨迹）；  
 3. 目标任务少量成功轨迹（用于阶段 3）。
 
+
+
+
+## 场景重建
+
+四维重建要在三维基础上再加时间，有点猛了
+
+### StreamVGGT: Streaming 4D Visual Geometry Transformer
+
+Dong Zhuo*, Wenzhao Zheng*, †, Jiahe Guo, Yuqi Wu, Jie Zhou, Jiwen Lu
+
+清华的工作
+
+[website](http://wzzheng.net/StreamVGGT/) [arxiv](https://arxiv.org/pdf/2507.11539) [github](https://github.com/wzzheng/StreamVGGT)
+
+> **StreamVGGT 是一个基于因果 Transformer 的实时 4D 视觉几何重建模型，支持**  
+> **“逐帧增量更新 + 缓存历史 token 记忆”，在保持 VGGT 级精度的同时实现低延迟在线推理。**
+
+- **4D 重建**：从视频中恢复动态 3D 场景 + 时间维度，是 CV 的基础任务。
+- **现有问题**：
+  - **离线模型**（如 VGGT、Fast3R）每次都要重新处理整个序列，无法实时；
+  - **流式模型**（如 Spann3R、CUT3R）虽支持在线更新，但存在误差累积；
+  - **效率瓶颈**：全局注意力复杂度高，不适合长序列。
+
+**模型结构**
+
+| 模块 | 设计 | 作用 |
+|---|---|---|
+| **因果 Transformer** | 仅允许当前帧关注历史帧，模拟“人类感知” | 保证因果性，减少计算 |
+| **Cached Token Memory** | 缓存历史帧的 key/value token，避免重复计算 | 实现“增量更新” |
+| **知识蒸馏** | 用 VGGT（全局注意力）作为教师，蒸馏到因果学生模型 | 抑制误差累积，提升精度 |
+| **FlashAttention-2** | 集成高效注意力算子 | 实现实时推理 |
+
+| 模块 | 说明 |
+|---|---|
+| **Image Encoder** | 使用 DINOv2 提取图像 token |
+| **Spatio-Temporal Decoder** | 替换 VGGT 的全局注意力为时间因果注意力 |
+| **Cached Memory** | 缓存历史 token，推理时只处理当前帧 |
+| **Multi-Task Heads** | 同时输出：<br>• 相机位姿（pose）<br>• 深度图（depth）<br>• 点云图（point map）<br>• 2D 点追踪（tracking） |
+
+**实验结果**
+
+| 任务 | 数据集 | 对比模型 | 结果 |
+|---|---|---|---|
+| **3D 重建** | 7-Scenes / NRGBD / ETH3D | vs CUT3R、Spann3R | **优于 SOTA 流式模型**，接近 VGGT |
+| **单帧深度估计** | KITTI / Sintel / NYU-v2 | vs MonST3R、DUSt3R | **优于所有流式模型** |
+| **视频深度估计** | Sintel / Bonn / KITTI | vs CUT3R、Point3R | **优于 CUT3R** |
+| **相机位姿估计** | CO3Dv2 | vs VGGT | **AUC@30 达到 82.4**（接近 VGGT 87.7） |
+
+**推理效率**
+
+| 帧数 | VGGT（全局） | StreamVGGT（流式） |
+|---|---|---|
+| N=1 | 2089 ms | 386 ms |
+| N=10 | 2000 ms | 67 ms |
+| N=40 | 2089 ms | 68 ms |
+
+> ✅ **StreamVGGT 在长序列下推理时间几乎恒定，VGGT 随帧数线性增长。**
+
+**局限性**
+
+| 问题 | 说明 |
+|---|---|
+| **内存膨胀** | 缓存 token 随帧数线性增长，不适合超长序列 |
+| **教师模型限制** | 蒸馏依赖 VGGT，极端场景（高速、非刚性）表现下降 |
+| **部署限制** | 当前模型较大，不适合移动端 |
