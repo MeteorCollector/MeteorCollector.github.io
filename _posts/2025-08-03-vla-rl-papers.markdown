@@ -229,6 +229,41 @@ Bernhard Jaeger et al. University of Tübingen）
 
 
 
+### Action Space Reduction Strategies for Reinforcement Learning in Autonomous Driving
+
+[arxiv](https://arxiv.org/abs/2507.05251) 暂未开源...
+
+是一个在 CARLA 里 RL 的小改进，就是减小动作空间。具体在训练上也是直接 PPO，倒是创新性有限（？）。
+
+> **论文提出两种新方法（动态掩码 + 相对动作）来“聪明地砍掉无用动作”，**  
+> **在 CARLA 仿真中让 PPO 智能体训练提速 2 倍，成功率更高，驾驶更平滑。**
+
+#### 提出的两种新方法
+
+| 方法                   | 核心思想                                                     | 动作空间大小                         | 特点                                             |
+| ---------------------- | ------------------------------------------------------------ | ------------------------------------ | ------------------------------------------------ |
+| **Dynamic Masking**    | **每帧只保留当前方向盘 ±0.2 范围内的 5 个转向 + 2 个油门**，其余动作被二进制掩码设为无效 | 仍为 42 维，但有效动作只剩 5×2=10 个 | 实时、上下文相关，避免无效探索                   |
+| **Relative Reduction** | **动作改为“相对调整”**：{-0.2, -0.1, 0, 0.1, 0.2}，加到当前方向盘上** | 固定 5×2=10 维                       | 动作空间维度不变，但物理意义更平滑，天然限制越界 |
+
+#### 实验验证（CARLA Town07）
+
+| 指标           | 结果                                                     |
+| -------------- | -------------------------------------------------------- |
+| **训练时间**   | 动态/相对方法比“全动作空间”**快 2 倍**                   |
+| **成功率**     | **Rel-0.5** 和 **Dyn-0.5** 在大多数场景 ≥ 70%，甚至 100% |
+| **控制平滑性** | 车道偏离显著降低（Rel-0.5 仅 0.10 m vs 全动作 0.31 m）   |
+| **复杂场景**   | 多转弯、十字路口也能稳定完成                             |
+
+
+#### 关键结论
+
+- **动作空间不是越大越好**——合理缩减反而提升性能。
+- **动态掩码** 和 **相对动作** 在 **速度、成功率、平滑性** 之间取得最佳平衡。
+- **可移植性高**：方法独立于网络结构，可插拔到任何 RL 框架（PPO、SAC、DDPG 等）。
+
+
+
+
 
 ## VLA
 
@@ -308,6 +343,109 @@ Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注
 
 
 
+### MP1: MeanFlow Tames Policy Learning in 1-step for Robotic Manipulation
+
+[arxiv](https://arxiv.org/abs/2507.10543) 
+
+北大的工作，刚开源三周左右，10 stars
+
+
+> **MP1 是第一个将 MeanFlow（平均速度场）引入机器人操作任务的方法，**  
+> **仅用 1 步推理（1-NFE）即可输出高质量动作轨迹，**  
+> **在多个仿真与真实任务中显著优于扩散模型（如 DP3）和流模型（如 FlowPolicy）。**
+
+
+| 方法类型 | 优点 | 缺点 |
+|---|---|---|
+| **Diffusion Policy（如 DP3）** | 多模态、鲁棒性强 | 推理慢（需 10+ NFE） |
+| **Flow Policy（如 FlowPolicy）** | 1-NFE 推理快 | 需一致性约束，误差大 |
+| **MeanFlow（图像生成）** | 1-NFE、无需一致性 | 尚未用于机器人任务 |
+
+> ❗ **MP1 首次将 MeanFlow 引入机器人学习，解决“快 vs 准”的权衡问题。**
+
+
+| 模块 | 设计 | 作用 |
+|---|---|---|
+| **MeanFlow Identity** | 直接建模平均速度场，绕过 ODE 积分 | 实现真正 1-NFE 推理 |
+| **Dispersive Loss** | 无正样本的对比正则项，拉开不同状态嵌入 | 提升少样本泛化能力 |
+| **CFG（Classifier-Free Guidance）** | 增强可控性 | 不影响 1-NFE 推理速度 |
+| **3D Point Cloud Input** | 使用 512/1024 点云作为视觉输入 | 提升空间理解能力 |
+
+#### 原理
+
+**输入处理**
+
+- **视觉输入**：3D 点云 → 3D Projection → 特征向量 `fv`
+- **状态输入**：机器人关节状态 → 全连接层 → 特征向量 `fs`
+- **条件向量**：`c = concat(fv, fs)`
+
+**MeanFlow 建模**
+```text
+u(z_t, r, t) = (1/(t-r)) ∫_r^t v(z_τ, τ) dτ
+```
+- 通过 **MeanFlow Identity** 直接回归平均速度场，无需 ODE 求解；
+- 训练目标为：
+```
+L_cfg = ||uθ - sg(u_target)||²
+```
+
+**Dispersive Loss（正则项）**
+```text
+L_disp = log E[exp(-||zi - zj||² / τ)]
+```
+- 无正样本的对比损失；
+- 训练时增强表征区分度，推理时不增加成本。
+
+**最终损失**
+```
+L_total = L_cfg + λ·L_disp
+```
+
+#### 实验结果
+
+**仿真任务（Adroit + Meta-World，共 37 个任务）**
+
+| 方法 | NFE | 平均成功率 | 平均推理时间 |
+|---|---|---|---|
+| **DP3** | 10 | 68.7% | 132.2 ms |
+| **FlowPolicy** | 1 | 71.6% | 12.6 ms |
+| **MP1 (ours)** | 1 | **78.9%** | **6.8 ms** |
+
+> ✅ **MP1 比 DP3 快 19×，比 FlowPolicy 快 2×，且成功率提升 7.3%。**
+
+**真实世界任务（ARX R5 双臂机器人）**
+
+| 任务 | MP1 成功率 | 完成时间 |
+|---|---|---|
+| Hammer | 90% | 18.6s |
+| Drawer Close | 100% | 8.8s |
+| Heat Water | 90% | 23.4s |
+| Stack Block | 80% | 27.2s |
+| Spoon | 90% | 22.6s |
+
+> ✅ **MP1 在所有任务中成功率最高，完成时间最短。**
+
+
+#### 数据需求
+
+| 数据项 | 格式 | 说明 |
+|---|---|---|
+| **专家轨迹** | 每帧一条记录，包含：<br>• 点云 `P ∈ ℝ^(N×3)`<br>• 机器人状态 `S ∈ ℝ^s`（关节角/末端位姿）<br>• 动作序列 `A ∈ ℝ^(K×a)` | `N=512/1024` 点，`K=4` 步预测，`a` 为动作维度 |
+| **训练集规模** | 10 条演示即可收敛，20 条以上收益递减 | 与 DP3 / FlowPolicy 设置一致 |
+| **数据来源** | 仿真（Adroit、Meta-World）或真实机器人（ARX R5） | 仿真用 Isaac Gym / MuJoCo，真实用 ROS 采集 |
+
+#### 资源需求
+
+All training and testing are performed on an NVIDIA RTX4090 GPU,with a batch size of 128, optimization uses the AdamW optimizer with a learningrate of 0.0001 (Adroit and Meta-World apply the same learning  rate), an observation window of 2steps, a history length of 4 states, and a prediction horizon of 4 steps.
+
+
+
+### DreamVLA: A Vision-Language-Action Model Dreamed with Comprehensive World Knowledge
+
+[website 标题跳动动画挺萌的](https://zhangwenyao1.github.io/DreamVLA/) [github刚刚开源一个月已经139stars](https://github.com/Zhangwenyao1/DreamVLA) [arxiv](https://arxiv.org/abs/2507.04447)
+
+
+
 
 ## 场景重建
 
@@ -317,7 +455,7 @@ Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注
 
 Dong Zhuo*, Wenzhao Zheng*, †, Jiahe Guo, Yuqi Wu, Jie Zhou, Jiwen Lu
 
-清华的工作
+清华的工作，500 stars
 
 [website](http://wzzheng.net/StreamVGGT/) [arxiv](https://arxiv.org/pdf/2507.11539) [github](https://github.com/wzzheng/StreamVGGT)
 
