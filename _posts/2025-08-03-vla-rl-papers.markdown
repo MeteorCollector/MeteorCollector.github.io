@@ -48,6 +48,8 @@ arXiv:2507.15073v1 [cs.LG] 20 Jul 2025  [Reinforcement Learning for Flow-Matchin
     – 每轮采样 G=10 条动作块，用 Rφ 计算组内优势，加权更新流匹配网络。  
     – 仅在验证性能停滞时才进行真实环境的少量 rollout，以校正奖励代理。
 
+
+
 ### Transition Matching: Scalable and Flexible Generative Modeling
 
 Meta
@@ -55,6 +57,39 @@ Meta
 Flow Matching 的改进，[airxiv](https://arxiv.org/abs/2506.23589)
 
 这篇文章的话，已经有珠玉在前。有一篇讲 transition matching 的知乎文章，顺带讲了一些 flow matching 的原理： [Transition Matching: Scalable and Flexible Generative Modeling （公式看晕了，喂！） - 知乎](https://zhuanlan.zhihu.com/p/1928847692173390104)
+
+另外记一下 velocity：
+
+在 **Flow Matching** 中，**velocity（速度场）** 是一个向量场，描述了如何从噪声（源分布）一步步“流动”到真实数据（目标分布）。
+
+在 Flow Matching 中，我们假设：
+- 有一个**源分布** $p_0(x)$（通常是标准高斯）；
+- 有一个**目标分布** $p_1(x)$（真实数据分布）；
+- 我们希望构造一条**连续的路径**（flow），把 $p_0$ 变成 $p_1$。
+
+这个路径是通过一个**常微分方程（ODE）**来定义的：
+
+$$
+\frac{dx_t}{dt} = v(x_t, t), \quad t \in [0, 1]
+$$
+
+其中：
+- $x_t$ 是时间 $t$ 时的中间状态；
+- $v(x_t, t)$ 就是所谓的 **velocity field（速度场）**，它告诉我们在每个位置 $x_t$ 和时间 $t$ 应该朝哪个方向“移动”。
+
+假设现在有一个点 $x_0$ 从标准高斯采样出来，目标是变成一张猫的图片 $x_1$。
+
+- **velocity $v(x_t, t)$** 就是每一步告诉你：
+  
+  > “你现在在这个位置 $x_t$，下一步应该往哪个方向走，才能更接近真实的猫图？”
+
+这个速度场是用一个神经网络 $v_\theta(x_t, t)$ 来学习的。
+
+| 方法                      | 如何移动                                      |
+| ------------------------- | --------------------------------------------- |
+| **扩散模型（Diffusion）** | 通过加噪/去噪，每一步是随机扰动（SDE）        |
+| **Flow Matching**         | 通过确定性速度场，每一步是**直接移动**（ODE） |
+
 
 
 ### Steering Your Diffusion Policy with Latent Space Reinforcement Learning
@@ -105,8 +140,51 @@ DSRL 把 RL 的作用域从“改权重”变成了“改噪声”：在保持�
    – 理论刻画噪声空间表达能力；
    – 无奖励或自动奖励设定。
 
-一句话带走
 DSRL 把“微调大模型”变成“微调小噪声”，让真实机器人用几十次交互就能把 20 % 成功率飙到 90 %，并首次把 RL 成功塞进 3.3 B 参数的通用策略 π0，为现场自适应打开了实用大门。
+
+
+
+### Hierarchical Rectified Flow Matching with Mini-Batch Couplings
+
+[github repo](https://github.com/riccizz/HRF_coupling) 还没开源而且仅有一个 star。
+
+Yichi Zhang, Yici Yan, Alex Schwing, Zhizhen Zhao  
+University of Illinois Urbana-Champaign  
+
+提出了一种**改进的流匹配方法（HRF）**，通过**小批量最优传输（mini-batch optimal transport）**来**简化速度场的多模态分布**，从而提升生成质量和效率，尤其适用于**低计算预算（低NFE）场景**。
+
+**流匹配（Flow Matching）** 是一种生成模型方法，通过建模一个**速度场（velocity field）** 来将简单分布（如高斯）转换成复杂数据分布。它通过数值积分一个常微分方程（ODE）来生成样本。
+
+但传统流匹配存在两个问题：
+1. **速度场是多模态的**，难以建模；
+2. **路径弯曲**，导致采样效率低。
+
+**层次流匹配（Hierarchical Rectified Flow, HRF）** 被提出用于建模速度场的分布，但它在每一层的复杂度都很高，**没有简化建模过程**。
+
+作者提出：**通过小批量耦合（mini-batch couplings）来逐步简化速度场的复杂度**，从而改善生成质量和效率。具体包括：
+
+**数据空间耦合（Data Coupling）**
+- 不再独立采样源分布和数据点，而是**用小批量最优传输（mini-batch OT）来配对样本**。
+- 结果：速度场分布变得更**单峰（unimodal）**，更容易学习。
+
+**速度空间耦合（Velocity Coupling）**
+- 在速度空间中，也用小批量OT来配对初始速度 $v_0$ 和目标速度 $v_1$。
+- 结果：采样路径更直，**减少积分步数（NFE）**，尤其适用于**低预算采样**。
+
+**联合耦合（Data + Velocity Coupling）**
+- 两阶段训练：先用数据耦合训练，再用速度耦合微调。
+- 结果：在低NFE（如1步）下也能生成高质量样本。
+
+之后有需要了再细看吧。。
+
+
+
+## RL4AD
+
+
+
+
+
 
 ## VLA
 
