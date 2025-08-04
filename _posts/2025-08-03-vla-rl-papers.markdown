@@ -181,7 +181,51 @@ University of Illinois Urbana-Champaign
 
 ## RL4AD
 
+### CaRL: Learning Scalable Planning Policies with Simple Rewards
 
+Bernhard Jaeger et al. University of Tübingen）
+熟悉的作者，熟悉的配方
+
+[arxiv](https://arxiv.org/pdf/2504.17838) [github](https://github.com/autonomousvision/CaRL)
+
+有一说一，这个工作非常 straightforward。RL是非常 consume rollout 次数的，我觉得 CARLA 直接练还是很难加速，资源消耗太大了，必须尽量避免如此直接的方法，除非有什么魔法能不用练几下就能达到很好的效果，比如有一个很好的 backbone VLA 只需要少许微调，不用在 CARLA 上从零开始。
+
+> **CaRL 提出了一种极简的强化学习奖励设计，仅用“路线完成度”+惩罚项，就能在大规模数据下训练出高效、鲁棒的自动驾驶规划策略，在 CARLA 和 nuPlan 上都取得了 SOTA 性能。**
+
+#### 极简奖励设计（Simple Reward）
+
+> **只用一个奖励项：路线完成度（Route Completion, RC）**
+
+#### 奖励公式：
+
+  ```
+  reward = RC * ∏(soft penalty) - terminal penalty
+  ```
+
+
+- **软惩罚**：如超速、偏离车道、舒适性等，乘性衰减；
+
+- **硬惩罚**：如碰撞、闯红灯，直接终止 episode；
+
+- **无规则参考**：不依赖任何规则系统，避免性能上限。
+
+#### 可扩展训练（Scalable Training）
+
+- **PPO 在大 batch size 下失效**：复杂奖励在大 batch 下容易陷入局部最优；
+- **简单奖励可扩展**：在大 batch 下性能反而提升；
+- **训练规模**：
+  - CARLA：300M samples（30× 以往工作）
+  - nuPlan：500M samples
+  - 使用 8-GPU 单机训练，DD-PPO 分布式训练框架
+
+#### 工程优化
+
+- **CARLA 训练加速**：
+  - 不重启 town、预计算 A* 路径
+  - 异步数据收集（AC-PPO）
+  - 场景自动生成脚本
+- **nuPlan 适配**：
+  - 增加 survival bonus 防止提前完成任务后“摆烂”
 
 
 
@@ -214,7 +258,6 @@ Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注
 └─ 解码：2 层 MLP 直接回归，L1 loss
 ```
 
-
 ####  数据与预处理  
 
 | 阶段   | 数据                                     | 伪标签生成                                | 采样率 |
@@ -234,8 +277,8 @@ Transformer：随机初始化 ViT-Base（12 层、768 维、8 头），因果注
   – 无人工动作标签，只用 **伪 3D 点轨迹**：  
     - 在首帧布 g×g 网格 → SpatialTracker 产生每帧 3D 坐标（相机坐标系）。  
 • 训练任务  
-    – 「给定语言指令 + 当前图像 + 当前 3D 点 p_t → 预测 t+1 的 3D 点 p_t+1」。  
-    – 采用 **自回归 next-token 范式**，损失为 L1(p̂_t+1, p_t+1)。  
+        – 「给定语言指令 + 当前图像 + 当前 3D 点 p_t → 预测 t+1 的 3D 点 p_t+1」。  
+        – 采用 **自回归 next-token 范式**，损失为 L1(p̂_t+1, p_t+1)。  
 
 ──────────────────  
 阶段 2：机器人场景 4D 轨迹微调（一次即可，跨任务共享）  
