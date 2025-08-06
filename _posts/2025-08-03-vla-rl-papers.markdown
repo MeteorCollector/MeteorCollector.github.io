@@ -527,6 +527,109 @@ All training and testing are performed on an NVIDIA RTX4090 GPU,with a batch siz
 
 
 
+### TriVLA: A Triple-System-Based Unified Vision-Language-Action Model for General Robot Control
+
+[arxiv](https://arxiv.org/abs/2507.01424) [website](https://zhenyangliu.github.io/TriVLA/)
+
+> 只有网站，还没有开源相关代码。这个多段其实比较符合我的想法，我觉得端到端直接来是真的不好搞啊。但是这个训练得实在是太耗资源了，要用视频模型预测未来动态场景，直接 8 个 H100 练 2-3 天，太凶猛了。我不看好用视频模型预测未来，没有必要。
+
+这篇论文《TriVLA: A Triple-System-Based Unified Vision-Language-Action Model for General Robot Control》提出了一种**新的三系统统一架构**，用于提升机器人在**动态环境中执行长周期、复杂指令任务**的能力。
+
+**核心创新：三系统架构（Triple-System）**
+
+| 系统编号 | 名称 | 作用 | 技术实现 |
+|----------|------|------|----------|
+| **System 2** | Vision-Language Module | 理解语言指令 + 场景语义 | 使用预训练 Eagle-2 VLM（SmolLM2 + SigLIP-2） |
+| **System 3** | Dynamics Perception Module | 预测未来动态场景（视频级） | 微调 Stable Video Diffusion（SVD）模型 |
+| **System 1** | Policy Learning Module | 生成连续动作序列 | 使用 Diffusion Transformer + Flow Matching |
+
+> 类比理解：  
+> - System 2 = “看懂任务”  
+> - System 3 = “脑补未来”  
+> - System 1 = “动手去做”
+
+**解决的问题**
+
+| 传统方法问题 | TriVLA 如何解决 |
+|--------------|------------------|
+| 只看当前图像，忽略动态变化 | System 3 预测未来帧，建模动态 |
+| 缺乏语言与视觉的深度对齐 | System 2 使用预训练 VLM 处理语言和图像 |
+| 动作生成不连贯、频率低 | System 1 使用扩散模型生成动作 chunk，支持 36Hz 控制频率 |
+
+**实验结果**
+
+| 场景 | 数据集 | 表现 |
+|------|--------|------|
+| **仿真** | CALVIN ABC→D | 平均任务长度 **4.37**（SOTA） |
+| **仿真** | MetaWorld（60任务） | 平均成功率 **71.4%**（优于 VPP、GR-1 等） |
+| **仿真** | LIBERO（4套件） | 在 Spatial/Object/Goal/Long 任务中均领先 |
+| **真实机器人** | Franka/Kinova/Fair | 在少量演示下成功完成长周期任务 |
+
+**关键亮点**
+
+- **数据效率高**：仅用 10% CALVIN 数据，性能优于全数据训练的 GR-1。
+- **控制频率高**：36Hz 实时控制，优于传统扩散策略。
+- **通用性强**：支持不同机器人（Franka、Kinova、Fair）和多视角输入。
+- **长周期任务能力强**：可处理多步指令，如“打开抽屉→取出方块→放入盒子→关闭抽屉”。
+
+#### 所需数据
+
+| 模态 | 内容 | 格式 |
+|------|------|------|
+| **视觉** | 多视角 RGB 图像（静态摄像头 + 手腕摄像头） | PNG/JPEG |
+| **语言** | 自然语言任务指令 | 文本 |
+| **动作** | 连续 7 维动作（末端位姿 + 夹爪状态） | NumPy 数组 |
+| **状态** | 机器人关节角度、末端位姿、速度等 | NumPy 数组 |
+| **视频** | 完整操作视频序列（用于 System 3） | MP4 |
+| **人类操作视频** | 互联网人类操作视频（用于预训练） | MP4 |
+| **辅助标签** | 可选：深度图、物体掩码、关键点等 | NumPy 数组 |
+
+| 数据类型 | 来源 | 量级 |
+|----------|------|------|
+| **人类操作视频** | Something-Something V2、YouTube 等 | **193,690 条** |
+| **机器人操作视频** | Open X-Embodiment、DROID、CALVIN | **179,074 条** |
+| **任务演示视频** | CALVIN、MetaWorld、LIBERO、真实机器人 | **每任务 50–100 条** |
+| **微调数据** | 真实机器人（Franka/Kinova/Fair） | **每任务 100 条轨迹** |
+
+#### 三阶段训练流程
+
+**阶段 1：System 3 视频扩散模型微调（VDM）**
+- **目标**：让视频模型学会预测未来帧（动态感知）
+- **数据**：
+  - 人类操作视频（193k）
+  - 机器人操作视频（179k）
+- **训练设置**：
+  - 模型：Stable Video Diffusion（1.5B 参数）
+  - 损失：扩散重建损失
+  - 训练时间：**2–3 天，8×H100 GPU**
+  - 冻结参数：训练完成后冻结 System 3
+
+**阶段 2：System 1 策略网络训练（Policy Learning）**
+- **目标**：学习从视觉+语言+动态表示 → 动作的映射
+- **数据**：
+  - CALVIN、MetaWorld、LIBERO、真实机器人演示
+- **训练设置**：
+  - 模型：Diffusion Transformer（DiT）
+  - 损失：Flow Matching + MSE 动作损失
+  - 训练时间：**5–9 小时，4×H100 GPU**
+  - 控制频率：**36 Hz**
+  - 动作 chunk 长度：10 步
+
+**阶段 3：System 2 VLM 微调（可选）**
+
+- **目标**：增强语言理解能力（已在 Eagle-2 中预训练）
+- **数据**：
+  - 任务指令 + 图像对
+- **训练设置**：
+  - 模型：Eagle-2（SmolLM2 + SigLIP-2）
+  - 冻结主干，仅微调 LoRA 层
+  - 输入：224×224 图像 + 文本指令
+  - 输出：第 12 层 token（用于策略输入）
+
+
+
+
+
 
 ## 场景重建
 
