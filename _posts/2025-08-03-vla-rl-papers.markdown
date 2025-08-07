@@ -6,7 +6,9 @@ categories: posts
 tag: autonomous driving
 ---
 
-# B2DVL完事了，看看最近的论文来搞新东西
+# B2DVL完事了，看看最近的论文
+
+> 一般来讲，越靠上的越新
 
 ## Diffusion
 
@@ -392,6 +394,114 @@ DIVER 把“扩散去噪过程”当成一个**可学习的随机策略**（poli
 
 
 ## VLA
+
+### VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting
+
+[arxiv](https://arxiv.org/abs/2507.05116) [github](https://github.com/LukeLIN-web/VOTE 仅几天前开源，16stars)
+
+> **VOTE 提出“单令牌动作 + 投票集成”的轻量级 VLA 框架，把生成动作所需的 token 数量从上百个压缩到 1 个，同时在推理阶段用历史预测投票纠错，实现 39× 推理加速、98% LIBERO 成功率，并能在边缘设备 46 Hz 实时运行。**
+
+| 传统 VLA 模型 | 问题 |
+|---|---|
+| 多 token / 扩散动作头 | **推理慢**：OpenVLA/CogACT 每步 200 ms 以上 |
+| 只执行当前预测 | **动作浪费**：上一帧预测被丢弃，轨迹抖动 |
+| 3D/扩散增强 | **训练贵**：显存大、梯度步数多 |
+
+
+#### 1️⃣ 训练阶段：单令牌动作  
+- 在 LLM tokenizer 内新增 `<ACT>` 特殊 token  
+- **一次前向只生成 1 个 token** → 隐藏态直接输入轻量 MLP 动作头  
+- **token 数从 N×D ↓ 1**（N=chunk, D=action dim）  
+- LoRA+瓶颈 MLP，训练步数≈OpenVLA-OFT 的 **15–54 %**  
+
+#### 2️⃣ 推理阶段：Trajectory Ensemble Voting  
+- 维护一个 **K+1 步动作委员会**（历史+当前）  
+- 用余弦相似度投票，**选多数派平均值**作为最终动作  
+- **τ=0.5** 经验阈值即可，无需调参  
+- 融合后轨迹更平滑，平均提升 **5–10 % SR**
+
+| 场景 | 数据量 | 成功率 | 延迟/吞吐 | 边缘设备 |
+|---|---|---|---|---|
+| **LIBERO-4 套件** | 50–130K 步 | **98 %** | 78 ms / 102 Hz | 46 Hz @Jetson Orin |
+| **SimplerEnv-WidowX** | 60K 步 | **58 %** | 78 ms | 实时 |
+| **Google Robot** | 150K 步 | **74 %** | 78 ms | 实时 |
+
+- **比 OpenVLA 快 39×**，显存占用 **-50 %**  
+- **比 CogACT 高 7 % SR**，边缘设备 CogACT OOM
+
+> **VOTE 用“1 个 token 生成整个动作块 + 历史投票纠错”，让 VLA 模型在边缘设备上也能以 46 Hz 的实时速度完成高成功率机器人操作。**
+
+#### 训练用数据
+
+**1️⃣ 数据模态**
+| 模态 | 说明 |
+|------|------|
+| **RGB 图像** | 1 张 224×224 第三人称相机图像（或更多视角可扩展） |
+| **语言指令** | 自然语言任务描述（如 “put the cup on the table”） |
+| **动作标签** | 连续 7-DoF 末端位姿 + 1 维夹爪开闭（共 8 维） |
+| **动作块（chunk）** | 连续 N 步动作序列（N=8 或 16，按实验设定） |
+
+> **无需深度图、点云、3D 姿态等额外模态**，保持极简输入。
+
+
+**2️⃣ 数据量（按任务/场景）**
+| 场景 | 单任务数据量 | 总数据量 | 备注 |
+|------|---------------|-----------|------|
+| **LIBERO 基准** | 50–130K 步 | 4 个任务 × 50–130K ≈ **200–520K 步** | 每个任务 500 条演示 × 100 步 |
+| **SimplerEnv** | 60K 步 | 1 个任务 ≈ **60K 步** | BridgeDataV2 子集 |
+| **真实机器人** | 类似量级 | 视任务而定 | 论文未明确，但经验值 **50–200 条演示/任务** |
+
+> **数据量远小于 OpenVLA-OFT**（后者需 150K 步 × 64 batch）。
+
+**计算资源**
+| 阶段 | 硬件需求 | 训练时间 | 显存占用 | 备注 |
+|------|-----------|-----------|-----------|------|
+| **微调 VLA（LoRA）** | 2×H100 (94GB) | 8–130K 步（1–3 天） | 14–19 GB | 全局 batch=40，LoRA rank=32 |
+| **边缘推理** | NVIDIA Jetson AGX Orin (32 GB) | 实时 46 Hz | **346 ms 延迟** | 无需再训练 |
+| **对比基线** | 8×A100 (80GB) | 150K 步 × 64 batch | 19 GB | OpenVLA-OFT 资源 |
+
+
+> **VOTE 仅需 RGB + 语言 + 动作轨迹，单任务几十到几百条演示，2×H100 上 1–3 天即可微调完成，边缘设备实时运行。**
+
+
+
+### Video Generators are Robot Policies
+
+Junbang Liang, Pavel Tokmakov, Ruoshi Liu, Sruthi Sudhakar, Paarth Shah, Rares Ambrus, Carl Vondrick
+
+[arxiv](https://arxiv.org/abs/2508.00795) 未开源
+
+> 不看好非要生成视频的模型，跑不起来... 8*A100 练两周真绷不住了
+
+> **本文提出“Video Policy”：用大规模视频生成模型当“世界模拟器”，再配一个轻量级动作解码器，就能把生成视频直接变成机器人策略，实现**少量动作数据、强鲁棒性的泛化控制**。
+
+#### 📌 核心思路：把“视频生成”当策略  
+1. **先视频**：用 **Stable Video Diffusion (SVD)** 级联模型，根据 **初始图像 + 语言任务** 生成未来机器人执行视频帧。  
+2. **后动作**：用 **轻量级 1D-CNN U-Net** 从视频隐藏层特征解码 **7-DoF 末端位姿 + 夹爪开闭** 的连续动作序列。  
+
+> 因为 SVD 已在互联网海量视频里学到通用动力学，**动作解码器只需 50~200 条演示即可泛化**。
+
+#### 📌 训练与数据  
+| 阶段           | 数据                                       | 计算资源        | 说明                     |
+| -------------- | ------------------------------------------ | --------------- | ------------------------ |
+| **视频预训练** | 互联网通用视频                             | 8×A100，两周    | 微调 SVD                 |
+| **动作微调**   | 每任务 **50 条人演示**（或 300M MimicGen） | 同上            | 冻结视频权重，只训动作头 |
+| **真实世界**   | 200 条/任务（5 任务）                      | RTX 4070 Laptop | 实时 30 步扩散推理       |
+
+#### 📌 主要结果  
+| Benchmark            | 数据量   | 平均成功率 | 对比                        |
+| -------------------- | -------- | ---------- | --------------------------- |
+| **RoboCasa-24 任务** | 50 demo  | **66%**    | 超 DP-ResNet、UVA、GR00T 等 |
+| **LIBERO-10**        | 50 demo  | **94%**    | 显著优于 UVA                |
+| **真实 5 任务**      | 200 demo | 0.3-1.0    | 对未见物体/背景/位置均泛化  |
+
+### 📌 关键发现  
+1. **2-阶段训练 > 联合训练**：先训视频再训动作，效果更好（63% vs 57%）。  
+2. **越长视频预测越泛化**：32 步视频预测在分布偏移任务上收益最大。  
+3. **无动作视频也能泛化**：仅动作头训 12/24 任务，靠视频先验仍超过基线。  
+4. **实时瓶颈**：25 帧 256×256 在 A100 上需 ~9 秒，但加速技术可解。
+
+
 
 ### Pre-training Auto-regressive Robotic Models with 4D Representations
 
@@ -1041,3 +1151,43 @@ UC Berkeley, Meta
 
 
 > **StreamDiT 提出了一种新颖的流式文本到视频生成框架，通过创新的训练策略、高效模型架构和定制蒸馏方法，首次实现了在单张 GPU 上的实时、高质量、长视频生成，为交互式视频应用开辟了新可能。**
+
+
+
+
+
+## 其他
+
+### DenseMixer: Improving MoE Post-Training with Precise Router Gradient
+
+**Feng Yao$^{\star\dagger}$      Junxia Cui$^{\star}$      Ruohan Zhang$^{\star}$      Liyuan Liu$^{\dagger}$      Shibo Hao      Li Zhang      Chengyu Dong      Shuohang Wang      Yelong Shen      Jianfeng Gao      Jingbo Shang**
+
+$^{\dagger}$: Project Lead; $^{\star}$: Core Contributors; (Work in Progress)
+
+**UCSD,  Microsoft**
+
+[blog](https://fengyao.notion.site/moe-posttraining) [github 两个月前开源，star 58](https://github.com/yaof20/DenseMixer)
+
+> MoE 的优化工作
+
+这篇文章主要介绍了一个新方法 **DenseMixer**，旨在改进 **Mixture-of-Experts（MoE）** 模型的后训练（post‑training）效果。核心内容如下：
+
+1. **研究背景与现有挑战**
+   MoE 模型相比稠密模型来说训练更困难，关键问题源于其稀疏路由机制（Top‑K router），该机制非可微，导致梯度反向传播复杂。
+
+2. **DenseMixer 方法**
+   论文提出了 DenseMixer 技术，通过在前向传播时对所有专家（包括未激活的专家）进行计算，来获取更加精确的路由梯度。它通过多付出一次前向计算的代价，换取更优的梯度估计。
+
+3. **适应性强，使用简单**
+
+   * **兼容性广**：支持不同规模的 MoE（如 7B、14B、30B）、架构（是否共享专家）、预训练方式（从零开始或 “up‑cycling”）、以及不同后训练数据类型（如 instruction tuning 或 long chain-of-thought 数据）。
+   * **方便使用**：只需执行 `pip install densemixer` 然后 `densemixer setup`，设置环境变量 `DENSEMIXER_ENABLED=1` 即可启用 DenseMixer，无需代码更改、推理无额外开销。
+
+4. **实验表现优异**
+   在多个任务的多种模型规模下，DenseMixer 均显著优于传统方法，平均提升一般在 **2% 左右**，在某些评测上甚至更高。
+
+
+总结来说，这篇文章提出的 **DenseMixer** 是一种简单易用、兼容性强且效果可靠的 MoE 后训练方案，通过改善梯度估计质量来提升模型表现。
+
+
+
