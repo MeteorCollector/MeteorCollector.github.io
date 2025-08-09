@@ -12,6 +12,52 @@ tag: autonomous driving
 
 ## Diffusion
 
+### DiWA: Diffusion Policy Adaptation with World Models
+
+Akshay L Chandra1∗, Iman Nematollahi1∗, Chenguang Huang2 Tim Welschehold1, Wolfram Burgard2, Abhinav Valada1 1 University of Freiburg 2 University of Technology Nuremberg
+
+[arxiv](https://arxiv.org/abs/2508.03645)    [github (2~3个月之前开源, 23 stars)](https://github.com/acl21/diwa)    [website](https://diwa.cs.uni-freiburg.de/)
+
+这篇论文叫 **《DiWA: Diffusion Policy Adaptation with World Models》**，它提出了一种全新的方法，**让机器人可以在完全不接触真实环境的情况下，通过“想象”来提升已有的技能**，尤其适用于**基于扩散模型（Diffusion Policy）的机器人控制策略**。
+
+> DiWA 是第一个**完全离线**的扩散策略微调框架，它用一个**世界模型**代替真实环境，让机器人通过“在脑子里练”来提升技能，**不需要任何额外真实交互**，却比传统在线强化学习方法更高效、更安全。
+
+#### DiWA 的核心思路
+
+| 阶段 | 任务 | 方法 |
+|------|------|------|
+| **1. 世界模型训练** | 学会“想象” | 用大量**无标签的机器人自由探索数据**训练一个**世界模型**，能预测未来状态 |
+| **2. 策略预训练** | 学会“模仿” | 用少量专家演示数据预训练一个**扩散策略**（Diffusion Policy） |
+| **3. 奖励建模** | 学会“目标” | 用专家数据训练一个**奖励分类器**，判断某个状态是否接近任务成功 |
+| **4. 离线微调** | 学会“改进” | 在**世界模型里做强化学习（PPO）**，通过“想象的轨迹”来微调策略 |
+
+#### 实验结果
+
+**✅ 模拟环境（CALVIN benchmark）**
+| 方法 | 成功率 | 是否在线交互 | 交互次数 |
+|------|--------|--------------|----------|
+| 原始扩散策略 | 57.8% | ❌ | 0 |
+| **DiWA**（离线微调） | **82.3%** | ❌ | **0** |
+| DPPO（在线微调） | 82.3% | ✅ | **250万次** |
+
+**✅ 真实世界（Franka机器人）**
+| 任务 | 原始策略 | DiWA微调后 |
+|------|----------|-------------|
+| 打开抽屉 | 55% → **85%** |
+| 关闭抽屉 | 60% → **95%** |
+| 推滑块 | 55% → **87%** |
+
+####  技术亮点
+
+| 模块 | 作用 | 技术细节 |
+|------|------|-----------|
+| **Dream Diffusion MDP** | 把扩散过程建模为强化学习问题 | 把每一步“去噪”看作一个动作，整个世界模型作为环境 |
+| **世界模型（World Model）** | 替代真实环境 | 基于DreamerV2架构，支持长时序预测 |
+| **奖励分类器** | 代替真实奖励 | 用专家数据训练一个二分类器，判断状态是否成功 |
+| **行为克隆正则化** | 防止“钻空子” | 限制策略不要太偏离原始行为，避免利用世界模型的缺陷 |
+
+
+
 ### Reinforcement Learning for Flow-Matching Policies  
 Samuel Pfrommer, Yixiao Huang, Somayeh Sojoudi（UC Berkeley）  
 arXiv:2507.15073v1 [cs.LG] 20 Jul 2025  [Reinforcement Learning for Flow-Matching Policies](https://arxiv.org/abs/2507.15073)
@@ -394,6 +440,38 @@ DIVER 把“扩散去噪过程”当成一个**可学习的随机策略**（poli
 
 
 ## VLA
+
+### FedVLA: Federated Vision-Language-Action Learning with Dual Gating Mixture-of-Experts for Robotic Manipulation
+
+Cui Miao1 TaoChang1 MeihanWu1 HongbinXu2 Chun Li3 MingLi4* Xiaodong Wang1 1 National University of Defense Technology 2Bytedance Seed 3Shenzhen MSU-BIT University 4Guangdong Laboratory of Artificial Intelligence and Digital Economy (SZ)
+
+[arxiv](https://arxiv.org/abs/2508.02190) 
+
+> 分布式训练 VLA，现在我这边可能不太需要吧，先放在这
+
+这篇文章提出了一种名为 **FedVLA** 的联邦学习框架，用于在机器人操作任务中训练 **视觉-语言-动作（VLA）模型**，同时保护用户隐私。文章的核心贡献是解决了**如何在分布式环境中高效训练多模态机器人模型**，同时**避免集中式训练带来的隐私风险**。
+
+> FedVLA 是第一个用于机器人操作任务的联邦视觉-语言-动作学习框架，它通过“任务感知特征提取 + 双向专家选择 + 专家驱动的聚合策略”，在保护隐私的同时实现了接近集中式训练的性能。
+
+#### FedVLA 的三大创新模块
+
+| 模块名称 | 作用 | 关键技术 |
+|----------|------|-----------|
+| **IOSP**（Instruction-Oriented Scene-Parsing） | 把图像分解为“任务相关”的对象表示 | 用CLIP模型将图像中的目标物体、周围物体、背景物体与语言指令对齐 |
+| **DGMoE**（Dual Gating Mixture-of-Experts） | 让模型根据任务复杂度动态选择专家，提高计算效率 | 引入“**自感知专家**”，专家可以主动决定是否接收token，实现双向选择 |
+| **EDA**（Expert-Driven Aggregation） | 在联邦聚合时，优先合并“专家选择相似”的客户端模型 | 利用专家激活向量计算客户端之间的相似度，动态分配聚合权重 |
+
+#### 实验验证
+
+**✅ 模拟环境（Meta-World）**
+- 任务：关门、关抽屉、扫地、开窗
+- FedVLA 成功率：**63.3%**（vs 集中式 65.0%，FedAvg 51.7%）
+
+**✅ 真实世界（UR3机械臂）**
+- 任务：清理桌面、扔垃圾、开抽屉、分药
+- FedVLA 成功率：**63.3%**（vs 集中式 63.4%，FedAvg 53.3%）
+
+
 
 ### VOTE: Vision-Language-Action Optimization with Trajectory Ensemble Voting
 
