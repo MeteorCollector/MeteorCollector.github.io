@@ -22,23 +22,64 @@
 
         <main>
             <section class="front">
-                <h1>MeteorCollector's<br>Electric Wasteland</h1>
+                <h1>MeteorCollector</h1>
                 <blockquote>Let us be, first and above all, kind, then honest<br>and then let us never forget each other.</blockquote>
             </section>
             <section class="list">
-                <h2>Welcome!</h2>
-                <p class="txt">I'm Yuqian Shao (邵钰乾), currently an undergraduate of Kuang Yaming Honors School, Nanjing University.</p>
-                <p class="txt">I'm pursuing my bachelor's degree in computer science and I'm interested in astronomy. Now simulating perceptions and implementing dreams in the cyber world.</p>
-                <p class="txt">As you may notice, some bubbles are forming on the right side of this page. May them remind you of tiny pieces of colorful memories and inspirations you have cherished once in your life. Have a nice day.</p>
-                <p class="ref"><a href="https://space.bilibili.com/21359077" target="_blank">Bilibili</a>  <a href="https://github.com/MeteorCollector" target="_blank">Github</a>  <a href="mailto:211240036@smail.nju.edu.cn" target="_blank">Mail</a></p>
-                <p class="ref"><a href="https://meteorcollector.github.io/archive" target="_blank">>> visit old site</a></p>
+                <h2>About Me</h2>
+                <p class="txt">I'm Yuqian Shao (邵钰乾), currently a master's student of Shanghai Jiaotong University.</p>
+                <p class="txt">I major in computer science, and my research interest includes autonomous driving and large langauge/vision models.</p>
+                <p class="txt">Feel free to contact me. Have a nice day.</p>
+                <p class="ref"><a href="https://github.com/MeteorCollector" target="_blank">Github</a> | <a href="mailto:shao-yq@sjtu.edu.cn" target="_blank">E-mail</a></p>
+                <!-- <p class="ref"><a href="https://meteorcollector.github.io/archive" target="_blank">>> visit old site</a></p> -->
             </section>
             <section class="list">
                 <h2>Education</h2>
                 <p class="ref"><a href="http://tfls.tj.edu.cn/index.html" target="_blank">Tianjin Foreign Languages School (Junior High)</a></p>
                 <p class="ref"><a href="http://nkzx.tj.edu.cn/" target="_blank">Tianjin Nankai High School (Senior High)</a></p>
-                <p class="ref"><a href="https://dii.nju.edu.cn/main.htm" target="_blank">Kuang Yaming Honors School, Nanjing University (Bachelor, undergraduate)</a></p>
-                <h2>My Works</h2>
+                <p class="ref"><a href="https://dii.nju.edu.cn/main.htm" target="_blank">Kuang Yaming Honors School, Nanjing University (Bachelor)</a></p>
+                <p class="ref"><a href="https://www.cs.sjtu.edu.cn/", taget="_blank">School of Computer Science, Shanghai Jiaotong University (Master, undergraduate)</a></p>
+                <h2>Academic Publications & Projects</h2>
+            </section>
+            <section class="gallery">
+                <div class="card">
+                    <div class="square-image">
+                        <img src="images/b2dvl_abstract_module.png" alt="b2dvl">
+                    </div>
+                    <div class="info">
+                        <h3><a href="https://thinklab-sjtu.github.io/Bench2Drive-VL/"><b>Bench2Drive-VL:</b> Tools and Benchmarks for Closed-Loop Autonomous Driving with Vision-Language Models</a></h3>
+                        <p>Xiaosong Jia*, <b>Yuqian Shao*</b>, Zhenjie Yang, Qifeng Li, Zhiyuan Zhang, Junchi Yan, Zuxuan Wu, Yu-Gang Jiang</p>
+                        <p><strong>Under review at JMLR</strong></p>
+                        <small>To achieve a full-task closed-loop evaluation of vision-language models (VLMs) for autonomous driving, we developed an evaluation framework that enables a VLM to control vehicles in the CARLA simulator while dynamically generating driving-related visual question answering (VQA) pairs based on the current scenario, and requiring the VLM to provide answers. <b><i>To our knowledge, this is the first framework to dynamically generate full-task VQAs.</i></b> The open-source release includes a complete suite of debugging and visualization tools.</small>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="square-image">
+                        <img src="images/ReSim.png" alt="resim">
+                    </div>
+                    <div class="info">
+                        <h3><a href="https://opendrivelab.com/ReSim"><b>ReSim:</b> Reliable World Simulation for Autonomous Driving</a></h3>
+                        <p>Jiazhi Yang, Kashyap Chitta, Shenyuan Gao, Long Chen, <b>Yuqian Shao</b>, Xiaosong Jia, Hongyang Li, Andreas Geiger, Xiangyu Yue, Li Chen</p>
+                        <p><strong>NeurIPS 2025 spotlight</strong></p>
+                        <small>Developed a controllable diffusion-based world model by combining real-world expert trajectories with diverse non-expert data from CARLA, enabling faithful simulation of both safe and hazardous driving behaviors; achieved up to 44% higher visual fidelity, 50%+ improved controllability, and boosted planning/policy performance on NAVSIM. <b><i>I'm responsible for the entire CARLA simulator data pipeline.</i></b></small>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="square-image">
+                        <img src="images/DriveMoE.png" alt="drivemoe">
+                    </div>
+                    <div class="info">
+                        <h3><a href="https://arxiv.org/abs/2505.16278"><b>DriveMoE:</b> Mixture-of-Experts for Vision-Language-Action Model in End-to-End Autonomous Driving</a></h3>
+                        <p>Zhenjie Yang*, Yilin Chai*, Xiaosong Jia*, Qifeng Li, <b>Yuqian Shao</b>, Xuekai Zhu, Haisheng Su, Junchi Yan</p>
+                        <p><strong>Under review at ICLR</strong></p>
+                        <small>DriveMoE proposed a MoE framework with scene-specific visual and skill-specific action experts to reduce multi-view redundancy and handle complex driving behaviors, improving efficiency and robustness. <b><i>I'm responsible for generating ground truth for the scene-specific visual MoE.</i></b></small>
+                    </div>
+                </div>
+            </section>
+            <section class="list">
+                <h2>Other Works</h2>
             </section>
             <section class="gallery">
                 <div class="card">
@@ -47,13 +88,13 @@
                     </div>
                     <div class="info">
                         <h3><a href="https://meteorcollector.github.io/2024/02/iris-description/">iris</a></h3>
-                        <p>A popular astronomy-related bot mainly works in QQ.<br>
-                            Adaption to QQ based on <a href="https://github.com/Mrs4s/go-cqhttp" target="_blank">go-cqhttp</a>.</p>
+                        <p>A popular astronomy-related bot, working in <b>100+ astronomy associations</b> in China.<br>
+                            Visit <a href="https://the-shell-of-iris.site/" target="_blank"><b>iris' official site</b></a> to learn more.
                         <p><strong>Highlight</strong>: <a href="https://mp.weixin.qq.com/s/wVHx1HhBruFWlaR2rE1ddg" target="_blank">Nominated NJU Annual Figure.</a></p>
                         <p><strong>Referenced by</strong>: <a href="https://github.com/Yu-Yang-Li/StarWhisper" tag="_blank">StarWhisper</a>, the first Chinese astronomy LLM.</p> 
                     </div>
                 </div>
-                <div class="card">
+                <!-- <div class="card">
                     <div class="square-image">
                         <img src="images/iris_live.jpg" alt="iris_live">
                     </div>
@@ -119,7 +160,7 @@
                         <p>Course project: 2022 Spring Problem Solving<br>
                             Based on Qt, "Excellent Term Project"</p> 
                     </div>
-                </div>
+                </div> -->
                 <div class="card">
                     <div class="square-image">
                         <img src="images/ship.png" alt="iris">

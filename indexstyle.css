@@ -74,9 +74,9 @@ header li {
     margin-top: 100px;
     margin-left: 10vw;
     color: black;
-    font-size: 36px;
-    font-family: "Lucida Console", "Consolas";
-    line-height: 64px;
+    font-size: 24px;
+    /* font-family: "Lucida Console", "Consolas"; */
+    line-height: 40px;
     transition: all 0.5s;
     animation: fadeIn 1.5s;
 }
@@ -88,9 +88,9 @@ header li {
     margin-top: 12px;
     margin-left: 10vw;
     margin-right: 28vw;
-    font-size: 18px;
-    font-family: "Lucida Console", "Consolas";
-    line-height: 36px;
+    font-size: 16px;
+    /* font-family: "Lucida Console", "Consolas"; */
+    line-height: 21px;
     transition: all 0.5s;
     animation: fadeIn 1.5s;
 }
@@ -99,7 +99,7 @@ header li {
     opacity: 60%;
 }
 .list .txt:hover {
-    transform: translate(0, -10px);
+    /* transform: translate(0, -10px); */
     text-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
 }
 .list .ref {
@@ -119,33 +119,55 @@ header li {
 .gallery .card {
     margin-top: 5vw;
     margin-left: 10vw;
-    margin-right: 10vw;
+    margin-right: 30vw;
     border-radius: 10px;;
     display: flex;
-    justify-content: left;
-    align-items: top;
+    justify-content: flex-start;
+    align-items: flex-start;
     transition: all 0.5s;
     animation: fadeIn 1.5s;
     background-color:rgba(255, 255, 255, 0.75)
 }
 .gallery .card:hover {
     transform: translate(0, -10px);
-    /* background-color: cyan; */
+    background-color: cyan;
     box-shadow:0 16px 32px 0 rgba(48, 55, 66, 0.15);
 }
 .gallery h3 {
     color: black;
-    font-size: 24px;
-    font-family: "Lucida Console", "Consolas";
-    line-height: 48px;
+    font-size: 16px;
+    /* font-family: "Lucida Console", "Consolas"; */
+    line-height: 32px;
 }
+
 .gallery p {
     color: black;
-    font-size: 16px;
-    font-family: "Lucida Console", "Consolas";
+    font-size: 14px;
+    /* font-family: "Lucida Console", "Consolas"; */
     line-height: 28px;
     opacity: 60%
 }
+
+.gallery .info small {
+    display: none;
+    color: black;
+    font-size: 12px;
+    /* font-family: "Lucida Console", "Consolas"; */
+    line-height: 16px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+
+.gallery .card:hover .info small {
+    display: block;
+    opacity: 60%;
+    max-height: 256px;
+    margin-top: 8px;
+}
+
 .gallery a {
     color: black;
     text-decoration: none;
@@ -154,19 +176,25 @@ header li {
     text-decoration: underline;
     opacity: 100%;
 }
+
 .gallery .square-image {
-    width: 300px;
-    height: 300px;
+    width: 256px;
+    height: 256px;
     overflow: hidden;
     border-radius: 10px;;
+    flex: 0 0 256px;
 }
+
 .gallery .square-image img {
     width: auto;
     height: 100%;
     object-fit: cover;
 }
 .gallery .info {
-    margin-left: 5vw;
+    margin-left: 32px;
+    margin-right: 32px;
+    margin-bottom: 32px;
+    margin-top: 32px;
 }
 footer {
     margin-top: 120px;
